@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Parkrun Map</title>
+	<meta charset="utf-8" />
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	
+	<link rel="shortcut icon" type="image/x-icon" href="docs/images/favicon.ico" />
+
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.3.4/dist/leaflet.css" integrity="sha512-puBpdR0798OZvTTbP4A8Ix/l+A4dHDD0DGqYW6RQ+9jxkRFclaxxQb/SJAWZfWAkuyeQUytO7+7N4QKrDh+drA==" crossorigin=""/>
+    <script src="https://unpkg.com/leaflet@1.3.4/dist/leaflet.js" integrity="sha512-nMMmRyTVoLYqjP9hrbed9S+FzjZHW5gY1TWCHA5ckwXZBadntCNs8kEqAWdrb9O7rxbCaA4lKTIWjDXZxflOcA==" crossorigin=""></script>
+    <script src="https://code.jquery.com/jquery-3.3.1.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script>
+</head>
+    <body>
+        <div id="mapid" style="width: 1200px; height: 750px;"></div>
+        <script>
+            var completedEvents = [];
+            var mymap = L.map('mapid');
+            var markerGroup = L.layerGroup().addTo(mymap);
+            L.tileLayer('https://api.tiles.mapbox.com/v4/{id}/{z}/{x}/{y}.png?access_token=pk.eyJ1IjoibWFwYm94IiwiYSI6ImNpejY4NXVycTA2emYycXBndHRqcmZ3N3gifQ.rJcFIG214AriISLbB6B5aw', {
+                maxZoom: 18,
+                attribution: 'Map data &copy; <a href="https://www.openstreetmap.org/">OpenStreetMap</a> contributors, ' +
+                    '<a href="https://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, ' +
+                    'Imagery © <a href="https://www.mapbox.com/">Mapbox</a>',
+                id: 'mapbox.streets'
+            }).addTo(mymap);
+            $(document).ready(function() {
+                initAndLoad();
+            });
+
+            function displayEvents(include) {
+                markerGroup.clearLayers();
+                var longitudeMin = undefined;
+                var longitudeMax = undefined;
+                var latitudeMin = undefined;
+                var latitudeMax = undefined;
+                var displayedEvents = 0;
+                // https://www.parkrun.org.uk/wp-content/themes/parkrun/xml
+                $.ajax('/geo.xml').done(function(data) {
+                    // var parser = new DOMParser();
+                    $(data).find('e').each(function() {
+                        var $element = $(this);
+                        var name = $element.attr('m');
+                        if (include(name)) {
+                            var longitude = parseFloat($element.attr('lo'));
+                            var latitude = parseFloat($element.attr('la'));
+                            var region = $element.attr('r');
+                            var checkbox = $('[data-region-id-' + region + ']');
+                            if (checkbox.prop('checked') && completedEvents.indexOf(name) == -1) {
+                                if (longitude < longitudeMin || typeof(longitudeMin) == "undefined") { longitudeMin = longitude; }
+                                if (latitude < latitudeMin || typeof(latitudeMin) == "undefined") { latitudeMin = latitude; }
+                                if (longitude > longitudeMax || typeof(longitudeMax) == "undefined") { longitudeMax = longitude; }
+                                if (latitude > latitudeMax || typeof(latitudeMax) == "undefined") { latitudeMax = latitude; }
+                                var marker = L.marker([latitude, longitude])
+                                marker.bindPopup(name);
+                                marker.addTo(markerGroup);
+                                displayedEvents++;
+                            }
+                        }
+                    });
+
+                    if (displayedEvents > 0) {
+                        latitudeMin = latitudeMin - 0.1;
+                        longitudeMin = longitudeMin - 0.1;
+                        latitudeMax = latitudeMax + 0.1;
+                        longitudeMax = longitudeMax + 0.1;
+
+                        mymap.fitBounds([
+                            [latitudeMin, longitudeMin],
+                            [latitudeMax, longitudeMax]
+                        ]);
+                    }
+                });
+            }
+
+            $(window).bind( 'hashchange', function(event) {
+                load();
+            });
+
+            function load() {
+                var hash = window.location.hash;
+                if (hash.startsWith('#startsWith-')) {
+                    var letter = hash.substring(12);
+                    displayEvents(function(name) {
+                        return name.toLowerCase().startsWith(letter.toLowerCase());
+                    });
+                } else if (hash.startsWith('#compass-')) {
+                    var point = hash.substring(9);
+                    console.info(point);
+                    displayEvents(function(name) {
+                        return name.toLowerCase().indexOf(point.toLowerCase()) > -1;
+                    });
+                } else {
+                    history.pushState("", document.title, window.location.pathname + window.location.search);
+                    displayEvents(function() {
+                        return true;
+                    });
+                }
+            }
+
+            function init() {
+                $.ajax({
+                        url: '/geo.xml'
+                    }).done(function(data) {
+                    // var parser = new DOMParser();
+                    $(data).find("r[id=1] > r").each(function() {
+                        var $element = $(this);
+                        var id = $element.attr('id');
+                        var name = $element.attr('n');
+                        // checked
+                        var $checkbox = $("<input type='checkbox' />");
+                        $checkbox.attr('data-region-id-' + id, '');
+                        $(data).find('r[id='+id+'] r').each(function() {
+                            $region = $(this);
+                            $checkbox.attr('data-region-id-' + $region.attr('id'), '');
+                        });
+                        $('.controls').append($checkbox).append($('<span />').text(name)).append($('<br />'));
+                        $checkbox.change(function() {
+                            load();
+                        })
+                    });
+                });
+            }
+
+            function initAndLoad() {
+                init();
+                load();
+            }
+        </script>
+
+        <div class="controls" style="position: absolute; top: 10px; left: 1220px">
+            <a href="#startsWith-A">A</a>
+            <a href="#startsWith-B">B</a>
+            <a href="#startsWith-C">C</a>
+            <a href="#startsWith-D">D</a>
+            <a href="#startsWith-E">E</a>
+            <a href="#startsWith-F">F</a>
+            <a href="#startsWith-G">G</a>
+            <a href="#startsWith-H">H</a>
+            <a href="#startsWith-I">I</a>
+            <a href="#startsWith-J">J</a>
+            <a href="#startsWith-K">K</a>
+            <a href="#startsWith-L">L</a>
+            <a href="#startsWith-M">M</a>
+            <a href="#startsWith-N">N</a>
+            <a href="#startsWith-O">O</a>
+            <a href="#startsWith-P">P</a>
+            <a href="#startsWith-Q">Q</a>
+            <a href="#startsWith-R">R</a>
+            <a href="#startsWith-S">S</a>
+            <a href="#startsWith-T">T</a>
+            <a href="#startsWith-U">U</a>
+            <a href="#startsWith-V">V</a>
+            <a href="#startsWith-W">W</a>
+            <a href="#startsWith-Y">Y</a>
+            <a href="#startsWith-Z">Z</a>
+            <a href="#">All</a><br /><br />
+
+            <a href="#compass-North">North</a>
+            <a href="#compass-East">East</a>
+            <a href="#compass-South">South</a>
+            <a href="#compass-West">West</a><br /><br />
+        </div>
+    </body>
+</html>
