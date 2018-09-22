@@ -36,7 +36,7 @@
                 var latitudeMax = undefined;
                 var displayedEvents = 0;
                 // https://www.parkrun.org.uk/wp-content/themes/parkrun/xml
-                $.ajax('/geo.xml').done(function(data) {
+                $.ajax('geo.xml').done(function(data) {
                     // var parser = new DOMParser();
                     $(data).find('e').each(function() {
                         var $element = $(this);
@@ -100,7 +100,7 @@
 
             function init() {
                 $.ajax({
-                        url: '/geo.xml'
+                        url: 'geo.xml'
                     }).done(function(data) {
                     // var parser = new DOMParser();
                     $(data).find("r[id=1] > r").each(function() {
