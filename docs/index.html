@@ -84,8 +84,8 @@
                     displayEvents(function(name) {
                         return name.toLowerCase().startsWith(letter.toLowerCase());
                     });
-                } else if (hash.startsWith('#compass-')) {
-                    var point = hash.substring(9);
+                } else if (hash.startsWith('#contains-')) {
+                    var point = hash.substring(10);
                     console.info(point);
                     displayEvents(function(name) {
                         return name.toLowerCase().indexOf(point.toLowerCase()) > -1;
@@ -159,10 +159,10 @@
             <a href="#startsWith-Z">Z</a>
             <a href="#">All</a><br /><br />
 
-            <a href="#compass-North">North</a>
-            <a href="#compass-East">East</a>
-            <a href="#compass-South">South</a>
-            <a href="#compass-West">West</a><br /><br />
+            <a href="#contains-North">North</a>
+            <a href="#contains-East">East</a>
+            <a href="#contains-South">South</a>
+            <a href="#contains-West">West</a><br /><br />
         </div>
     </body>
 </html>
