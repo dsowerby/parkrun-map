@@ -113,6 +113,9 @@
                         $(data).find('r[id='+id+'] r').each(function() {
                             $region = $(this);
                             $checkbox.attr('data-region-id-' + $region.attr('id'), '');
+                            if ($name == 'UK') {
+                                $checkbox.prop('checked');
+                            }
                         });
                         $('.controls').append($checkbox).append($('<span />').text(name)).append($('<br />'));
                         $checkbox.change(function() {
