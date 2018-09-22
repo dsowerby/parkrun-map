@@ -110,7 +110,7 @@
                         // checked
                         var $checkbox = $("<input type='checkbox' />");
                         if (name == 'UK') {
-                            $checkbox.prop('checked');
+                            $checkbox.attr('checked','');
                         }
                         $checkbox.attr('data-region-id-' + id, '');
                         $(data).find('r[id='+id+'] r').each(function() {
