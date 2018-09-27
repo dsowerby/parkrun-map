@@ -25,8 +25,17 @@
                 id: 'mapbox.streets'
             }).addTo(mymap);
             $(document).ready(function() {
+                centerOnUK();
                 initAndLoad();
             });
+
+            function centerOnUK() {
+                // center on the complete bounds of all UK based parkruns
+                mymap.fitBounds([
+                    [49.095026, -7.742293],
+                    [60.258081000000004, 1.847338]
+                ]);
+            }
 
             function displayEvents(include) {
                 markerGroup.clearLayers();
@@ -45,11 +54,7 @@
                             var latitude = parseFloat($element.attr('la'));
                             var region = $element.attr('r');
                             if (region != '') {
-                                console.info($($(data).find('r[id=' + region + ']').closest("r[u!='']")));
                                 var elementRegionUrl = $(data).find('r[id=' + region + ']').closest("r[u!='']").attr('u');
-                                console.info(elementRegionUrl);
-                            } else {
-                                console.info('For parkrun ' + name + ' the region is empty');
                             }
                             var checkbox = $('[data-region-id-' + region + ']');
                             if (checkbox.prop('checked') && completedEvents.indexOf(name) == -1) {
