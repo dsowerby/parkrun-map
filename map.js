@@ -4,12 +4,35 @@ var markerGroup;
 
 $(document).ready(function() {
     initMap();
+    initBurger();
     centerOnUK();
     initAndLoad();
 });
 
+function initBurger() {
+    var hamburger = {
+		navToggle: document.querySelector('.nav-toggle'),
+		nav: document.querySelector('.nav'),
+
+		doToggle: function(e) {
+            e.preventDefault();
+            console.info('toggling');
+			this.navToggle.classList.toggle('expanded');
+			this.nav.classList.toggle('expanded');
+		}
+	};
+
+	hamburger.navToggle.addEventListener('click', function(e) { hamburger.doToggle(e); });
+	// hamburger.nav.addEventListener('click', function(e) { hamburger.doToggle(e); });
+}
+
 function initMap() {
-    mymap = L.map('mapid');
+    mymap = L.map('mapid', {
+        zoomControl: false
+    });
+    L.control.zoom({
+        position:'topright'
+    }).addTo(mymap);
     markerGroup = L.layerGroup().addTo(mymap);
     L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
         maxZoom: 19,
@@ -108,7 +131,7 @@ function init() {
     $.ajax({
             url: 'geo.xml'
         }).done(function(data) {
-        $('.controls').append("<h4>Countries</h4>");
+        $('.nav').append("<h4>Countries</h4>");
         // var parser = new DOMParser();
         $(data).find("r[id=1] > r").each(function() {
             var $element = $(this);
@@ -124,7 +147,7 @@ function init() {
                 $region = $(this);
                 $checkbox.attr('data-region-id-' + $region.attr('id'), '');
             });
-            $('.controls').append($checkbox).append($('<span />').text(name)).append($('<br />'));
+            $('.nav').append($checkbox).append($('<span />').text(name)).append($('<br />'));
             $checkbox.change(function() {
                 load();
             })
