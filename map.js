@@ -111,10 +111,15 @@ function load() {
 			return name.toLowerCase().startsWith(prefix.toLowerCase());
 		});
 	} else if (hash.startsWith('#contains-')) {
-		var point = hash.substring(10);
+		var needle = hash.substring(10);
 		displayEvents(function(name) {
-			return name.toLowerCase().indexOf(point.toLowerCase()) > -1;
+			return name.toLowerCase().indexOf(needle.toLowerCase()) > -1;
 		});
+	} else if (hash.startsWith('#matches-')) {
+        var regex = new RegExp(hash.substring(9), 'i');
+		displayEvents(function(name) {
+            return regex.test(name.toLowerCase());
+        });
 	} else if (hash === '#all') {
 		displayEvents(function(name) {
 			return true;
