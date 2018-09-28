@@ -21,10 +21,17 @@ html, body, #map {
     z-index: 2147483646;
 }
 .nav .controls {
+    padding-top: -5px;
     height: 100%;
     overflow-y: auto;
     overflow-x: hidden;
 }
+.nav .controls:first-child:first-child {
+    margin-top: 0;
+}
 .nav .controls li {
     padding-left: 25px;
+}
+.nav .controls h1 {
+    margin: 0px auto 0px;
 }
