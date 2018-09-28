@@ -1,6 +1,6 @@
 html {
     color: #fff;
-    font: 8px Arial,sans-serif
+    font: 8px Arial,sans-serif;
 }
 body {
     padding: 0;
@@ -19,6 +19,14 @@ html, body, #map {
 }
 .nav {
     z-index: 2147483646;
+}
+.nav .controls {
+    height: 100%;
+    margin-top: 5px;
     overflow-y: auto;
-    overflow-x: none;
+    overflow-x: hidden;
+    /* font-size: 1.5rem; */
+}
+.nav .controls li {
+    padding-left: 25px;
 }
