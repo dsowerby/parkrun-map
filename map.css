@@ -20,4 +20,5 @@ html, body, #map {
 .nav {
     z-index: 2147483646;
     overflow-y: auto;
+    overflow-x: none;
 }
