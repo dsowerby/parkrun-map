@@ -104,11 +104,11 @@ $(window).bind( 'hashchange', function(event) {
 });
 
 function load() {
-    var hash = window.location.hash;
+    var hash = decodeURIComponent(window.location.hash);
     if (hash.startsWith('#startsWith-')) {
-        var letter = hash.substring(12);
+        var prefix = hash.substring(12);
         displayEvents(function(name) {
-            return name.toLowerCase().startsWith(letter.toLowerCase());
+            return name.toLowerCase().startsWith(prefix.toLowerCase());
         });
     } else if (hash.startsWith('#contains-')) {
         var point = hash.substring(10);
