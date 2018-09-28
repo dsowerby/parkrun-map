@@ -19,5 +19,5 @@ html, body, #map {
 }
 .nav {
     z-index: 2147483646;
-    overflow: scroll;
+    overflow-y: auto;
 }
