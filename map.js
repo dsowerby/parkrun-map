@@ -75,7 +75,7 @@ function displayEvents(include) {
 					if (latitude > latitudeMax || typeof(latitudeMax) == "undefined") { latitudeMax = latitude; }
 					var marker = L.marker([latitude, longitude])
 					if (typeof(elementRegionUrl) !== undefined) {
-						marker.bindPopup('<a target="_new" href="' + elementRegionUrl + '/' + elementId + '">' + name + '</a><br /><a target="_new" href="https://www.google.com/maps/dir/?api=1&destination='+latitude+',' + longitude + '">Directions</a>');
+						marker.bindPopup('<strong>'+ name + '</strong><br /><a target="_blank" href="' + elementRegionUrl + '/' + elementId + '">Course page</a><br /><a target="_blank" href="https://www.google.com/maps/dir/?api=1&destination='+latitude+',' + longitude + '">Directions</a>');
 					} else {
 						marker.bindPopup(name);
 					}
