@@ -36,3 +36,6 @@ html, body, #map {
 .nav h1 {
     margin: 0px auto 0px;
 }
+.nav h5 {
+    margin: 10px;
+}

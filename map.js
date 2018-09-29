@@ -157,7 +157,14 @@ function init() {
 				load();
 			})
 		});
-	});
+    });
+    $('#letter-prefix').keypress(function (e) {
+        if (e.which == 13) {
+            var prefix = $('#letter-prefix').val();
+            var prefix = Array.from(new Set(prefix.toLowerCase().replace(/[^a-z]/ig, '').split(''))).join('')
+            window.location.hash = '#matches-^[' + prefix + ']'; 
+        }
+    });
 }
 
 function initAndLoad() {
