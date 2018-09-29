@@ -39,3 +39,6 @@ html, body, #map {
 .nav h5 {
     margin: 10px;
 }
+.leaflet-popup-content {
+    text-align: center;
+}

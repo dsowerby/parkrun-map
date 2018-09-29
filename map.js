@@ -10,7 +10,7 @@ $(document).ready(function() {
 });
 
 function initBurger() {
-    var hamburger = {
+	var hamburger = {
 		navToggle: document.querySelector('.nav-toggle'),
 		nav: document.querySelector('.nav'),
 
@@ -75,7 +75,7 @@ function displayEvents(include) {
 					if (latitude > latitudeMax || typeof(latitudeMax) == "undefined") { latitudeMax = latitude; }
 					var marker = L.marker([latitude, longitude])
 					if (typeof(elementRegionUrl) !== undefined) {
-						marker.bindPopup('<a target="_new" href="' + elementRegionUrl + '/' + elementId + '">' + name + '</a>');
+						marker.bindPopup('<a target="_new" href="' + elementRegionUrl + '/' + elementId + '">' + name + '</a><br /><a target="_new" href="https://www.google.com/maps/dir/?api=1&destination='+latitude+',' + longitude + '">Directions</a>');
 					} else {
 						marker.bindPopup(name);
 					}
@@ -116,10 +116,10 @@ function load() {
 			return name.toLowerCase().indexOf(needle.toLowerCase()) > -1;
 		});
 	} else if (hash.startsWith('#matches-')) {
-        var regex = new RegExp(hash.substring(9), 'i');
+		var regex = new RegExp(hash.substring(9), 'i');
 		displayEvents(function(name) {
-            return regex.test(name.toLowerCase());
-        });
+			return regex.test(name.toLowerCase());
+		});
 	} else if (hash === '#all') {
 		displayEvents(function(name) {
 			return true;
@@ -157,14 +157,20 @@ function init() {
 				load();
 			})
 		});
-    });
-    $('#letter-prefix').keypress(function (e) {
-        if (e.which == 13) {
-            var prefix = $('#letter-prefix').val();
-            var prefix = Array.from(new Set(prefix.toLowerCase().replace(/[^a-z]/ig, '').split(''))).join('')
-            window.location.hash = '#matches-^[' + prefix + ']'; 
-        }
-    });
+	});
+	$('#letter-prefix').keypress(function (e) {
+		if (e.which == 13) {
+			var prefix = $('#letter-prefix').val();
+			var prefix = Array.from(new Set(prefix.toLowerCase().replace(/[^a-z]/ig, '').split(''))).join('')
+			window.location.hash = '#matches-^[' + prefix + ']'; 
+		}
+	});
+	$('#search').keypress(function (e) {
+		if (e.which == 13) {
+			var search = $('#search').val();
+			window.location.hash = '#matches-.*' + search + '.*'; 
+		}
+	});
 }
 
 function initAndLoad() {
