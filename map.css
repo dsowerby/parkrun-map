@@ -19,6 +19,7 @@ html, body, #map {
 }
 .nav {
     z-index: 2147483646;
+    cursor: default;
 }
 .nav .controls {
     padding-top: -5px;
