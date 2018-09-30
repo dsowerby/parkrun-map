@@ -1,6 +1,7 @@
 var completedEvents = [];
 var mymap;
 var markerGroup;
+var $geo;
 
 $(document).ready(function() {
 	initMap();
@@ -55,48 +56,46 @@ function displayEvents(include) {
 	var latitudeMin = undefined;
 	var latitudeMax = undefined;
 	var displayedEvents = 0;
-	$.ajax('geo.xml').done(function(data) {
-		$(data).find('e').each(function() {
-			var $element = $(this);
-			var name = $element.attr('m');
-			if (include(name)) {
-				var elementId = $element.attr('n');
-				var longitude = parseFloat($element.attr('lo'));
-				var latitude = parseFloat($element.attr('la'));
-				var region = $element.attr('r');
-				if (region != '') {
-					var elementRegionUrl = $(data).find('r[id=' + region + ']').closest("r[u!='']").attr('u');
-				}
-				var checkbox = $('[data-region-id-' + region + ']');
-				if (checkbox.prop('checked') && completedEvents.indexOf(name) == -1) {
-					if (longitude < longitudeMin || typeof(longitudeMin) == "undefined") { longitudeMin = longitude; }
-					if (latitude < latitudeMin || typeof(latitudeMin) == "undefined") { latitudeMin = latitude; }
-					if (longitude > longitudeMax || typeof(longitudeMax) == "undefined") { longitudeMax = longitude; }
-					if (latitude > latitudeMax || typeof(latitudeMax) == "undefined") { latitudeMax = latitude; }
-					var marker = L.marker([latitude, longitude])
-					if (typeof(elementRegionUrl) !== undefined) {
-						marker.bindPopup('<strong>'+ name + '</strong><br /><a target="_blank" href="' + elementRegionUrl + '/' + elementId + '">Course page</a><br /><a target="_blank" href="https://www.google.com/maps/dir/?api=1&destination='+latitude+',' + longitude + '">Directions</a>');
-					} else {
-						marker.bindPopup(name);
-					}
-					marker.addTo(markerGroup);
-					displayedEvents++;
-				}
-			}
-		});
-
-		if (displayedEvents > 0) {
-			latitudeMin = latitudeMin - 0.1;
-			longitudeMin = longitudeMin - 0.1;
-			latitudeMax = latitudeMax + 0.1;
-			longitudeMax = longitudeMax + 0.1;
-
-			mymap.fitBounds([
-				[latitudeMin, longitudeMin],
-				[latitudeMax, longitudeMax]
-			]);
+    $geo.find('e').each(function() {
+        var $element = $(this);
+        var name = $element.attr('m');
+		var region = $element.attr('r');
+		if (region != '') {
+			var elementRegionUrl = $geo.find('r[id=' + region + ']').closest("r[u!='']").attr('u');
 		}
-	});
+		var checkbox = $('[data-region-id-' + region + ']');
+		var regionSelected = checkbox.prop('checked') && completedEvents.indexOf(name) == -1;
+
+		if (include($element, regionSelected)) {
+            var elementId = $element.attr('n');
+            var longitude = parseFloat($element.attr('lo'));
+            var latitude = parseFloat($element.attr('la'));
+			if (longitude < longitudeMin || typeof(longitudeMin) == "undefined") { longitudeMin = longitude; }
+			if (latitude < latitudeMin || typeof(latitudeMin) == "undefined") { latitudeMin = latitude; }
+			if (longitude > longitudeMax || typeof(longitudeMax) == "undefined") { longitudeMax = longitude; }
+			if (latitude > latitudeMax || typeof(latitudeMax) == "undefined") { latitudeMax = latitude; }
+			var marker = L.marker([latitude, longitude])
+			if (typeof(elementRegionUrl) !== undefined) {
+				marker.bindPopup('<strong>'+ name + '</strong><br /><a target="_blank" href="' + elementRegionUrl + '/' + elementId + '">Course page</a><br /><a target="_blank" href="https://www.google.com/maps/dir/?api=1&destination='+latitude+',' + longitude + '">Directions</a>');
+			} else {
+				marker.bindPopup(name);
+			}
+			marker.addTo(markerGroup);
+			displayedEvents++;
+        }
+    });
+
+    if (displayedEvents > 0) {
+        latitudeMin = latitudeMin - 0.1;
+        longitudeMin = longitudeMin - 0.1;
+        latitudeMax = latitudeMax + 0.1;
+        longitudeMax = longitudeMax + 0.1;
+
+        mymap.fitBounds([
+            [latitudeMin, longitudeMin],
+            [latitudeMax, longitudeMax]
+        ]);
+    }
 }
 
 $(window).bind( 'hashchange', function(event) {
@@ -107,23 +106,34 @@ function load() {
 	var hash = decodeURIComponent(window.location.hash);
 	if (hash.startsWith('#startsWith-')) {
 		var prefix = hash.substring(12);
-		displayEvents(function(name) {
-			return name.toLowerCase().startsWith(prefix.toLowerCase());
+		displayEvents(function($event, regionSelected) {
+			var name = $event.attr('m');
+			return regionSelected && name.toLowerCase().startsWith(prefix.toLowerCase());
 		});
 	} else if (hash.startsWith('#contains-')) {
 		var needle = hash.substring(10);
-		displayEvents(function(name) {
-			return name.toLowerCase().indexOf(needle.toLowerCase()) > -1;
+		displayEvents(function($event, regionSelected) {
+			var name = $event.attr('m');
+			return regionSelected && name.toLowerCase().indexOf(needle.toLowerCase()) > -1;
 		});
 	} else if (hash.startsWith('#matches-')) {
 		var regex = new RegExp(hash.substring(9), 'i');
-		displayEvents(function(name) {
-			return regex.test(name.toLowerCase());
+		displayEvents(function($event, regionSelected) {
+			var name = $event.attr('m');
+			return regionSelected && regex.test(name.toLowerCase());
 		});
+    } else if (hash.startsWith('#region-')) {
+        $(document).ready(function() {
+            var region = hash.substring(8);
+            var regionId = $geo.find("r[n='"+region+"']").attr('id');
+			displayEvents(function($event, regionSelected) {
+				return regionId === $event.attr('r');
+			});
+        });
 	} else if (hash === '#all') {
-		displayEvents(function(name) {
+		displayEvents(function($event, regionSelected) {
 			return true;
-		});
+        });
 	} else {
 		history.pushState("", document.title, window.location.pathname + window.location.search);
 		displayEvents(function() {
@@ -134,30 +144,32 @@ function load() {
 
 function init() {
 	$.ajax({
-			url: 'geo.xml'
+            url: 'geo.xml',
+            async: false,
 		}).done(function(data) {
-		$('.nav .controls').append("<h4>Countries</h4>");
-		// var parser = new DOMParser();
-		$(data).find("r[id=1] > r").each(function() {
-			var $element = $(this);
-			var id = $element.attr('id');
-			var name = $element.attr('n');
-			// checked
-			var $checkbox = $("<input type='checkbox' />");
-			if (name == 'UK') {
-				$checkbox.attr('checked','');
-			}
-			$checkbox.attr('data-region-id-' + id, '');
-			$(data).find('r[id='+id+'] r').each(function() {
-				$region = $(this);
-				$checkbox.attr('data-region-id-' + $region.attr('id'), '');
-			});
-			$('.nav .controls').append($checkbox).append($('<span />').text(name)).append($('<br />'));
-			$checkbox.change(function() {
-				load();
-			})
-		});
-	});
+            $geo = $(data);
+            $('.nav .controls').append("<h4>Countries</h4>");
+            // var parser = new DOMParser();
+            $geo.find("r[id=1] > r").each(function() {
+                var $element = $(this);
+                var id = $element.attr('id');
+                var name = $element.attr('n');
+                // checked
+                var $checkbox = $("<input type='checkbox' />");
+                if (name == 'UK') {
+                    $checkbox.attr('checked','');
+                }
+                $checkbox.attr('data-region-id-' + id, '');
+                $geo.find('r[id='+id+'] r').each(function() {
+                    $region = $(this);
+                    $checkbox.attr('data-region-id-' + $region.attr('id'), '');
+                });
+                $('.nav .controls').append($checkbox).append($('<span />').text(name)).append($('<br />'));
+                $checkbox.change(function() {
+                    load();
+                })
+            });
+    });
 	$('#letter-prefix').keypress(function (e) {
 		if (e.which == 13) {
 			var prefix = $('#letter-prefix').val();
