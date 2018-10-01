@@ -14,7 +14,7 @@
 			var option = window.location.hash.substring(1);
 			var pathArray = window.location.pathname.split('/');
 			var path = pathArray.splice(0,pathArray.length -2).join('/') + '/';
-			var options = JSON.parse(Cookies.get('options')) || {};
+			var options = JSON.parse(Cookies.get('options') || '');
 			options[option] = true;
 			Cookies.set('options', JSON.stringify(options), { expires: 3650, path: path, secure: true });
 			window.location = path;
