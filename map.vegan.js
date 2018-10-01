@@ -76,7 +76,7 @@ function displayEvents(include) {
 			if (latitude > latitudeMax || typeof(latitudeMax) == "undefined") { latitudeMax = latitude; }
 			var marker = L.marker([latitude, longitude])
 			if (typeof(elementRegionUrl) !== undefined) {
-				marker.bindPopup('<strong>'+ name + '</strong><br /><a target="_blank" href="' + elementRegionUrl + '/' + elementId + '">Course page</a><br /><a target="_blank" href="https://www.google.com/maps/dir/?api=1&destination='+latitude+',' + longitude + '">Directions</a>');
+				marker.bindPopup('<strong>'+ name + '</strong><br /><a target="_blank" href="' + elementRegionUrl + '/' + elementId + '">Course page</a><br /><a target="_blank" href="https://www.google.com/maps/dir/?api=1&destination='+latitude+',' + longitude + '">Directions</a>Mbr /><a target="_blank" href="https://www.happycow.net/searchmap?location=&vegan=true&lat='+latitude+'&lng='+longitude+'">Local vegan food</a>');
 			} else {
 				marker.bindPopup(name);
 			}
