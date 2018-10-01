@@ -1,1 +1,26 @@
-../index.html
+<!DOCTYPE html>
+<html>
+<head>
+	<title>parkrun map (enabling vegan)</title>
+	<meta charset="utf-8" />
+	<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+
+	<link rel="shortcut icon" type="image/x-icon" href="docs/images/favicon.ico" />
+
+	<script src="https://code.jquery.com/jquery-3.3.1.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/js-cookie/2.2.0/js.cookie.min.js" crossorigin="anonymous"></script>
+	<script>
+		$(document).ready(function() {
+			var pathArray = window.location.pathname.split('/');
+			var path = pathArray.splice(0,pathArray.length -2).join('/') + '/';
+			var options = Cookies.get('options') || {};
+			options.vegan = true;
+			Cookies.set('options', JSON.stringify(options), { expires: 7, path: path, secure: true });
+			window.location = path;
+		});
+	</script>
+</head>
+	<body>
+		enabling vegan view and redirecting.
+	</body>
+</html>

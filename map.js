@@ -149,7 +149,6 @@ function init() {
 		}).done(function(data) {
             $geo = $(data);
             $('.nav .controls').append("<h4>Countries</h4>");
-            // var parser = new DOMParser();
             $geo.find("r[id=1] > r").each(function() {
                 var $element = $(this);
                 var id = $element.attr('id');
