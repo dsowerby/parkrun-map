@@ -13,7 +13,7 @@ $(document).ready(function() {
 });
 
 function initOptions() {
-	options = Cookies.get('options') || {};
+	options = JSON.parse(Cookies.get('options')) || {};
 }
 
 function initBurger() {
