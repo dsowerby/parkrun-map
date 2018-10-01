@@ -15,7 +15,7 @@
 			var path = pathArray.splice(0,pathArray.length -2).join('/') + '/';
 			var options = Cookies.get('options') || {};
 			options.vegan = true;
-			Cookies.set('options', JSON.stringify(options), { expires: 7, path: path, secure: true });
+			Cookies.set('options', JSON.stringify(options), { expires: 3650, path: path, secure: true });
 			window.location = path;
 		});
 	</script>
