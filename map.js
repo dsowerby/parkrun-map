@@ -2,13 +2,19 @@ var completedEvents = [];
 var mymap;
 var markerGroup;
 var $geo;
+var options;
 
 $(document).ready(function() {
+	initOptions();
 	initMap();
 	initBurger();
 	centerOnUK();
 	initAndLoad();
 });
+
+function initOptions() {
+	options = Cookies.get('options') || {};
+}
 
 function initBurger() {
 	var hamburger = {
@@ -76,6 +82,9 @@ function displayEvents(include) {
 			if (latitude > latitudeMax || typeof(latitudeMax) == "undefined") { latitudeMax = latitude; }
 			var marker = L.marker([latitude, longitude])
 			if (typeof(elementRegionUrl) !== undefined) {
+				if (PushSubscriptionOptions.vegan) {
+
+				}
 				marker.bindPopup('<strong>'+ name + '</strong><br /><a target="_blank" href="' + elementRegionUrl + '/' + elementId + '">Course page</a><br /><a target="_blank" href="https://www.google.com/maps/dir/?api=1&destination='+latitude+',' + longitude + '">Directions</a>');
 			} else {
 				marker.bindPopup(name);
