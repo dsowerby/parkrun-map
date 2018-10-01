@@ -82,10 +82,11 @@ function displayEvents(include) {
 			if (latitude > latitudeMax || typeof(latitudeMax) == "undefined") { latitudeMax = latitude; }
 			var marker = L.marker([latitude, longitude])
 			if (typeof(elementRegionUrl) !== undefined) {
+				var markerContent = '<strong>'+ name + '</strong><br /><a target="_blank" href="' + elementRegionUrl + '/' + elementId + '">Course page</a><br /><a target="_blank" href="https://www.google.com/maps/dir/?api=1&destination='+latitude+',' + longitude + '">Directions</a>';
 				if (PushSubscriptionOptions.vegan) {
-
+					markerContent += '<br /><a target="_blank" href="https://www.happycow.net/searchmap?lat=51&lng=1&vegan=true">Local vegan food</a>';
 				}
-				marker.bindPopup('<strong>'+ name + '</strong><br /><a target="_blank" href="' + elementRegionUrl + '/' + elementId + '">Course page</a><br /><a target="_blank" href="https://www.google.com/maps/dir/?api=1&destination='+latitude+',' + longitude + '">Directions</a>');
+				marker.bindPopup(markerContent);
 			} else {
 				marker.bindPopup(name);
 			}
