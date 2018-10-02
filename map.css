@@ -1,44 +1,50 @@
 html {
-    color: #fff;
-    font: 8px Arial,sans-serif;
+	color: #fff;
+	font: 8px Arial,sans-serif;
 }
 body {
-    padding: 0;
-    margin: 0;
+	padding: 0;
+	margin: 0;
 }
 html, body, #map {
-    height: 100%;
-    width: 100vw;
+	height: 100%;
+	width: 100vw;
 }
 #mapid {
-    width: 100%;
-    height: 100%;
+	width: 100%;
+	height: 100%;
 }
 .nav-toggle {
-    z-index: 2147483647;
+	z-index: 2147483647;
 }
 .nav {
-    z-index: 2147483646;
-    cursor: default;
+	z-index: 2147483646;
+	cursor: default;
 }
 .nav .controls {
-    padding-top: -5px;
-    height: 100%;
-    overflow-y: auto;
-    overflow-x: hidden;
+	padding-top: -5px;
+	height: 100%;
+	overflow-y: auto;
+	overflow-x: hidden;
 }
 .nav .controls:first-child:first-child {
-    margin-top: 0;
+	margin-top: 0;
 }
 .nav .controls li {
-    padding-left: 25px;
+	padding-left: 25px;
 }
 .nav h1 {
-    margin: 0px auto 0px;
+	margin: 0px auto 0px;
 }
 .nav h5 {
-    margin: 10px;
+	margin: 10px;
 }
 .leaflet-popup-content {
-    text-align: center;
+	text-align: center;
+}
+
+@media (min-width:641px) {
+	nav {
+		width: 30rem;
+	}
 }
