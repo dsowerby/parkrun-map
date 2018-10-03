@@ -142,8 +142,8 @@ function load() {
         });
 	} else if (hash === '#all') {
 		displayEvents(function($event, regionSelected) {
-			return true;
-        });
+			return regionSelected;
+		});
 	} else {
 		history.pushState("", document.title, window.location.pathname + window.location.search);
 		displayEvents(function() {
