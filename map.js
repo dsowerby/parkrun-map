@@ -128,8 +128,7 @@ function load() {
 	$(document).ready(function() {
 		var hash = decodeURIComponent(window.location.hash);
 		var filters = [];
-		var hashes = hash.split('#').filter(function(e){return e});
-		hashes.forEach(function(hash) {
+		hash.split('#').filter(function(e){return e}).forEach(function(hash) {
 			if (hash.startsWith('startsWith-')) {
 				var prefix = hash.substring(11);
 				filters.push(function($event) {
@@ -165,7 +164,7 @@ function load() {
 				});
 			}
 		});
-		if (hashes.length == 0) {
+		if (filters.length == 0) {
 			filters.push(function() {
 				return false;
 			})
