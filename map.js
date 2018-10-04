@@ -128,7 +128,8 @@ function load() {
 	$(document).ready(function() {
 		var hash = decodeURIComponent(window.location.hash);
 		var filters = [];
-		hash.split('#').filter(function(e){return e}).forEach(function(hash) {
+		var hashes = hash.split('#').filter(function(e){return e});
+		hashes.forEach(function(hash) {
 			if (hash.startsWith('startsWith-')) {
 				var prefix = hash.substring(11);
 				filters.push(function($event) {
@@ -162,14 +163,13 @@ function load() {
 				filters.push(function() {
 					return true;
 				});
-				// we need to test the length of the array, to decide if this is what we need to do
-			} else {
-				history.pushState("", document.title, window.location.pathname + window.location.search);
-				filters.push(function() {
-					return false;
-				});
 			}
 		});
+		if (hashes.length == 0) {
+			filters.push(function() {
+				return false;
+			})
+		}
 		displayEvents(filters);
 	});
 }
