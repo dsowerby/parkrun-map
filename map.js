@@ -157,8 +157,9 @@ function init() {
             url: 'geo.xml',
             async: false,
 		}).done(function(data) {
-            $geo = $(data);
-            $('.nav .controls').append("<h4>Countries</h4>");
+			$geo = $(data);
+			var $countries = $('<div class="countries"><h4>Countries</h4></div>')
+            $('.nav .controls').append($countries);
             $geo.find("r[id=1] > r").each(function() {
                 var $element = $(this);
                 var id = $element.attr('id');
@@ -173,7 +174,7 @@ function init() {
                     $region = $(this);
                     $checkbox.attr('data-region-id-' + $region.attr('id'), '');
                 });
-                $('.nav .controls').append($checkbox).append($('<span />').text(name)).append($('<br />'));
+                $countries.append($checkbox).append($('<span />').text(name)).append($('<br />'));
                 $checkbox.change(function() {
                     load();
                 })

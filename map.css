@@ -46,6 +46,7 @@ html, body, #map {
 
 @media (min-width:641px) {
 	nav.nav {
-		width: 30rem;
+        width: 30rem;
+        left: -30rem;
 	}
 }
