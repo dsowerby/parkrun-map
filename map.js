@@ -3,14 +3,25 @@ var mymap;
 var markerGroup;
 var $geo;
 var options;
+var athleteData = [];
 
 $(document).ready(function() {
+	initAjaxPrefilter();
 	initOptions();
 	initMap();
 	initBurger();
 	centerOnUK();
 	initAndLoad();
 });
+
+// bypass CORS or CORB
+function initAjaxPrefilter() {
+	jQuery.ajaxPrefilter(function(options) {
+		if (options.crossDomain && jQuery.support.cors) {
+			options.url = 'https://cors-anywhere.herokuapp.com/' + options.url;
+		}
+	});
+}
 
 function initOptions() {
 	options = JSON.parse(Cookies.get('options') || '{}');
@@ -153,6 +164,15 @@ function load() {
 				var regionId = $geo.find("r[n='"+region+"']").attr('id');
 				filters.push(function($event) {
 					return regionId === $event.attr('r');
+				});
+			} else if (hash.startsWith('athlete-')) {
+				var athleteId = hash.substring(8);
+				$.ajax({
+					url: 'https://www.parkrun.org.uk:443/results/athleteeventresultshistory/?athleteNumber=' + athleteId + '&eventNumber=0',
+					async: false,
+				}).done(function(data) { athleteData[athleteId] = $(data) });
+				filters.push(function($event) {
+					return athleteData[athleteId].find("a[href$='/" + $event.attr('n') + "/results']").length > 0;
 				});
 			} else if (hash === 'none') {
 				filters.push(function() {
