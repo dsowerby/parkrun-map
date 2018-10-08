@@ -155,6 +155,7 @@ function getFilter(filter) {
 					return true;
 				}
 			}
+			return false;
 		}
 	} else if (filter.startsWith('startsWith-')) {
 		var prefix = filter.substring(11);
