@@ -135,54 +135,82 @@ $(window).bind( 'hashchange', function(event) {
 	load();
 });
 
+function getFilter(filter) {
+	console.info('getFilter: ' + filter);
+	if (filter.startsWith('not-')) {
+		var notFilter = filter.substring(4);
+		var filterFunction = getFilter(notFilter);
+		return function($event) {
+			return !filterFunction($event);
+		};
+	} else if (filter.startsWith('or-')) {
+		var orFilter = filter.substring(3);
+		var orFilters = [];
+		orFilter.split('|').filter(function(e){return e}).forEach(function(orFilterPart) {
+			orFilters.push(getFilter(orFilterPart));
+		});
+		return function($event) {
+			for (var i = 0; i < orFilters.length; i++) {
+				if (orFilters[i]($event)) {
+					return true;
+				}
+			}
+		}
+	} else if (filter.startsWith('startsWith-')) {
+		var prefix = filter.substring(11);
+		return function($event) {
+			var name = $event.attr('m');
+			return name.toLowerCase().startsWith(prefix.toLowerCase());
+		};
+	} else if (filter.startsWith('contains-')) {
+		var needle = filter.substring(9);
+		return function($event) {
+			var name = $event.attr('m');
+			return name.toLowerCase().indexOf(needle.toLowerCase()) > -1;
+		};
+	} else if (filter.startsWith('matches-')) {
+		var r = filter.substring(8);
+		var regex = new RegExp(r, 'i');
+		return function($event) {
+			var name = $event.attr('m');
+			return regex.test(name.toLowerCase());
+		};
+	} else if (filter.startsWith('region-')) {
+		var region = filter.substring(7);
+		var regionId = $geo.find("r[n='"+region+"']").attr('id');
+		return function($event) {
+			return regionId === $event.attr('r');
+		};
+	} else if (filter.startsWith('athlete-')) {
+		var athleteId = filter.substring(8);
+		if (typeof(athleteData['316947']) === 'undefined') {
+			$.ajax({
+				url: 'https://www.parkrun.org.uk:443/results/athleteeventresultshistory/?athleteNumber=' + athleteId + '&eventNumber=0',
+				async: false,
+			}).done(function(data) {
+				athleteData[athleteId] = $(data);
+			});	
+		} 
+		return function($event) {
+			return athleteData[athleteId].find("a[href$='/" + $event.attr('n') + "/results']").length > 0;
+		};
+	} else if (filter === 'none') {
+		return function() {
+			return false;
+		};
+	} else if (filter === 'all') {
+		return function() {
+			return true;
+		};
+	}
+}
+
 function load() {
 	$(document).ready(function() {
 		var hash = decodeURIComponent(window.location.hash);
 		var filters = [];
 		hash.split('#').filter(function(e){return e}).forEach(function(hash) {
-			if (hash.startsWith('startsWith-')) {
-				var prefix = hash.substring(11);
-				filters.push(function($event) {
-					var name = $event.attr('m');
-					return name.toLowerCase().startsWith(prefix.toLowerCase());
-				});
-			} else if (hash.startsWith('contains-')) {
-				var needle = hash.substring(9);
-				filters.push(function($event) {
-					var name = $event.attr('m');
-					return name.toLowerCase().indexOf(needle.toLowerCase()) > -1;
-				});
-			} else if (hash.startsWith('matches-')) {
-				var r = hash.substring(8);
-				var regex = new RegExp(r, 'i');
-				filters.push(function($event) {
-					var name = $event.attr('m');
-					return regex.test(name.toLowerCase());
-				});
-			} else if (hash.startsWith('region-')) {
-				var region = hash.substring(7);
-				var regionId = $geo.find("r[n='"+region+"']").attr('id');
-				filters.push(function($event) {
-					return regionId === $event.attr('r');
-				});
-			} else if (hash.startsWith('athlete-')) {
-				var athleteId = hash.substring(8);
-				$.ajax({
-					url: 'https://www.parkrun.org.uk:443/results/athleteeventresultshistory/?athleteNumber=' + athleteId + '&eventNumber=0',
-					async: false,
-				}).done(function(data) { athleteData[athleteId] = $(data) });
-				filters.push(function($event) {
-					return athleteData[athleteId].find("a[href$='/" + $event.attr('n') + "/results']").length > 0;
-				});
-			} else if (hash === 'none') {
-				filters.push(function() {
-					return false;
-				});
-			} else if (hash === 'all') {
-				filters.push(function() {
-					return true;
-				});
-			}
+			filters.push(getFilter(hash));
 		});
 		if (filters.length == 0) {
 			filters.push(function() {
