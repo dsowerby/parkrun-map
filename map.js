@@ -184,7 +184,7 @@ function getFilter(filter) {
 		};
 	} else if (filter.startsWith('athlete-')) {
 		var athleteId = filter.substring(8);
-		if (typeof(athleteData['316947']) === 'undefined') {
+		if (typeof(athleteData[athleteId]) === 'undefined') {
 			$.ajax({
 				url: 'https://www.parkrun.org.uk:443/results/athleteeventresultshistory/?athleteNumber=' + athleteId + '&eventNumber=0',
 				async: false,
