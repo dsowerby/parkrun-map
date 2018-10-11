@@ -104,7 +104,7 @@ function displayEvents(filterFunctions) {
 
 				var marker = L.marker([latitude, longitude]);
 				if (typeof(elementRegionUrl) !== undefined) {
-					var markerContent = '<strong>'+ name + '</strong><br /><a target="_blank" href="' + elementRegionUrl + '/' + elementId + '">Course page</a><br /><a target="_blank" href="https://www.google.com/maps/dir/?api=1&destination='+latitude+',' + longitude + '">Directions</a>';
+					var markerContent = '<strong><a target="_blank" href="' + elementRegionUrl + '/' + elementId + '/">'+ name + '</a></strong><br /><a target="_blank" href="' + elementRegionUrl + '/' + elementId + '/course/">Course page</a><br /><a target="_blank" href="https://www.google.com/maps/dir/?api=1&destination='+latitude+',' + longitude + '">Directions</a>';
 					if (options.vegan) {
 						markerContent += '<br /><a target="_blank" href="https://www.happycow.net/searchmap?lat='+latitude+'&lng='+longitude+'&vegan=true">Local vegan food</a>';
 					}
