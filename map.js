@@ -157,6 +157,10 @@ function displayEvents(filterFunctions) {
 			[latitudeMin, longitudeMin],
 			[latitudeMax, longitudeMax]
 		]);
+		hamburger.hide();
+	} else {
+		hamburger.show();
+		console.info('no events displayed');
 	}
 }
 
