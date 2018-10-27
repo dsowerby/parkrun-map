@@ -1,17 +1,24 @@
-var completedEvents = [];
 var mymap;
 var markerGroup;
 var $geo;
 var options;
 var athleteData = [];
+var filters = [];
+var position;
+var hamburger;
 
 $(document).ready(function() {
 	initAjaxPrefilter();
 	initOptions();
-	initMap();
+	initMap();	
 	initBurger();
-	centerOnUK();
-	initAndLoad();
+	centreMap();
+	navigator.geolocation.getCurrentPosition(function(data) {
+		position = data;
+		initAndLoad();
+	}, function(error) {
+		initAndLoad();
+	});
 });
 
 // bypass CORS or CORB
@@ -28,7 +35,7 @@ function initOptions() {
 }
 
 function initBurger() {
-	var hamburger = {
+	hamburger = {
 		navToggle: document.querySelector('.nav-toggle'),
 		nav: document.querySelector('.nav'),
 
@@ -36,6 +43,16 @@ function initBurger() {
 			e.preventDefault();
 			this.navToggle.classList.toggle('expanded');
 			this.nav.classList.toggle('expanded');
+		},
+
+		show: function() {
+			this.navToggle.classList.add('expanded');
+			this.nav.classList.add('expanded');
+		},
+
+		hide: function() {
+			this.navToggle.classList.remove('expanded');
+			this.nav.classList.remove('expanded');
 		}
 	};
 
@@ -53,17 +70,29 @@ function initMap() {
 	}).addTo(mymap);
 	markerGroup = L.layerGroup().addTo(mymap);
 	L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-	maxZoom: 19,
-	attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>'
-}).addTo(mymap);
+		maxZoom: 19,
+		attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>'
+	}).addTo(mymap);
 }
 
-function centerOnUK() {
-	// center on the complete bounds of all UK based parkruns
-	mymap.fitBounds([
-		[49.095026, -7.742293],
-		[60.258081000000004, 1.847338]
-	]);
+function centreMap() {
+	if (position) {
+		// centre the map around the user's location
+		mymap.fitBounds(
+			[
+				[position.coords.latitude - 0.01, position.coords.longitude - 0.01],
+				[position.coords.latitude + 0.01, position.coords.longitude + 0.01]
+			]
+		)
+	} else {
+		// centre on the complete bounds of all UK based parkruns
+		mymap.fitBounds(
+			[
+				[49.095026, -7.742293],
+				[60.258081000000004, 1.847338]
+			]
+		);
+	}
 }
 
 function displayEvents(filterFunctions) {
@@ -136,7 +165,6 @@ $(window).bind( 'hashchange', function(event) {
 });
 
 function getFilter(filter) {
-	console.info('getFilter: ' + filter);
 	if (filter.startsWith('not-')) {
 		var notFilter = filter.substring(4);
 		var filterFunction = getFilter(notFilter);
@@ -178,9 +206,13 @@ function getFilter(filter) {
 		};
 	} else if (filter.startsWith('region-')) {
 		var region = filter.substring(7);
-		var regionId = $geo.find("r[n='"+region+"']").attr('id');
+		// we now have the region name
+		var $regionElement = $geo.find("r[n='"+region+"']");
+		window.regionElement = $regionElement;
+		// we have the region id
 		return function($event) {
-			return regionId === $event.attr('r');
+			var eventRegionId = $event.attr('r');
+			return $regionElement.is('[id="'+eventRegionId+'"]') || ($regionElement.has('r[id="'+eventRegionId+'"]').length > 0);
 		};
 	} else if (filter.startsWith('athlete-')) {
 		var athleteId = filter.substring(8);
@@ -195,6 +227,13 @@ function getFilter(filter) {
 		return function($event) {
 			return athleteData[athleteId].find("a[href$='/" + $event.attr('n') + "/results']").length > 0;
 		};
+	} else if (filter.startsWith('within-')) {
+		var distance = parseInt(filter.substring(7));
+		return function($event) {
+			var longitude = parseFloat($event.attr('lo'));
+			var latitude = parseFloat($event.attr('la'));
+			return getDistanceFromLatLonInKm(latitude, longitude, position.coords.latitude, position.coords.longitude) < distance;
+		};
 	} else if (filter === 'none') {
 		return function() {
 			return false;
@@ -206,22 +245,36 @@ function getFilter(filter) {
 	}
 }
 
+function getDistanceFromLatLonInKm(lat1,lon1,lat2,lon2) {
+	var R = 6371; // Radius of the earth in km
+	var dLat = deg2rad(lat2-lat1);  // deg2rad below
+	var dLon = deg2rad(lon2-lon1); 
+	var a = 
+		Math.sin(dLat/2) * Math.sin(dLat/2) +
+		Math.cos(deg2rad(lat1)) * Math.cos(deg2rad(lat2)) * 
+		Math.sin(dLon/2) * Math.sin(dLon/2); 
+	var c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a)); 
+	var d = R * c; // Distance in km
+	return d;
+}
+
+function deg2rad(deg) {
+	return deg * (Math.PI/180)
+}
+
 function load() {
 	$(document).ready(function() {
 		var hash = decodeURIComponent(window.location.hash);
-		var filters = [];
+		filters = [];
 		hash.split('#').filter(function(e){return e}).forEach(function(hash) {
 			var filter = getFilter(hash);
 			if (filter !== undefined) {
 				filters.push(filter);
 			}
 		});
-		if (filters.length == 0) {
-			filters.push(function() {
-				return false;
-			})
+		if (filters.length > 0) {
+			displayEvents(filters);
 		}
-		displayEvents(filters);
 	});
 }
 
