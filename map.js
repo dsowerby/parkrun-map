@@ -6,6 +6,7 @@ var athleteData = [];
 var filters = [];
 var position;
 var hamburger;
+var regionFilter;
 
 $(document).ready(function() {
 	initAjaxPrefilter();
@@ -111,8 +112,8 @@ function displayEvents(filterFunctions) {
 		var regionSelected = checkbox.prop('checked');
 
 		var displayEvent = false;
-		if (regionSelected) {
-		displayEvent = true;
+		if (regionSelected || regionFilter) {
+			displayEvent = true;
 			for (var i = 0; i < filterFunctions.length; i++) {
 				if (displayEvent) {
 					var include = filterFunctions[i]($event);
@@ -209,6 +210,7 @@ function getFilter(filter) {
 			return regex.test(name.toLowerCase());
 		};
 	} else if (filter.startsWith('region-')) {
+		regionFilter = true;
 		var region = filter.substring(7);
 		// we now have the region name
 		var $regionElement = $geo.find("r[n='"+region+"']");
@@ -270,6 +272,7 @@ function load() {
 	$(document).ready(function() {
 		var hash = decodeURIComponent(window.location.hash);
 		filters = [];
+		regionFilter = false;
 		hash.split('#').filter(function(e){return e}).forEach(function(hash) {
 			var filter = getFilter(hash);
 			if (filter !== undefined) {
