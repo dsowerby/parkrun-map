@@ -211,7 +211,10 @@ function load() {
 		var hash = decodeURIComponent(window.location.hash);
 		var filters = [];
 		hash.split('#').filter(function(e){return e}).forEach(function(hash) {
-			filters.push(getFilter(hash));
+			var filter = getFilter(hash);
+			if (filter !== undefined) {
+				filters.push(filter);
+			}
 		});
 		if (filters.length == 0) {
 			filters.push(function() {
