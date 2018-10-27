@@ -108,7 +108,7 @@ function displayEvents(filterFunctions) {
 			var elementRegionUrl = $geo.find('r[id=' + region + ']').closest("r[u!='']").attr('u');
 		}
 		var checkbox = $('[data-region-id-' + region + ']');
-		var regionSelected = checkbox.prop('checked') && completedEvents.indexOf(name) == -1;
+		var regionSelected = checkbox.prop('checked');
 
 		var displayEvent = false;
 		if (regionSelected) {
