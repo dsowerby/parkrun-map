@@ -97,7 +97,6 @@ function centreMap() {
 }
 
 function displayEvents(filterFunctions) {
-	markerGroup.clearLayers();
 	var longitudeMin = longitudeMax = latitudeMin = latitudeMax = undefined;
 	var displayedEvents = 0;
 
@@ -234,11 +233,35 @@ function getFilter(filter) {
 			return athleteData[athleteId].find("a[href$='/" + $event.attr('n') + "/results']").length > 0;
 		};
 	} else if (filter.startsWith('within-')) {
-		var distance = parseInt(filter.substring(7));
+		var within = filter.substring(7);
+		var distance, withinLatitude, withinLongitude;
+		if (isNaN(within)) {
+			var indexOf = within.indexOf('-');
+			distance = within.substring(0, indexOf);
+			var withinLongLat = within.substring(indexOf+1).split(',');
+			withinLatitude = withinLongLat[0];
+			withinLongitude = withinLongLat[1];
+		} else {
+			distance = parseInt(filter.substring(7));
+			withinLatitude = position.coords.latitude;
+			withinLongitude = position.coords.longitude;
+		}
+
+		var markerIcon = L.icon({
+			iconUrl: 'https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-orange.png',
+			shadowUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/0.7.7/images/marker-shadow.png',
+			iconSize: [25, 41],
+			iconAnchor: [12, 41],
+			popupAnchor: [1, -34],
+			shadowSize: [41, 41]
+		});
+		var marker = L.marker([withinLatitude, withinLongitude], { icon: markerIcon});
+		marker.addTo(markerGroup);
+
 		return function($event) {
 			var longitude = parseFloat($event.attr('lo'));
 			var latitude = parseFloat($event.attr('la'));
-			return getDistanceFromLatLonInKm(latitude, longitude, position.coords.latitude, position.coords.longitude) < distance;
+			return getDistanceFromLatLonInKm(latitude, longitude, withinLatitude, withinLongitude) < distance;
 		};
 	} else if (filter === 'none') {
 		return function() {
@@ -270,6 +293,7 @@ function deg2rad(deg) {
 
 function load() {
 	$(document).ready(function() {
+		markerGroup.clearLayers();
 		var hash = decodeURIComponent(window.location.hash);
 		filters = [];
 		regionFilter = false;
