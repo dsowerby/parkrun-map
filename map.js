@@ -11,7 +11,7 @@ var regionFilter;
 $(document).ready(function() {
 	initAjaxPrefilter();
 	initOptions();
-	initMap();	
+	initMap();
 	initBurger();
 	centreMap();
 	navigator.geolocation.getCurrentPosition(function(data) {
@@ -164,10 +164,6 @@ function displayEvents(filterFunctions) {
 	}
 }
 
-$(window).bind( 'hashchange', function(event) {
-	load();
-});
-
 function getFilter(filter) {
 	if (filter.startsWith('not-')) {
 		var notFilter = filter.substring(4);
@@ -310,6 +306,9 @@ function load() {
 }
 
 function init() {
+	$(window).bind( 'hashchange', function(event) {
+		load();
+	});	
 	$.ajax({
 		url: 'geo.xml',
 		async: false,
