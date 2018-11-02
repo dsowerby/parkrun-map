@@ -174,7 +174,7 @@ function getFilter(filter) {
 	} else if (filter.startsWith('or-')) {
 		var orFilter = filter.substring(3);
 		var orFilters = [];
-		orFilter.split('|').filter(function(e){return e}).forEach(function(orFilterPart) {
+		orFilter.split('||').filter(function(e){return e}).forEach(function(orFilterPart) {
 			orFilters.push(getFilter(orFilterPart));
 		});
 		return function($event) {
