@@ -7,6 +7,14 @@ var filters = [];
 var position;
 var hamburger;
 var regionFilter;
+var withinFilter;
+
+navigator.geolocation.getCurrentPosition(function(data) {
+	position = data;
+	initAndLoad();
+}, function(error) {
+	initAndLoad();
+});
 
 $(document).ready(function() {
 	initAjaxPrefilter();
@@ -14,12 +22,7 @@ $(document).ready(function() {
 	initMap();
 	initBurger();
 	centreMap();
-	navigator.geolocation.getCurrentPosition(function(data) {
-		position = data;
-		initAndLoad();
-	}, function(error) {
-		initAndLoad();
-	});
+	initAndLoad();
 });
 
 // bypass CORS or CORB
@@ -111,7 +114,7 @@ function displayEvents(filterFunctions) {
 		var regionSelected = checkbox.prop('checked');
 
 		var displayEvent = false;
-		if (regionSelected || regionFilter) {
+		if (regionSelected || regionFilter || withinFilter) {
 			displayEvent = true;
 			for (var i = 0; i < filterFunctions.length; i++) {
 				if (displayEvent) {
@@ -142,6 +145,7 @@ function displayEvents(filterFunctions) {
 					marker.bindPopup(name);
 				}
 				marker.addTo(markerGroup);
+				console.info(name);
 				displayedEvents++;
 			}
 		}
@@ -229,6 +233,7 @@ function getFilter(filter) {
 			return athleteData[athleteId].find("a[href$='/" + $event.attr('n') + "/results']").length > 0;
 		};
 	} else if (filter.startsWith('within-')) {
+		withinFilter = true;
 		var within = filter.substring(7);
 		var distance, withinLatitude, withinLongitude;
 		if (isNaN(within)) {
@@ -239,8 +244,14 @@ function getFilter(filter) {
 			withinLongitude = withinLongLat[1];
 		} else {
 			distance = parseInt(filter.substring(7));
-			withinLatitude = position.coords.latitude;
-			withinLongitude = position.coords.longitude;
+			if (position === undefined) {
+				distance = 0;
+				withinLatitude = 0;
+				withinLongitude = 0;
+			} else {
+				withinLatitude = position.coords.latitude;
+				withinLongitude = position.coords.longitude;
+			}
 		}
 
 		var markerIcon = L.icon({
@@ -293,6 +304,7 @@ function load() {
 		var hash = decodeURIComponent(window.location.hash);
 		filters = [];
 		regionFilter = false;
+		withinFilter = false;
 		hash.split('#').filter(function(e){return e}).forEach(function(hash) {
 			var filter = getFilter(hash);
 			if (filter !== undefined) {
