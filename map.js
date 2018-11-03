@@ -72,7 +72,7 @@ function initMap() {
 	L.control.zoom({
 		position:'topright'
 	}).addTo(mymap);
-	markerGroup = L.layerGroup().addTo(mymap);
+	markerGroup = L.featureGroup().addTo(mymap);
 	L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
 		maxZoom: 19,
 		attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>'
@@ -152,15 +152,16 @@ function displayEvents(filterFunctions) {
 	});
 
 	if (displayedEvents > 0) {
-		latitudeMin = latitudeMin - 0.1;
-		longitudeMin = longitudeMin - 0.1;
-		latitudeMax = latitudeMax + 0.1;
-		longitudeMax = longitudeMax + 0.1;
+		mymap.fitBounds(markerGroup.getBounds());
+		// latitudeMin = latitudeMin - 0.1;
+		// longitudeMin = longitudeMin - 0.1;
+		// latitudeMax = latitudeMax + 0.1;
+		// longitudeMax = longitudeMax + 0.1;
 
-		mymap.fitBounds([
-			[latitudeMin, longitudeMin],
-			[latitudeMax, longitudeMax]
-		]);
+		// mymap.fitBounds([
+			// [latitudeMin, longitudeMin],
+			// [latitudeMax, longitudeMax]
+		// ]);
 		hamburger.hide();
 	} else {
 		hamburger.show();
