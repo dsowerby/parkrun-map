@@ -100,7 +100,6 @@ function centreMap() {
 }
 
 function displayEvents(filterFunctions) {
-	var longitudeMin = longitudeMax = latitudeMin = latitudeMax = undefined;
 	var displayedEvents = 0;
 
 	$geo.find('e').each(function() {
@@ -129,11 +128,6 @@ function displayEvents(filterFunctions) {
 			var longitude = parseFloat($event.attr('lo'));
 			var latitude = parseFloat($event.attr('la'));
 			if (!isNaN(longitude) && !isNaN(latitude)) {
-				if (longitude < longitudeMin || typeof(longitudeMin) == 'undefined') { longitudeMin = longitude; }
-				if (latitude < latitudeMin || typeof(latitudeMin) == 'undefined') { latitudeMin = latitude; }
-				if (longitude > longitudeMax || typeof(longitudeMax) == 'undefined') { longitudeMax = longitude; }
-				if (latitude > latitudeMax || typeof(latitudeMax) == 'undefined') { latitudeMax = latitude; }
-
 				var marker = L.marker([latitude, longitude]);
 				if (typeof(elementRegionUrl) !== undefined) {
 					var markerContent = '<strong><a target="_blank" href="' + elementRegionUrl + '/' + elementId + '/">'+ name + '</a></strong><br /><a target="_blank" href="' + elementRegionUrl + '/' + elementId + '/course/">Course page</a><br /><a target="_blank" href="https://www.google.com/maps/dir/?api=1&destination='+latitude+',' + longitude + '">Directions</a>';
@@ -153,15 +147,6 @@ function displayEvents(filterFunctions) {
 
 	if (displayedEvents > 0) {
 		mymap.fitBounds(markerGroup.getBounds());
-		// latitudeMin = latitudeMin - 0.1;
-		// longitudeMin = longitudeMin - 0.1;
-		// latitudeMax = latitudeMax + 0.1;
-		// longitudeMax = longitudeMax + 0.1;
-
-		// mymap.fitBounds([
-			// [latitudeMin, longitudeMin],
-			// [latitudeMax, longitudeMax]
-		// ]);
 		hamburger.hide();
 	} else {
 		hamburger.show();
