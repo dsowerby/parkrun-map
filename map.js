@@ -161,6 +161,20 @@ function getFilter(filter) {
 		return function($event) {
 			return !filterFunction($event);
 		};
+	} else if (filter.startsWith('and-')) {
+		var andFilter = filter.substring(4);
+		var andFilters = [];
+		andFilter.split('&&').filter(function(e){return e}).forEach(function(andFilterPart) {
+			andFilters.push(getFilter(andFilterPart));
+		});
+		return function($event) {
+			for (var i = 0; i < andFilters.length; i++) {
+				if (!andFilters[i]($event)) {
+					return false;
+				}
+			}
+			return true;
+		}
 	} else if (filter.startsWith('or-')) {
 		var orFilter = filter.substring(3);
 		var orFilters = [];
@@ -255,6 +269,51 @@ function getFilter(filter) {
 			var longitude = parseFloat($event.attr('lo'));
 			var latitude = parseFloat($event.attr('la'));
 			return getDistanceFromLatLonInKm(latitude, longitude, withinLatitude, withinLongitude) < distance;
+		};
+	} else if (filter.startsWith('closest')) {
+		withinFilter = true;
+		var closest = parseInt(filter.substring(8));
+		var events = [];
+		var eventDistances = [];
+		var closestEventDistances = [];
+
+		if (position === undefined) {
+			distance = 0;
+			withinLatitude = 0;
+			withinLongitude = 0;
+		} else {
+			withinLatitude = position.coords.latitude;
+			withinLongitude = position.coords.longitude;
+		}
+
+		$geo.find('e').each(function() {
+			var $event = $(this);
+			var longitude = parseFloat($event.attr('lo'));
+			var latitude = parseFloat($event.attr('la'));
+			var distance = getDistanceFromLatLonInKm(latitude, longitude, withinLatitude, withinLongitude);
+			eventDistances.push({'id': $event.attr('id'), 'distance': distance });
+		});
+
+		closestEventDistances = eventDistances.sort(function(a, b){return a.distance-b.distance}).slice(0, closest);
+		delete eventDistances;
+		for (var i=0; i< closestEventDistances.length; i++) {
+			events.push(closestEventDistances[i].id);
+		}
+		delete closestEventDistances;
+
+		var markerIcon = L.icon({
+			iconUrl: 'https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-orange.png',
+			shadowUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/0.7.7/images/marker-shadow.png',
+			iconSize: [25, 41],
+			iconAnchor: [12, 41],
+			popupAnchor: [1, -34],
+			shadowSize: [41, 41]
+		});
+		var marker = L.marker([withinLatitude, withinLongitude], { icon: markerIcon});
+		marker.addTo(markerGroup);
+
+		return function($event) {
+			return events.indexOf($event.attr('id')) > -1;
 		};
 	} else if (filter === 'none') {
 		return function() {
