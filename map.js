@@ -273,7 +273,7 @@ function getFilter(filter) {
 			}
 		}
 
-		addMarker(withinLatitude, withinLongitude, 'Within ' + within +'km', 'orange');
+		addMarker(withinLatitude, withinLongitude, 'Within ' + distance +'km', 'orange');
 		return function($event) {
 			var longitude = parseFloat($event.attr('lo'));
 			var latitude = parseFloat($event.attr('la'));
