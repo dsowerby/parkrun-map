@@ -124,21 +124,10 @@ function displayEvents(filterFunctions) {
 		}
 
 		if (displayEvent) {
-			var elementId = $event.attr('n');
 			var longitude = parseFloat($event.attr('lo'));
 			var latitude = parseFloat($event.attr('la'));
 			if (!isNaN(longitude) && !isNaN(latitude)) {
-				var marker = L.marker([latitude, longitude]);
-				if (typeof(elementRegionUrl) !== undefined) {
-					var markerContent = '<strong><a target="_blank" href="' + elementRegionUrl + '/' + elementId + '/">'+ name + '</a></strong><br /><a target="_blank" href="' + elementRegionUrl + '/' + elementId + '/course/">Course page</a><br /><a target="_blank" href="https://www.google.com/maps/dir/?api=1&destination='+latitude+',' + longitude + '">Directions</a>';
-					if (options.vegan) {
-						markerContent += '<br /><a target="_blank" href="https://www.happycow.net/searchmap?lat='+latitude+'&lng='+longitude+'&vegan=true">Local vegan food</a>';
-					}
-					marker.bindPopup(markerContent);
-				} else {
-					marker.bindPopup(name);
-				}
-				marker.addTo(markerGroup);
+				addMarker(latitude, longitude, name, 'blue', $event);
 				displayedEvents++;
 			}
 		}
@@ -151,6 +140,37 @@ function displayEvents(filterFunctions) {
 		hamburger.show();
 		console.info('no events displayed');
 	}
+}
+
+function addMarker(latitude, longitude, name, iconColour, $event) {
+	var markerIcon = L.icon({
+		iconUrl: 'https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-'+iconColour+'.png',
+		shadowUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/0.7.7/images/marker-shadow.png',
+		iconSize: [25, 41],
+		iconAnchor: [12, 41],
+		popupAnchor: [1, -34],
+		shadowSize: [41, 41]
+	});
+	var marker = L.marker([latitude, longitude], { icon: markerIcon});
+	var markerContent;
+	if (typeof($event) !== 'undefined') {
+		var elementId = $event.attr('n');
+		var region = $event.attr('r');
+		if (region != '') {
+			var elementRegionUrl = $geo.find('r[id=' + region + ']').closest("r[u!='']").attr('u');
+		}
+		markerContent = '<strong><a target="_blank" href="' + elementRegionUrl + '/' + elementId + '/">'+ name + '</a></strong><br /><a target="_blank" href="' + elementRegionUrl + '/' + elementId + '/course/">Course page</a><br /><a target="_blank" href="https://www.google.com/maps/dir/?api=1&destination='+latitude+',' + longitude + '">Directions</a>';
+	} else if (typeof(name) !== 'undefined') {
+		markerContent = name;
+	}
+	if (options.vegan) {
+		if (typeof(markerContent) !== 'undefined') {
+			markerContent += '<br />';
+		}
+		markerContent += '<a target="_blank" href="https://www.happycow.net/searchmap?lat='+latitude+'&lng='+longitude+'&vegan=true">Local vegan food</a>';
+	}
+	marker.bindPopup(markerContent);
+	marker.addTo(markerGroup);
 }
 
 function getFilter(filter) {
@@ -253,17 +273,7 @@ function getFilter(filter) {
 			}
 		}
 
-		var markerIcon = L.icon({
-			iconUrl: 'https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-orange.png',
-			shadowUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/0.7.7/images/marker-shadow.png',
-			iconSize: [25, 41],
-			iconAnchor: [12, 41],
-			popupAnchor: [1, -34],
-			shadowSize: [41, 41]
-		});
-		var marker = L.marker([withinLatitude, withinLongitude], { icon: markerIcon});
-		marker.addTo(markerGroup);
-
+		addMarker(withinLatitude, withinLongitude, 'Within ' + within +'km', 'orange');
 		return function($event) {
 			var longitude = parseFloat($event.attr('lo'));
 			var latitude = parseFloat($event.attr('la'));
@@ -320,17 +330,7 @@ function getFilter(filter) {
 		}
 		delete closestEventDistances;
 
-		var markerIcon = L.icon({
-			iconUrl: 'https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-green.png',
-			shadowUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/0.7.7/images/marker-shadow.png',
-			iconSize: [25, 41],
-			iconAnchor: [12, 41],
-			popupAnchor: [1, -34],
-			shadowSize: [41, 41]
-		});
-		var marker = L.marker([closestLatitude, closestLongitude], { icon: markerIcon});
-		marker.addTo(markerGroup);
-
+		addMarker(closestLatitude, closestLongitude, 'Closest ' + closest + ' event ', 'green');
 		return function($event) {
 			return events.indexOf($event.attr('id')) > -1;
 		};
