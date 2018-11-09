@@ -139,7 +139,6 @@ function displayEvents(filterFunctions) {
 					marker.bindPopup(name);
 				}
 				marker.addTo(markerGroup);
-				console.info(name);
 				displayedEvents++;
 			}
 		}
@@ -272,7 +271,26 @@ function getFilter(filter) {
 		};
 	} else if (filter.startsWith('closest')) {
 		withinFilter = true;
-		var closest = parseInt(filter.substring(8));
+		var closest = filter.substring(8);
+		if (isNaN(closest)) {
+			var indexOf = closest.indexOf('-');
+			var closestLongLat = closest.substring(indexOf+1).split(',');
+			closestLatitude = closestLongLat[0];
+			closestLongitude = closestLongLat[1];
+			delete closestLongLat;
+			closest = closest.substring(0, indexOf);
+		} else {
+			if (position === undefined) {
+				closest = 0;
+				closestLatitude = 0;
+				closestLongitude = 0;
+			} else {
+				cloest = parseInt(filter.substring(8));
+				closestLatitude = position.coords.latitude;
+				closestLongitude = position.coords.longitude;
+			}
+		}
+
 		var events = [];
 		var eventDistances = [];
 		var closestEventDistances = [];
@@ -290,26 +308,27 @@ function getFilter(filter) {
 			var $event = $(this);
 			var longitude = parseFloat($event.attr('lo'));
 			var latitude = parseFloat($event.attr('la'));
-			var distance = getDistanceFromLatLonInKm(latitude, longitude, withinLatitude, withinLongitude);
+			var distance = getDistanceFromLatLonInKm(latitude, longitude, closestLatitude, closestLongitude);
 			eventDistances.push({'id': $event.attr('id'), 'distance': distance });
 		});
 
 		closestEventDistances = eventDistances.sort(function(a, b){return a.distance-b.distance}).slice(0, closest);
 		delete eventDistances;
 		for (var i=0; i< closestEventDistances.length; i++) {
+			console.info($geo.find("e[id='"+closestEventDistances[i].id+"']").attr('m'));
 			events.push(closestEventDistances[i].id);
 		}
 		delete closestEventDistances;
 
 		var markerIcon = L.icon({
-			iconUrl: 'https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-orange.png',
+			iconUrl: 'https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-green.png',
 			shadowUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/0.7.7/images/marker-shadow.png',
 			iconSize: [25, 41],
 			iconAnchor: [12, 41],
 			popupAnchor: [1, -34],
 			shadowSize: [41, 41]
 		});
-		var marker = L.marker([withinLatitude, withinLongitude], { icon: markerIcon});
+		var marker = L.marker([closestLatitude, closestLongitude], { icon: markerIcon});
 		marker.addTo(markerGroup);
 
 		return function($event) {
