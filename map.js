@@ -136,6 +136,7 @@ function displayEvents(filterFunctions) {
 	if (displayedEvents > 0) {
 		mymap.fitBounds(markerGroup.getBounds());
 		hamburger.hide();
+		console.info(displayedEvents + ' events displayed');
 	} else {
 		hamburger.show();
 		console.info('no events displayed');
