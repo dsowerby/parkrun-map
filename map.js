@@ -306,15 +306,15 @@ function getFilter(filter) {
 		var closestEventDistances = [];
 
 		if (position === undefined) {
-			distance = 0;
-			withinLatitude = 0;
-			withinLongitude = 0;
+			closest = 0;
+			closestLatitude = 0;
+			closestLongitude = 0;
 		} else {
-			withinLatitude = position.coords.latitude;
-			withinLongitude = position.coords.longitude;
+			closestLatitude = position.coords.latitude;
+			closestLongitude = position.coords.longitude;
 		}
 
-		$geo.find('e').each(function() {
+		$geo.find('e[lo!=""][la!=""]').each(function() {
 			var $event = $(this);
 			var longitude = parseFloat($event.attr('lo'));
 			var latitude = parseFloat($event.attr('la'));
@@ -325,7 +325,6 @@ function getFilter(filter) {
 		closestEventDistances = eventDistances.sort(function(a, b){return a.distance-b.distance}).slice(0, closest);
 		delete eventDistances;
 		for (var i=0; i< closestEventDistances.length; i++) {
-			console.info($geo.find("e[id='"+closestEventDistances[i].id+"']").attr('m'));
 			events.push(closestEventDistances[i].id);
 		}
 		delete closestEventDistances;
