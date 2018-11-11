@@ -296,9 +296,15 @@ function getFilter(filter) {
 				closestLatitude = 0;
 				closestLongitude = 0;
 			} else {
-				cloest = parseInt(filter.substring(8));
-				closestLatitude = position.coords.latitude;
-				closestLongitude = position.coords.longitude;
+				if (position === undefined) {
+					closest = 0;
+					closestLatitude = 0;
+					closestLongitude = 0;
+				} else {
+					closest = parseInt(filter.substring(8));
+					closestLatitude = position.coords.latitude;
+					closestLongitude = position.coords.longitude;
+				}
 			}
 		}
 
@@ -306,15 +312,7 @@ function getFilter(filter) {
 		var eventDistances = [];
 		var closestEventDistances = [];
 
-		if (position === undefined) {
-			closest = 0;
-			closestLatitude = 0;
-			closestLongitude = 0;
-		} else {
-			closestLatitude = position.coords.latitude;
-			closestLongitude = position.coords.longitude;
-		}
-
+		console.info('Looking for the closest ' + closest + ' events to ' + closestLatitude + ',' + closestLongitude);
 		$geo.find('e[lo!=""][la!=""]').each(function() {
 			var $event = $(this);
 			var longitude = parseFloat($event.attr('lo'));
