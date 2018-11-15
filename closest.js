@@ -149,7 +149,9 @@ function displayEvents(closest) {
 			window.location.reload();
 		});
 	});
-	addMarker(closestLatitude, closestLongitude, 'Closest ' + closest + ' event ', 'green');
+
+	var marker = L.marker([closestLatitude, closestLongitude], { icon: markerIcon});
+	marker.addTo(markerGroup);
 
     mymap.fitBounds(markerGroup.getBounds());
 }
