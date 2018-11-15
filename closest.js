@@ -174,7 +174,7 @@ function load() {
 	$(document).ready(function() {
 		markerGroup.clearLayers();
 		var hash = decodeURIComponent(window.location.hash);
-		var closest = p.substring(1);
+		var closest = hash.substring(1);
         displayEvents(closest);
 	});
 }
