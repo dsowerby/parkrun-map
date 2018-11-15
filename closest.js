@@ -139,7 +139,6 @@ function displayEvents(closest) {
             $event = $geo.find("e[id='"+eventId+"']");
 			var eventName = $event.attr('m');
 			completedEventNames = options.completedEventNames || [];
-			completedEventNames = completedEventNames.getUnique();
             if (completedEventNames.indexOf(eventName) == -1) {
                 addMarker(++displayedEvents, $event.attr('la'), $event.attr('lo'), eventName, iconColours[(displayedEvents % iconColours.length)-1], $event);
             }
@@ -151,6 +150,7 @@ function displayEvents(closest) {
 			$source = $(this);
 			options.completedEventNames = options.completedEventNames || [];
 			options.completedEventNames.push($source.attr('data-name'));
+			options.completedEventNames = completedEventNames.getUnique();
 			var pathArray = window.location.pathname.split('/');
 			var path = pathArray.splice(0,pathArray.length -2).join('/') + '/';
 			Cookies.set('options', JSON.stringify(options), { expires: 3650, path: path, secure: true });
