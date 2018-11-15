@@ -144,6 +144,8 @@ function displayEvents(closest) {
 			$source = $(this);
 			options.completedEventNames = options.completedEventNames || [];
 			options.completedEventNames.push($source.attr('data-name'));
+			var pathArray = window.location.pathname.split('/');
+			var path = pathArray.splice(0,pathArray.length -2).join('/') + '/';
 			Cookies.set('options', JSON.stringify(options), { expires: 3650, path: path, secure: true });
 			window.location.reload();
 		});
