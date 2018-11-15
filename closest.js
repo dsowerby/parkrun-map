@@ -4,6 +4,13 @@ var position;
 var options = {};
 var iconColours = ['red', 'orange-dark', 'orange', 'yellow', 'blue-dark', 'cyan', 'purple', 'violet', 'pink', 'green-dark', 'green', 'green-light', 'black', 'white']
 
+Array.prototype.getUnique = function() {
+    var o = {}, a = []
+    for (var i = 0; i < this.length; i++) o[this[i]] = 1
+    for (var e in o) a.push(e)
+    return a
+};
+
 navigator.geolocation.getCurrentPosition(function(data) {
 	position = data;
 	initAndLoad();
@@ -132,6 +139,7 @@ function displayEvents(closest) {
             $event = $geo.find("e[id='"+eventId+"']");
 			var eventName = $event.attr('m');
 			completedEventNames = options.completedEventNames || [];
+			completedEventNames = completedEventNames.getUnique();
             if (completedEventNames.indexOf(eventName) == -1) {
                 addMarker(++displayedEvents, $event.attr('la'), $event.attr('lo'), eventName, iconColours[(displayedEvents % iconColours.length)-1], $event);
             }
