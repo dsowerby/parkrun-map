@@ -107,9 +107,6 @@ function displayEvents(closest) {
             closestLongitude = position.coords.longitude;
         }
 	}
-	console.info(closestLatitude);
-	console.info(closestLongitude);
-
     var eventIds = [];
     var eventDistances = [];
     var closestEventDistances = [];
@@ -177,8 +174,7 @@ function load() {
 	$(document).ready(function() {
 		markerGroup.clearLayers();
 		var hash = decodeURIComponent(window.location.hash);
-        var count = parseInt(hash.substr(1));
-        displayEvents(count);
+        displayEvents(hash);
 	});
 }
 
