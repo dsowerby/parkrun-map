@@ -9,3 +9,4 @@ uglifycss map.css > docs/map.min.css
 uglifycss hamburger.css > docs/hamburger.min.css
 CACHEBUST=`date +%s`
 sed 's/CACHEBUST/'$CACHEBUST'/g' index.html > docs/index.html
+sed 's/CACHEBUST/'$CACHEBUST'/g' index-closest.html > docs/closest/index.html
