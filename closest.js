@@ -144,7 +144,7 @@ function displayEvents(closest) {
 			$source = $(this);
 			options.completedEventNames = options.completedEventNames || [];
 			options.completedEventNames.push($source.attr('data-name'));
-			Cookies.set('options', JSON.stringify(options));
+			Cookies.set('options', JSON.stringify(options), { expires: 3650, path: path, secure: true });
 			window.location.reload();
 		});
 	});
