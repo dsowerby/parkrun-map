@@ -150,7 +150,7 @@ function displayEvents() {
 	alphabetEvents = {};
 	for (var i=allCompletedEvents.length; i>0; i--) {
 		var eventName = allCompletedEvents[i-1].innerHTML;
-		var eventLetter = eventName.substring(0, 1).toUpperCase();
+		var eventLetter = eventName.substring(0, 1).toUpperCase().normalize('NFD').replace(/[\u0300-\u036f]/g, "");
 		if (typeof(alphabetEvents[eventLetter]) === 'undefined') {
 			alphabetEvents[eventLetter] = eventName;
 		}
@@ -162,7 +162,7 @@ function displayEvents() {
 
 		var eventName = $event.attr('m');
 		var display = false;
-		var eventIndex = eventName.substring(0,1).toUpperCase();
+		var eventIndex = eventName.substring(0,1).toUpperCase().normalize('NFD').replace(/[\u0300-\u036f]/g, "");
 
 		if (alphabetEvents[eventIndex] == eventName) {
 			display = true;
