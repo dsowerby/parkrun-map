@@ -1,7 +1,8 @@
 var mymap;
 var $geo;
 var position;
-var options = {};
+var options;
+var athleteData = [];
 var iconColours = ['red', 'orange-dark', 'orange', 'yellow', 'blue-dark', 'cyan', 'purple', 'violet', 'pink', 'green-dark', 'green', 'green-light', 'black', 'white']
 
 Array.prototype.getUnique = function() {
