@@ -14,7 +14,7 @@
 			var option = window.location.hash.substring(1);
 			var values = option.split('=');
 			var options = JSON.parse(Cookies.get('options') || '{}');
-			if (values.length = 1) {
+			if (values.length == 1) {
 				options[values[0]] = true;
 			} else {
 				options[values[0]] = values[1];
