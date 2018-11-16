@@ -15,12 +15,9 @@
 			var values = option.split('=');
 			var options = JSON.parse(Cookies.get('options') || '{}');
 			if (values.length = 1) {
-				var valueName = values[0];
-				options[valueName] = true;
+				options[values[0]] = true;
 			} else {
-				var valueName = values[0];
-				var value = values[1];
-				options[valueName] = value;
+				options[values[0]] = values[1];
 			}
 			var pathArray = window.location.pathname.split('/');
 			var path = pathArray.splice(0,pathArray.length -2).join('/') + '/';
