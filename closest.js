@@ -144,7 +144,7 @@ function displayEvents(closest) {
     }
     delete closestEventDistances;
 
-	if (!typeof(options.athleteId === 'undefinied')) {
+	if (typeof(options.athleteId === 'string')) {
 		if (typeof(athleteData[options.athleteId]) === 'undefined') {
 			$.ajax({
 				url: 'https://www.parkrun.org.uk:443/results/athleteeventresultshistory/?athleteNumber=' + options.athleteId + '&eventNumber=0',
