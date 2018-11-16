@@ -161,17 +161,13 @@ function displayEvents() {
 		$event = $geo.find("e[id='"+eventId+"']");
 
 		var eventName = $event.attr('m');
-		var display = false;
 		var eventIndex = eventName.substring(0,1).toUpperCase().normalize('NFD').replace(/[\u0300-\u036f]/g, "");
 
 		if (alphabetEvents[eventIndex] == eventName) {
-			display = true;
+			addMarker(++displayedEvents, $event.attr('la'), $event.attr('lo'), eventName, 'purple', $event);
 		} else if (typeof(alphabetEvents[eventIndex]) === 'undefined') {
 			alphabetEvents[eventIndex] = eventName;
-			display = true;
-		}
-		if (display) {
-			addMarker(++displayedEvents, $event.attr('la'), $event.attr('lo'), eventName, iconColours[(displayedEvents % iconColours.length)-1], $event);
+			addMarker(++displayedEvents, $event.attr('la'), $event.attr('lo'), eventName, 'orange', $event);
 		}
 	});
 
