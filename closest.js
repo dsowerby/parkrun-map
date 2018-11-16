@@ -20,11 +20,21 @@ navigator.geolocation.getCurrentPosition(function(data) {
 });
 
 $(document).ready(function() {
+	initAjaxPrefilter();
 	initMap();
 	initOptions();
 	centreMap();
 	initAndLoad();
 });
+
+// bypass CORS or CORB
+function initAjaxPrefilter() {
+	jQuery.ajaxPrefilter(function(options) {
+		if (options.crossDomain && jQuery.support.cors) {
+			options.url = 'https://cors-anywhere.herokuapp.com/' + options.url;
+		}
+	});
+}
 
 function initOptions() {
 	options = JSON.parse(Cookies.get('options') || '{}');
