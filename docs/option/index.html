@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>parkrun map</title>
+	<meta charset="utf-8" />
+	<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+
+	<link rel="shortcut icon" type="image/x-icon" href="docs/images/favicon.ico" />
+
+	<script src="https://code.jquery.com/jquery-3.3.1.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/js-cookie/2.2.0/js.cookie.min.js" crossorigin="anonymous"></script>
+	<script>
+		$(document).ready(function() {
+			var option = window.location.hash.substring(1);
+			var values = option.split('=');
+			var options = JSON.parse(Cookies.get('options') || '{}');
+			if (values.length = 1) {
+				var valueName = values[0];
+				options[valueName] = true;
+			} else {
+				var valueName = values[0];
+				var value = values[1];
+				options[valueName] = value;
+			}
+			var pathArray = window.location.pathname.split('/');
+			var path = pathArray.splice(0,pathArray.length -2).join('/') + '/';
+			Cookies.set('options', JSON.stringify(options), { expires: 3650, path: path, secure: true });
+			window.location = path;
+		});
+	</script>
+</head>
+</html>

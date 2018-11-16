@@ -133,30 +133,40 @@ function displayEvents(closest) {
     }
     delete closestEventDistances;
 
+	if (!typeof(options.athleteId === 'undefinied')) {
+		if (typeof(athleteData[athleteId]) === 'undefined') {
+			$.ajax({
+				url: 'https://www.parkrun.org.uk:443/results/athleteeventresultshistory/?athleteNumber=' + athleteId + '&eventNumber=0',
+				async: false,
+			}).done(function(data) {
+				athleteData[athleteId] = $(data);
+			});	
+		}
+	}
+
     var displayedEvents = 0;
     eventIds.forEach(function(eventId) {
         if (displayedEvents < closest) {
             $event = $geo.find("e[id='"+eventId+"']");
 			var eventName = $event.attr('m');
-			completedEventNames = options.completedEventNames || [];
-            if (completedEventNames.indexOf(eventName) == -1) {
+			if (athleteData[options.athleteId].find("a[href$='/" + $event.attr('n') + "/results']").length == 0) {
                 addMarker(++displayedEvents, $event.attr('la'), $event.attr('lo'), eventName, iconColours[(displayedEvents % iconColours.length)-1], $event);
             }
         }
 	});
-	mymap.on('popupopen', function() {
-		$('.complete-event').on('click', function(event) {
-			event.preventDefault();
-			$source = $(this);
-			options.completedEventNames = options.completedEventNames || [];
-			options.completedEventNames.push($source.attr('data-name'));
-			options.completedEventNames = completedEventNames.getUnique().sort();
-			var pathArray = window.location.pathname.split('/');
-			var path = pathArray.splice(0,pathArray.length -2).join('/') + '/';
-			Cookies.set('options', JSON.stringify(options), { expires: 3650, path: path, secure: true });
-			window.location.reload();
-		});
-	});
+	// mymap.on('popupopen', function() {
+		// $('.complete-event').on('click', function(event) {
+		// 	event.preventDefault();
+		// 	$source = $(this);
+		// 	options.completedEventNames = options.completedEventNames || [];
+		// 	options.completedEventNames.push($source.attr('data-name'));
+		// 	options.completedEventNames = completedEventNames.getUnique().sort();
+		// 	var pathArray = window.location.pathname.split('/');
+		// 	var path = pathArray.splice(0,pathArray.length -2).join('/') + '/';
+		// 	Cookies.set('options', JSON.stringify(options), { expires: 3650, path: path, secure: true });
+		// 	window.location.reload();
+		// });
+	// });
 
 	var markerIcon = L.icon({
 		iconUrl: 'https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-blue.png',

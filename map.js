@@ -240,8 +240,13 @@ function getFilter(filter) {
 			var eventRegionId = $event.attr('r');
 			return $regionElement.is('[id="'+eventRegionId+'"]') || ($regionElement.has('r[id="'+eventRegionId+'"]').length > 0);
 		};
-	} else if (filter.startsWith('athlete-')) {
-		var athleteId = filter.substring(8);
+	} else if (filter.startsWith('athlete')) {
+		var athleteId;
+		if (filter == 'athlete') {
+			athleteId = options.athleteId;
+		} else {
+			athleteId = filter.substring(8);
+		}
 		if (typeof(athleteData[athleteId]) === 'undefined') {
 			$.ajax({
 				url: 'https://www.parkrun.org.uk:443/results/athleteeventresultshistory/?athleteNumber=' + athleteId + '&eventNumber=0',
