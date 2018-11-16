@@ -43,7 +43,7 @@ function initMap() {
 		maxZoom: 19,
 		attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>'
 	}).addTo(mymap);
-	mymap.on('contextmenu', function (eventData) { window.location.hash ='#closest-5-'+eventData.latlng.lat + ',' + eventData.latlng.lng; });
+	mymap.on('contextmenu', function (eventData) { window.location.hash ='#5-'+eventData.latlng.lat + ',' + eventData.latlng.lng; });
 }
 
 function centreMap() {
