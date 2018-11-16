@@ -1,7 +1,7 @@
 var mymap;
 var $geo;
 var position;
-var options;
+var options = {};
 var athleteData = [];
 var iconColours = ['red', 'orange-dark', 'orange', 'yellow', 'blue-dark', 'cyan', 'purple', 'violet', 'pink', 'green-dark', 'green', 'green-light', 'black', 'white']
 
@@ -150,9 +150,15 @@ function displayEvents(closest) {
         if (displayedEvents < closest) {
             $event = $geo.find("e[id='"+eventId+"']");
 			var eventName = $event.attr('m');
-			if (athleteData[options.athleteId].find("a[href$='/" + $event.attr('n') + "/results']").length == 0) {
-                addMarker(++displayedEvents, $event.attr('la'), $event.attr('lo'), eventName, iconColours[(displayedEvents % iconColours.length)-1], $event);
-            }
+			var display = false;
+			if (typeof(options.athleteId) === 'undefined' || typeof(athleteData) === 'undefined' || typeof(athleteData[options.athleteId]) == 'undefined') {
+				display = true;
+			} else if (athleteData[options.athleteId].find("a[href$='/" + $event.attr('n') + "/results']").length == 0) {
+				display = true;
+			}
+			if (display) {
+				addMarker(++displayedEvents, $event.attr('la'), $event.attr('lo'), eventName, iconColours[(displayedEvents % iconColours.length)-1], $event);
+			}
         }
 	});
 	// mymap.on('popupopen', function() {
