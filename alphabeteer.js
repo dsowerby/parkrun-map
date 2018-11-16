@@ -162,7 +162,7 @@ function displayEvents() {
 
 		var eventName = $event.attr('m');
 		var display = false;
-		var eventIndex = eventName.substring(0,1);
+		var eventIndex = eventName.substring(0,1).toUpperCase();
 
 		if (alphabetEvents[eventIndex] == eventName) {
 			display = true;
