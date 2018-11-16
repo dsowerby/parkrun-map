@@ -91,7 +91,7 @@ function addMarker(index, latitude, longitude, name, iconColour, $event) {
 		}
 		markerContent += '<a target="_blank" href="https://www.happycow.net/searchmap?lat='+latitude+'&lng='+longitude+'&vegan=true">Local vegan food</a>';
 	}
-	markerContent += '<br /><a href class="complete-event" data-name="'+name+'">(completed this event)</a>';
+	// markerContent += '<br /><a href class="complete-event" data-name="'+name+'">(completed this event)</a>';
 	marker.bindPopup(markerContent);
 	marker.addTo(markerGroup);
 }
@@ -137,7 +137,7 @@ function displayEvents(closest) {
 	if (!typeof(options.athleteId === 'undefinied')) {
 		if (typeof(athleteData[athleteId]) === 'undefined') {
 			$.ajax({
-				url: 'https://www.parkrun.org.uk:443/results/athleteeventresultshistory/?athleteNumber=' + athleteId + '&eventNumber=0',
+				url: 'https://www.parkrun.org.uk:443/results/athleteeventresultshistory/?athleteNumber=' + options.athleteId + '&eventNumber=0',
 				async: false,
 			}).done(function(data) {
 				athleteData[athleteId] = $(data);
