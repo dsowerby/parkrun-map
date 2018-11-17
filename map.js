@@ -390,7 +390,7 @@ function init() {
 		load();
 	});	
 	$.ajax({
-		url: 'geo.xml',
+		url: 'https://www.parkrun.org.uk/wp-content/themes/parkrun/xml/geo.xml',
 		async: false,
 	}).done(function(data) {
 		$geo = $(data);
