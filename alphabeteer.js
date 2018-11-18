@@ -55,7 +55,6 @@ function initMap() {
 		maxZoom: 19,
 		attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>'
 	}).addTo(mymap);
-	mymap.on('contextmenu', function (eventData) { window.location.hash ='#5-'+eventData.latlng.lat + ',' + eventData.latlng.lng; });
 }
 
 function centreMap() {
@@ -108,10 +107,7 @@ function addMarker(index, latitude, longitude, name, iconColour, $event) {
 }
 
 function displayEvents() {
-	if (position === undefined) {
-		closestLatitude = 0;
-		closestLongitude = 0;
-	} else {
+	if (position !== undefined) {
 		closestLatitude = position.coords.latitude;
 		closestLongitude = position.coords.longitude;
 	}
