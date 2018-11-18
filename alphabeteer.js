@@ -161,7 +161,7 @@ function displayEvents() {
 
 		if (alphabetEvents[eventIndex] == eventName) {
 			addMarker(++displayedEvents, $event.attr('la'), $event.attr('lo'), eventName, 'purple', $event);
-		} else if (typeof(alphabetEvents[eventIndex]) === 'undefined') {
+		} else if (typeof(alphabetEvents[eventIndex]) === 'undefined' && typeof(position) !== 'undefined') {
 			alphabetEvents[eventIndex] = eventName;
 			addMarker(++displayedEvents, $event.attr('la'), $event.attr('lo'), eventName, 'orange', $event);
 		}
