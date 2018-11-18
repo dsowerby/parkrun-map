@@ -107,7 +107,7 @@ function addMarker(index, latitude, longitude, name, iconColour, $event) {
 }
 
 function displayEvents() {
-	if (position !== undefined) {
+	if (typeof(position) !== 'undefined') {
 		closestLatitude = position.coords.latitude;
 		closestLongitude = position.coords.longitude;
 	}
