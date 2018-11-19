@@ -161,7 +161,7 @@ function addMarker(latitude, longitude, name, iconColour, $event) {
 		if (region != '') {
 			var elementRegionUrl = $geo.find('r[id=' + region + ']').closest("r[u!='']").attr('u');
 		}
-		markerContent = '<strong><a target="_blank" href="' + elementRegionUrl + '/' + elementId + '/">'+ name + '</a></strong><br /><a target="_blank" href="' + elementRegionUrl + '/' + elementId + '/course/">Course page</a><br /><a target="_blank" href="https://www.google.com/maps/dir/?api=1&destination='+latitude+',' + longitude + '">Directions</a>';
+		markerContent = '<strong><a target="_blank" href="' + elementRegionUrl + '/' + elementId + '/">'+ name + '</a></strong><br /><a target="_blank" href="' + elementRegionUrl + '/' + elementId + '/course/">Course page</a><br /><br /><a target="_blank" href="' + elementRegionUrl + '/' + elementId + '/futureroster/">Future Roster</a><br /><a target="_blank" href="https://www.google.com/maps/dir/?api=1&destination='+latitude+',' + longitude + '">Directions</a>';
 	} else if (typeof(name) !== 'undefined') {
 		markerContent = name;
 	}
