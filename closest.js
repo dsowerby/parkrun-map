@@ -6,10 +6,10 @@ var athleteData = [];
 var iconColours = ['red', 'orange-dark', 'orange', 'yellow', 'blue-dark', 'cyan', 'purple', 'violet', 'pink', 'green-dark', 'green', 'green-light', 'black', 'white']
 
 Array.prototype.getUnique = function() {
-    var o = {}, a = []
-    for (var i = 0; i < this.length; i++) o[this[i]] = 1
-    for (var e in o) a.push(e)
-    return a
+	var o = {}, a = []
+	for (var i = 0; i < this.length; i++) o[this[i]] = 1
+	for (var e in o) a.push(e)
+	return a
 };
 
 navigator.geolocation.getCurrentPosition(function(data) {
@@ -79,9 +79,9 @@ function centreMap() {
 
 function addMarker(index, latitude, longitude, name, iconColour, $event) {
 	var markerIcon = L.ExtraMarkers.icon({
-        markerColor: iconColour,
-        icon: 'fa-number',
-        number: index
+		markerColor: iconColour,
+		icon: 'fa-number',
+		number: index
 	});
 	var marker = L.marker([latitude, longitude], { icon: markerIcon});
 	var markerContent;
@@ -107,42 +107,42 @@ function addMarker(index, latitude, longitude, name, iconColour, $event) {
 }
 
 function displayEvents(closest) {
-    if (isNaN(closest)) {
-        var indexOf = closest.indexOf('-');
-        var closestLongLat = closest.substring(indexOf+1).split(',');
-        closestLatitude = closestLongLat[0];
-        closestLongitude = closestLongLat[1];
-        delete closestLongLat;
-        closest = closest.substring(0, indexOf);
-    } else {
-        if (position === undefined) {
-            closest = 0;
-            closestLatitude = 0;
-            closestLongitude = 0;
-        } else {
-            closest = parseInt(closest);
-            closestLatitude = position.coords.latitude;
-            closestLongitude = position.coords.longitude;
-        }
+	if (isNaN(closest)) {
+		var indexOf = closest.indexOf('-');
+		var closestLongLat = closest.substring(indexOf+1).split(',');
+		closestLatitude = closestLongLat[0];
+		closestLongitude = closestLongLat[1];
+		delete closestLongLat;
+		closest = closest.substring(0, indexOf);
+	} else {
+		if (position === undefined) {
+			closest = 0;
+			closestLatitude = 0;
+			closestLongitude = 0;
+		} else {
+			closest = parseInt(closest);
+			closestLatitude = position.coords.latitude;
+			closestLongitude = position.coords.longitude;
+		}
 	}
-    var eventIds = [];
-    var eventDistances = [];
-    var closestEventDistances = [];
+	var eventIds = [];
+	var eventDistances = [];
+	var closestEventDistances = [];
 
-    $geo.find('e[lo!=""][la!=""]').each(function() {
-        var $event = $(this);
-        var longitude = parseFloat($event.attr('lo'));
-        var latitude = parseFloat($event.attr('la'));
-        var distance = getDistanceFromLatLonInKm(latitude, longitude, closestLatitude, closestLongitude);
-        eventDistances.push({'id': $event.attr('id'), 'distance': distance });
-    });
+	$geo.find('e[lo!=""][la!=""]').each(function() {
+		var $event = $(this);
+		var longitude = parseFloat($event.attr('lo'));
+		var latitude = parseFloat($event.attr('la'));
+		var distance = getDistanceFromLatLonInKm(latitude, longitude, closestLatitude, closestLongitude);
+		eventDistances.push({'id': $event.attr('id'), 'distance': distance });
+	});
 
-    closestEventDistances = eventDistances.sort(function(a, b){return a.distance-b.distance});
-    delete eventDistances;
-    for (var i=0; i< closestEventDistances.length; i++) {
-        eventIds.push(closestEventDistances[i].id);
-    }
-    delete closestEventDistances;
+	closestEventDistances = eventDistances.sort(function(a, b){return a.distance-b.distance});
+	delete eventDistances;
+	for (var i=0; i< closestEventDistances.length; i++) {
+		eventIds.push(closestEventDistances[i].id);
+	}
+	delete closestEventDistances;
 
 	if (typeof(options.athleteId === 'string')) {
 		if (typeof(athleteData[options.athleteId]) === 'undefined') {
@@ -155,10 +155,10 @@ function displayEvents(closest) {
 		}
 	}
 
-    var displayedEvents = 0;
-    eventIds.forEach(function(eventId) {
-        if (displayedEvents < closest) {
-            $event = $geo.find("e[id='"+eventId+"']");
+	var displayedEvents = 0;
+	eventIds.forEach(function(eventId) {
+		if (displayedEvents < closest) {
+			$event = $geo.find("e[id='"+eventId+"']");
 			var eventName = $event.attr('m');
 			var display = false;
 			if (typeof(options.athleteId) === 'undefined' || typeof(athleteData) === 'undefined' || typeof(athleteData[options.athleteId]) == 'undefined') {
@@ -169,21 +169,8 @@ function displayEvents(closest) {
 			if (display) {
 				addMarker(++displayedEvents, $event.attr('la'), $event.attr('lo'), eventName, iconColours[(displayedEvents % iconColours.length)-1], $event);
 			}
-        }
+		}
 	});
-	// mymap.on('popupopen', function() {
-		// $('.complete-event').on('click', function(event) {
-		// 	event.preventDefault();
-		// 	$source = $(this);
-		// 	options.completedEventNames = options.completedEventNames || [];
-		// 	options.completedEventNames.push($source.attr('data-name'));
-		// 	options.completedEventNames = completedEventNames.getUnique().sort();
-		// 	var pathArray = window.location.pathname.split('/');
-		// 	var path = pathArray.splice(0,pathArray.length -2).join('/') + '/';
-		// 	Cookies.set('options', JSON.stringify(options), { expires: 3650, path: path, secure: true });
-		// 	window.location.reload();
-		// });
-	// });
 
 	var markerIcon = L.icon({
 		iconUrl: 'https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-blue.png',
@@ -196,7 +183,7 @@ function displayEvents(closest) {
 	var marker = L.marker([closestLatitude, closestLongitude], { icon: markerIcon});
 	marker.addTo(markerGroup);
 
-    mymap.fitBounds(markerGroup.getBounds());
+	mymap.fitBounds(markerGroup.getBounds());
 }
 
 function getDistanceFromLatLonInKm(lat1,lon1,lat2,lon2) {
@@ -221,7 +208,7 @@ function load() {
 		markerGroup.clearLayers();
 		var hash = decodeURIComponent(window.location.hash);
 		var closest = hash.substring(1);
-        displayEvents(closest);
+		displayEvents(closest);
 	});
 }
 
