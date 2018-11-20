@@ -107,11 +107,14 @@ function addMarker(index, latitude, longitude, name, iconColour, $event) {
 }
 
 function displayEvents(hash) {
-	var indexOf = hash.indexOf(',');
-	if (indexOf > -1) {
-		var closestLongLat = hash.substring(indexOf+1).split(',');
-		closestLatitude = closestLongLat[0];
-		closestLongitude = closestLongLat[1];
+	if (typeof(hash) !== 'undefined') {
+		hash = hash.substring(1);
+		var indexOf = hash.indexOf(',');
+		if (indexOf > -1) {
+			var closestLongLat = hash.substring(indexOf+1).split(',');
+			closestLatitude = closestLongLat[0];
+			closestLongitude = closestLongLat[1];
+		}
 	} else if (typeof(position) !== 'undefined') {
 		closestLatitude = position.coords.latitude;
 		closestLongitude = position.coords.longitude;
