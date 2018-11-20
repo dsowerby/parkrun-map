@@ -109,9 +109,8 @@ function addMarker(index, latitude, longitude, name, iconColour, $event) {
 function displayEvents(hash) {
 	if (typeof(hash) !== 'undefined') {
 		hash = hash.substring(1);
-		var indexOf = hash.indexOf(',');
-		if (indexOf > -1) {
-			var closestLongLat = hash.substring(indexOf+1).split(',');
+		if (indexOf > hash.indexOf(',')) {
+			var closestLongLat = hash.split(',');
 			closestLatitude = closestLongLat[0];
 			closestLongitude = closestLongLat[1];
 		}
