@@ -42,6 +42,7 @@ function initOptions() {
 
 function initMap() {
 	mymap = L.map('mapid', {
+		fullscreenControl: true,
 		zoomControl: false,
 		maxBounds: new L.LatLngBounds( new L.LatLng(-90, -180), new L.LatLng(90, 180)),
 		minZoom: 2,
