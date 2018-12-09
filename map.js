@@ -194,11 +194,17 @@ function addMarker(latitude, longitude, name, iconColour, $event) {
 		}
 		markerContent += '<a target="_blank" href="https://www.happycow.net/searchmap?lat='+latitude+'&lng='+longitude+'&vegan=true">Local vegan food</a>';
 	}
-	if (options.nationalTrust) {
+	if (options.nationaltrust) {
 		if (typeof(markerContent) !== 'undefined') {
 			markerContent += '<br />';
 		}
 		markerContent += '<a target="_blank" href="https://www.nationaltrust.org.uk/search?lat='+latitude+'&lon='+longitude+'&type=place&view=map">National Trust venues</a>';
+	}
+	if (options.premierinn) {
+		if (typeof(markerContent) !== 'undefined') {
+			markerContent += '<br />';
+		}
+		markerContent += '<a target="_blank" href="https://www.premierinn.com/gb/en/search.html?&LOCATION=' + latitude + ',' + longitude + '">Local Premier Inns</a>';
 	}
 	marker.bindPopup(markerContent);
 	marker.addTo(markerGroup);
