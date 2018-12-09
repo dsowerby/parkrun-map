@@ -79,27 +79,6 @@ function initMap() {
 		attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>'
 	}).addTo(mymap);
 	mymap.on('contextmenu', function (eventData) { window.location.hash ='#closest-5-'+eventData.latlng.lat + ',' + eventData.latlng.lng; });
-
-	L.Control.Watermark = L.Control.extend({
-		onAdd: function(map) {
-			var img = L.DomUtil.create('img');
-	
-			img.src = 'https://leafletjs.com/docs/images/logo.png';
-			img.style.width = '100px';
-	
-			return img;
-		},
-	
-		onRemove: function(map) {
-			// Nothing to do here
-		}
-	});
-	
-	L.control.watermark = function(opts) {
-		return new L.Control.Watermark(opts);
-	}
-	
-	L.control.watermark({ position: 'topleft' }).addTo(mymap);
 }
 
 function centreMap() {
