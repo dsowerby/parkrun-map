@@ -198,7 +198,7 @@ function addMarker(latitude, longitude, name, iconColour, $event) {
 		if (typeof(markerContent) !== 'undefined') {
 			markerContent += '<br />';
 		}
-		markerContent += '<a target="_blank" href="https://www.nationaltrust.org.uk/search?lat='+latitude+'&lon='+longitude+'&type=place&view=map">National Trust Venues</a>';
+		markerContent += '<a target="_blank" href="https://www.nationaltrust.org.uk/search?lat='+latitude+'&lon='+longitude+'&type=place&view=map">National Trust venues</a>';
 	}
 	marker.bindPopup(markerContent);
 	marker.addTo(markerGroup);
