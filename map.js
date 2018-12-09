@@ -65,6 +65,7 @@ function initBurger() {
 
 function initMap() {
 	mymap = L.map('mapid', {
+		fullscreenControl: true,
 		zoomControl: false,
 		maxBounds: new L.LatLngBounds( new L.LatLng(-90, -180), new L.LatLng(90, 180)),
 		minZoom: 2,
@@ -78,6 +79,27 @@ function initMap() {
 		attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>'
 	}).addTo(mymap);
 	mymap.on('contextmenu', function (eventData) { window.location.hash ='#closest-5-'+eventData.latlng.lat + ',' + eventData.latlng.lng; });
+
+	L.Control.Watermark = L.Control.extend({
+		onAdd: function(map) {
+			var img = L.DomUtil.create('img');
+	
+			img.src = 'https://leafletjs.com/docs/images/logo.png';
+			img.style.width = '100px';
+	
+			return img;
+		},
+	
+		onRemove: function(map) {
+			// Nothing to do here
+		}
+	});
+	
+	L.control.watermark = function(opts) {
+		return new L.Control.Watermark(opts);
+	}
+	
+	L.control.watermark({ position: 'topleft' }).addTo(mymap);
 }
 
 function centreMap() {
@@ -127,6 +149,7 @@ function displayEvents(filterFunctions) {
 		if (displayEvent) {
 			var longitude = parseFloat($event.attr('lo'));
 			var latitude = parseFloat($event.attr('la'));
+			console.info($event.attr('n'));
 			if (!isNaN(longitude) && !isNaN(latitude)) {
 				addMarker(latitude, longitude, name, 'blue', $event);
 				displayedEvents++;
@@ -170,6 +193,12 @@ function addMarker(latitude, longitude, name, iconColour, $event) {
 			markerContent += '<br />';
 		}
 		markerContent += '<a target="_blank" href="https://www.happycow.net/searchmap?lat='+latitude+'&lng='+longitude+'&vegan=true">Local vegan food</a>';
+	}
+	if (options.nationalTrust) {
+		if (typeof(markerContent) !== 'undefined') {
+			markerContent += '<br />';
+		}
+		markerContent += '<a target="_blank" href="https://www.nationaltrust.org.uk/search?lat='+latitude+'&lon='+longitude+'&type=place&view=map">National Trust Venues</a>';
 	}
 	marker.bindPopup(markerContent);
 	marker.addTo(markerGroup);
