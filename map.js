@@ -5,7 +5,6 @@ var options;
 var athleteData = [];
 var filters = [];
 var position;
-var hamburger;
 var regionFilter;
 var withinFilter;
 
@@ -20,7 +19,6 @@ $(document).ready(function() {
 	initAjaxPrefilter();
 	initOptions();
 	initMap();
-	initBurger();
 	centreMap();
 	initAndLoad();
 });
@@ -38,34 +36,12 @@ function initOptions() {
 	options = JSON.parse(Cookies.get('options') || '{}');
 }
 
-function initBurger() {
-	hamburger = {
-		navToggle: document.querySelector('.nav-toggle'),
-		nav: document.querySelector('.nav'),
-
-		doToggle: function(e) {
-			e.preventDefault();
-			this.navToggle.classList.toggle('expanded');
-			this.nav.classList.toggle('expanded');
-		},
-
-		show: function() {
-			this.navToggle.classList.add('expanded');
-			this.nav.classList.add('expanded');
-		},
-
-		hide: function() {
-			this.navToggle.classList.remove('expanded');
-			this.nav.classList.remove('expanded');
-		}
-	};
-
-	hamburger.navToggle.addEventListener('click', function(e) { hamburger.doToggle(e); });
-}
-
 function initMap() {
 	mymap = L.map('mapid', {
-		fullscreenControl: true,
+		// fullscreenControl: true,
+		// fullscreenControlOptions: {
+			// position: 'topright'
+		// },
 		zoomControl: false,
 		maxBounds: new L.LatLngBounds( new L.LatLng(-90, -180), new L.LatLng(90, 180)),
 		minZoom: 2,
@@ -78,6 +54,7 @@ function initMap() {
 		maxZoom: 19,
 		attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>'
 	}).addTo(mymap);
+	L.control.sidebar('sidebar').addTo(mymap);
 	mymap.on('contextmenu', function (eventData) { window.location.hash ='#closest-5-'+eventData.latlng.lat + ',' + eventData.latlng.lng; });
 }
 
@@ -138,10 +115,8 @@ function displayEvents(filterFunctions) {
 
 	if (displayedEvents > 0) {
 		mymap.fitBounds(markerGroup.getBounds());
-		hamburger.hide();
 		console.info(displayedEvents + ' events displayed');
 	} else {
-		hamburger.show();
 		console.info('no events displayed');
 	}
 }

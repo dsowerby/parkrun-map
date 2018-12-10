@@ -1,5 +1,5 @@
 html {
-	color: #fff;
+	/* color: #fff; */
 	font: 8px Arial,sans-serif;
 }
 body {
@@ -14,39 +14,6 @@ html, body, #map {
 	width: 100%;
 	height: 100%;
 }
-.nav-toggle {
-	z-index: 2147483647;
-}
-.nav {
-	z-index: 2147483646;
-	cursor: default;
-}
-.nav .controls {
-	padding-top: -5px;
-	padding-right: 10px;
-	height: 100%;
-	overflow-y: auto;
-	overflow-x: hidden;
-}
-.nav .controls:first-child:first-child {
-	margin-top: 0;
-}
-.nav .controls li {
-	padding-left: 25px;
-}
-.nav h1 {
-	margin: 0px auto 0px;
-}
-.nav h5 {
-	margin: 10px;
-}
 .leaflet-popup-content {
 	text-align: center;
-}
-
-@media (min-width:641px) {
-	nav.nav {
-        width: 30rem;
-        left: -30rem;
-	}
 }
