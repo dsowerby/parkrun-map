@@ -51,7 +51,7 @@ function initMap() {
 	}).addTo(mymap);
 	markerGroup = L.featureGroup().addTo(mymap);
 	L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-		maxZoom: 19,
+		maxZoom: 15,
 		attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>'
 	}).addTo(mymap);
 	L.control.sidebar('sidebar').addTo(mymap);
