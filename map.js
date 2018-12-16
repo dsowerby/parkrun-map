@@ -66,6 +66,9 @@ function initBurger() {
 function initMap() {
 	mymap = L.map('mapid', {
 		fullscreenControl: true,
+		fullscreenControlOptions: {
+		  position: 'topright'
+		},
 		zoomControl: false,
 		maxBounds: new L.LatLngBounds( new L.LatLng(-90, -180), new L.LatLng(90, 180)),
 		minZoom: 2,
