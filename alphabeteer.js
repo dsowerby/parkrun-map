@@ -30,11 +30,11 @@ $(document).ready(function() {
 
 // bypass CORS or CORB
 function initAjaxPrefilter() {
-	jQuery.ajaxPrefilter(function(options) {
-		if (options.crossDomain && jQuery.support.cors) {
-			options.url = 'https://cors-anywhere.herokuapp.com/' + options.url;
-		}
-	});
+	// jQuery.ajaxPrefilter(function(options) {
+		// if (options.crossDomain && jQuery.support.cors) {
+			// options.url = '' + options.url;
+		// }
+	// });
 }
 
 function initOptions() {
@@ -78,8 +78,8 @@ function centreMap() {
 	}
 }
 
-function addMarker(index, latitude, longitude, name, iconColour, $event) {
-	var eventNamePrefix = name.substring(0, 1);
+function addMarker(eventNamePrefix, latitude, longitude, name, iconColour, $event) {
+	console.info('eventNamePrefix: ' + eventNamePrefix);
 	var markerIcon = L.ExtraMarkers.icon({
 		markerColor: iconColour,
 		icon: 'fa-number',
@@ -145,7 +145,7 @@ function displayEvents(hash) {
 	if (typeof(options.athleteId === 'string')) {
 		if (typeof(athleteData[options.athleteId]) === 'undefined') {
 			$.ajax({
-				url: 'https://www.parkrun.org.uk:443/results/athleteeventresultshistory/?athleteNumber=' + options.athleteId + '&eventNumber=0',
+				url: 'https://cors-anywhere.herokuapp.com/https://www.parkrun.org.uk:443/results/athleteeventresultshistory/?athleteNumber=' + options.athleteId + '&eventNumber=0',
 				async: false,
 			}).done(function(data) {
 				athleteData[options.athleteId] = $(data);
@@ -160,6 +160,8 @@ function displayEvents(hash) {
 		var eventLetter = eventName.substring(0, 1).toUpperCase().normalize('NFD').replace(/[\u0300-\u036f]/g, "");
 		if (typeof(alphabetEvents[eventLetter]) === 'undefined') {
 			alphabetEvents[eventLetter] = eventName;
+		} else if (typeof(alphabetEvents[eventLetter + '1']) === 'undefined' && options.double) {
+			alphabetEvents[eventLetter + '1'] = eventName;
 		}
 	}
 
@@ -170,11 +172,18 @@ function displayEvents(hash) {
 		var eventName = $event.attr('m');
 		var eventIndex = eventName.substring(0,1).toUpperCase().normalize('NFD').replace(/[\u0300-\u036f]/g, "");
 
+		// completed events
 		if (alphabetEvents[eventIndex] == eventName) {
-			addMarker(++displayedEvents, $event.attr('la'), $event.attr('lo'), eventName, 'purple', $event);
+			addMarker(eventIndex, $event.attr('la'), $event.attr('lo'), eventName, 'purple', $event);
+		} else if (alphabetEvents[eventIndex + '1'] == eventName && && options.double) {
+			addMarker(eventIndex + '1', $event.attr('la'), $event.attr('lo'), eventName, 'purple', $event);
+		// non completed events
 		} else if (typeof(alphabetEvents[eventIndex]) === 'undefined' && typeof(position) !== 'undefined') {
 			alphabetEvents[eventIndex] = eventName;
-			addMarker(++displayedEvents, $event.attr('la'), $event.attr('lo'), eventName, 'orange', $event);
+			addMarker(eventIndex, $event.attr('la'), $event.attr('lo'), eventName, 'orange', $event);
+		} else if (typeof(alphabetEvents[eventIndex + '1']) === 'undefined' && typeof(position) !== 'undefined' && options.double) {
+			alphabetEvents[eventIndex + '1'] = eventName;
+			addMarker(eventIndex + '1', $event.attr('la'), $event.attr('lo'), eventName, 'orange', $event);
 		}
 	});
 
@@ -222,7 +231,7 @@ function init() {
 		load();
 	});	
 	$.ajax({
-		url: 'https://www.parkrun.org.uk/wp-content/themes/parkrun/xml/geo.xml',
+		url: 'https://cors-anywhere.herokuapp.com/https://www.parkrun.org.uk/wp-content/themes/parkrun/xml/geo.xml',
 		async: false,
 	}).done(function(data) {
 		$geo = $(data);
