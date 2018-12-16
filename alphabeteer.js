@@ -15,8 +15,10 @@ Array.prototype.getUnique = function() {
 
 navigator.geolocation.getCurrentPosition(function(data) {
 	position = data;
+	console.info('loaded');
 	initAndLoad();
 }, function(error) {
+	console.info('failed');
 	initAndLoad();
 });
 
@@ -175,7 +177,7 @@ function displayEvents(hash) {
 		// completed events
 		if (alphabetEvents[eventIndex] == eventName) {
 			addMarker(eventIndex, $event.attr('la'), $event.attr('lo'), eventName, 'purple', $event);
-		} else if (alphabetEvents[eventIndex + '1'] == eventName && && options.double) {
+		} else if (alphabetEvents[eventIndex + '1'] == eventName && options.double) {
 			addMarker(eventIndex + '1', $event.attr('la'), $event.attr('lo'), eventName, 'purple', $event);
 		// non completed events
 		} else if (typeof(alphabetEvents[eventIndex]) === 'undefined' && typeof(position) !== 'undefined') {
