@@ -131,7 +131,7 @@ function displayEvents(filterFunctions) {
 		if (displayEvent) {
 			var longitude = parseFloat($event.attr('lo'));
 			var latitude = parseFloat($event.attr('la'));
-			console.info($event.attr('n'));
+			console.info($event.attr('n') + ' ' + $event.attr('id'));
 			if (!isNaN(longitude) && !isNaN(latitude)) {
 				addMarker(latitude, longitude, name, 'blue', $event);
 				displayedEvents++;
