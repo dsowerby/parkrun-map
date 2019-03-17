@@ -17,7 +17,7 @@ navigator.geolocation.getCurrentPosition(function(data) {
 });
 
 $(document).ready(function() {
-	initAjaxPrefilter();
+	// initAjaxPrefilter();
 	initOptions();
 	initMap();
 	initBurger();
@@ -26,13 +26,13 @@ $(document).ready(function() {
 });
 
 // bypass CORS or CORB
-function initAjaxPrefilter() {
-	jQuery.ajaxPrefilter(function(options) {
-		if (options.crossDomain && jQuery.support.cors) {
-			options.url = 'https://cors-anywhere.herokuapp.com/' + options.url;
-		}
-	});
-}
+// function initAjaxPrefilter() {
+	// jQuery.ajaxPrefilter(function(options) {
+		// if (options.crossDomain && jQuery.support.cors) {
+			// options.url = 'https://cors-anywhere.herokuapp.com/' + options.url;
+		// }
+	// });
+// }
 
 function initOptions() {
 	options = JSON.parse(Cookies.get('options') || '{}');
@@ -268,7 +268,7 @@ function getFilter(filter) {
 		}
 		if (typeof(athleteData[athleteId]) === 'undefined') {
 			$.ajax({
-				url: 'https://www.parkrun.org.uk:443/results/athleteeventresultshistory/?athleteNumber=' + athleteId + '&eventNumber=0',
+				url: 'https://cors-anywhere.herokuapp.com/http://www.parkrun.org.uk/results/athleteeventresultshistory/?athleteNumber=' + athleteId + '&eventNumber=0',
 				async: false,
 			}).done(function(data) {
 				athleteData[athleteId] = $(data);
@@ -409,7 +409,7 @@ function init() {
 		load();
 	});	
 	$.ajax({
-		url: 'https://www.parkrun.org.uk/wp-content/themes/parkrun/xml/geo.xml',
+		url: './geo.xml',
 		async: false,
 	}).done(function(data) {
 		$geo = $(data);

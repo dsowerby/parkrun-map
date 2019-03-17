@@ -23,21 +23,11 @@ navigator.geolocation.getCurrentPosition(function(data) {
 });
 
 $(document).ready(function() {
-	initAjaxPrefilter();
 	initMap();
 	initOptions();
 	centreMap();
 	initAndLoad();
 });
-
-// bypass CORS or CORB
-function initAjaxPrefilter() {
-	// jQuery.ajaxPrefilter(function(options) {
-		// if (options.crossDomain && jQuery.support.cors) {
-			// options.url = '' + options.url;
-		// }
-	// });
-}
 
 function initOptions() {
 	options = JSON.parse(Cookies.get('options') || '{}');
@@ -233,7 +223,7 @@ function init() {
 		load();
 	});	
 	$.ajax({
-		url: 'https://cors-anywhere.herokuapp.com/https://www.parkrun.org.uk/wp-content/themes/parkrun/xml/geo.xml',
+		url: '../geo.xml',
 		async: false,
 	}).done(function(data) {
 		$geo = $(data);
