@@ -305,7 +305,57 @@ function getFilter(filter) {
 			var latitude = parseFloat($event.attr('la'));
 			return getDistanceFromLatLonInKm(latitude, longitude, withinLatitude, withinLongitude) < distance;
 		};
-	} else if (filter.startsWith('closest')) {
+	} else if (filter.equals('closest')) {
+		var northern = {};
+		var southern = {};
+		var eastern = {};
+		var western = {};
+
+		$geo.find('e[lo!=""][la!=""]').each(function() {
+			var $event = $(this);
+			var longitude = parseFloat($event.attr('lo'));
+			var latitude = parseFloat($event.attr('la'));
+
+			/**
+				High Lat = North
+				<e n="inverness" m="Inverness" c="97" id="267" r="7" la="57.463654" lo="-4.235474"/>
+
+				High Long = East
+				<e n="lowestoft" m="Lowestoft" c="97" id="1289" r="11" la="52.468286" lo="1.747338"/>
+
+				Low Lat = South
+				<e n="brighton" m="Brighton & Hove" c="97" id="8" r="17" la="50.842140" lo="-0.172498"/>
+
+				Low Long = West
+				<e n="aberystwyth" m="Aberystwyth" c="97" id="423" r="12" la="52.414546" lo="-4.080401"/>
+			*/
+			if (isNaN(northern.latitude) || northern.latitude < latitude) {
+				northern.longitude = longitude;
+				northern.latitude = latitude;
+				northern.id = $event.attr('id');
+			}
+			if (isNaN(eastern.longitude) || eastern.longitude < longitude) {
+				eastern.longitude = longitude;
+				eastern.latitude = latitude;
+				eastern.id = $event.attr('id');
+			}
+			if (isNaN(southern.latitude) || southern.latitude > latitude) {
+				southern.longitude = longitude;
+				southern.latitude = latitude;
+				southern.id = $event.attr('id');
+			}
+			if (isNaN(western.longitude) || western.longitude > longitude) {
+				western.longitude = longitude;
+				western.latitude = latitude;
+				western.id = $event.attr('id');
+			}
+		});
+
+		return function($event) {
+			var eventId = $event.attr('id');
+			return (eventId == northern.id || eventId == eastern.id || eventId == southern.id || eventId == western.id);
+		};
+	} else if (filter.startsWith('compass')) {
 		withinFilter = true;
 		var closest = filter.substring(8);
 		if (isNaN(closest)) {
