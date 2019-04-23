@@ -117,15 +117,7 @@ function displayEvents(filterFunctions) {
 		var includedEvents = [];
 		var filterFunction = filterFunctions[i];
 
-		// for (var e = 0; e < events.length; e++) {
-		// 	$event = $(events[e])
-		// 	var include = filterFunction($event);
-		// 	if (include) {
-		// 		includedEvents.push($event);
-		// 	}
-		// }
 		events = filterFunction(events);
-		// includedEvents;
 		console.info('after filter ' + i + ' there are ' + events.length + ' events');
 	}
 
@@ -138,7 +130,6 @@ function displayEvents(filterFunctions) {
 				regionFilterText += 'region-' + $(selectedCountries[sc]).attr('name') + '||';
 			}
 			regionFilterText = regionFilterText.substring(0, regionFilterText.length-2)
-			console.info(regionFilterText);
 			events = getFilter(regionFilterText)(events);
 		}
 	}
@@ -229,14 +220,9 @@ function getFilter(filter) {
 	if (filter.startsWith('not-')) {
 		var notFilter = filter.substring(4);
 		var filterFunction = getFilter(notFilter);
-
-		// 1, 2, 3
-		// filterFunction = 3
-		// we want 1, 2
-		// we'd have to remove the returned array from the original to find the notted array
 		return function(events) {
 			var includedEvents = filterFunction(events);
-			return _.difference(events, includedEvents);
+			return _.differenceWith(events, includedEvents, function(event1, event2) { return $(event1).attr('id') == $(event2).attr('id'); });
 		};
 	} else if (filter.startsWith('and-')) {
 		var andFilter = filter.substring(4);
@@ -247,7 +233,7 @@ function getFilter(filter) {
 		return function(events) {
 			var filteredEvents = events;
 			for (var i = 0; i < andFilters.length; i++) {
-				var filteredEvents = andFilters[i](filteredEvents);
+				filteredEvents = andFilters[i](filteredEvents);
 			}
 			return filteredEvents;
 		}
