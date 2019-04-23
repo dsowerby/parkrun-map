@@ -22,7 +22,6 @@ $(document).ready(function() {
 	initMap();
 	initBurger();
 	centreMap();
-	initAndLoad();
 });
 
 // bypass CORS or CORB
@@ -107,37 +106,56 @@ function centreMap() {
 function displayEvents(filterFunctions) {
 	var displayedEvents = 0;
 
-	$geo.find('e').each(function() {
-		var $event = $(this);
+	// TODO: change this from iterating the list of events, to iterating the list of functions
+	// this way we can increase the speed of rendering
+	var events = $geo.find('e');
+
+	console.info('initial size: ' + events.length);
+	console.info('processing with ' + filterFunctions.length + ' filters');
+
+	for (var i = 0; i < filterFunctions.length; i++) {
+		var includedEvents = [];
+		var filterFunction = filterFunctions[i];
+
+		// for (var e = 0; e < events.length; e++) {
+		// 	$event = $(events[e])
+		// 	var include = filterFunction($event);
+		// 	if (include) {
+		// 		includedEvents.push($event);
+		// 	}
+		// }
+		events = filterFunction(events);
+		// includedEvents;
+		console.info('after filter ' + i + ' there are ' + events.length + ' events');
+	}
+
+	if (!(regionFilter || withinFilter)) {
+		// there is no region or within filter specified, so we should find out the UI selected regions
+		var selectedCountries = $('.countries input:checked');
+		if (selectedCountries.length > 0) {
+			var regionFilterText = 'or-';
+			for (var sc=0; sc<selectedCountries.length; sc++) {
+				regionFilterText += 'region-' + $(selectedCountries[sc]).attr('name') + '||';
+			}
+			regionFilterText = regionFilterText.substring(0, regionFilterText.length-2)
+			console.info(regionFilterText);
+			events = getFilter(regionFilterText)(events);
+		}
+	}
+	console.info('after all filters there are ' + events.length + ' events');
+
+	window.events = events;
+
+	for (var e = 0; e < events.length; e++) {
+		var $event = $(events[e]);
+		var longitude = parseFloat($event.attr('lo'));
+		var latitude = parseFloat($event.attr('la'));
 		var name = $event.attr('m');
-		var region = $event.attr('r');
-		if (region != '') {
-			var elementRegionUrl = $geo.find('r[id=' + region + ']').closest("r[u!='']").attr('u');
+		if (!isNaN(longitude) && !isNaN(latitude)) {
+			addMarker(latitude, longitude, name, 'blue', $event);
+			displayedEvents++;
 		}
-		var checkbox = $('[data-region-id-' + region + ']');
-		var regionSelected = checkbox.prop('checked');
-
-		var displayEvent = false;
-		if (regionSelected || regionFilter || withinFilter) {
-			displayEvent = true;
-			for (var i = 0; i < filterFunctions.length; i++) {
-				if (displayEvent) {
-					var include = filterFunctions[i]($event);
-					displayEvent = displayEvent && include;
-				}
-			}
-		}
-
-		if (displayEvent) {
-			var longitude = parseFloat($event.attr('lo'));
-			var latitude = parseFloat($event.attr('la'));
-			console.info($event.attr('n') + ' ' + $event.attr('id'));
-			if (!isNaN(longitude) && !isNaN(latitude)) {
-				addMarker(latitude, longitude, name, 'blue', $event);
-				displayedEvents++;
-			}
-		}
-	});
+	}
 
 	if (displayedEvents > 0) {
 		mymap.fitBounds(markerGroup.getBounds());
@@ -194,12 +212,31 @@ function addMarker(latitude, longitude, name, iconColour, $event) {
 	marker.addTo(markerGroup);
 }
 
+function filterEvents(events, eventFilter) {
+	return function(events) {
+		var filteredEvents = [];
+		for (var e=0; e<events.length; e++) {
+			var $event = $(events[e]);
+			if (eventFilter($event)) {
+				filteredEvents.push($event);
+			}
+		}
+		return filteredEvents;
+	}
+}
+
 function getFilter(filter) {
 	if (filter.startsWith('not-')) {
 		var notFilter = filter.substring(4);
 		var filterFunction = getFilter(notFilter);
-		return function($event) {
-			return !filterFunction($event);
+
+		// 1, 2, 3
+		// filterFunction = 3
+		// we want 1, 2
+		// we'd have to remove the returned array from the original to find the notted array
+		return function(events) {
+			var includedEvents = filterFunction(events);
+			return _.difference(events, includedEvents);
 		};
 	} else if (filter.startsWith('and-')) {
 		var andFilter = filter.substring(4);
@@ -207,13 +244,12 @@ function getFilter(filter) {
 		andFilter.split('&&').filter(function(e){return e}).forEach(function(andFilterPart) {
 			andFilters.push(getFilter(andFilterPart));
 		});
-		return function($event) {
+		return function(events) {
+			var filteredEvents = events;
 			for (var i = 0; i < andFilters.length; i++) {
-				if (!andFilters[i]($event)) {
-					return false;
-				}
+				var filteredEvents = andFilters[i](filteredEvents);
 			}
-			return true;
+			return filteredEvents;
 		}
 	} else if (filter.startsWith('or-')) {
 		var orFilter = filter.substring(3);
@@ -221,33 +257,32 @@ function getFilter(filter) {
 		orFilter.split('||').filter(function(e){return e}).forEach(function(orFilterPart) {
 			orFilters.push(getFilter(orFilterPart));
 		});
-		return function($event) {
+		return function(events) {
+			orFilterResults = [];
 			for (var i = 0; i < orFilters.length; i++) {
-				if (orFilters[i]($event)) {
-					return true;
-				}
+				orFilterResults = _.union(orFilterResults, orFilters[i](events));
 			}
-			return false;
+			return orFilterResults;
 		}
 	} else if (filter.startsWith('startsWith-')) {
 		var prefix = filter.substring(11);
-		return function($event) {
+		return filterEvents(events, function($event) {
 			var name = $event.attr('m');
 			return name.toLowerCase().startsWith(prefix.toLowerCase());
-		};
+		});
 	} else if (filter.startsWith('contains-')) {
 		var needle = filter.substring(9);
-		return function($event) {
+		return filterEvents(events, function($event) {
 			var name = $event.attr('m');
 			return name.toLowerCase().indexOf(needle.toLowerCase()) > -1;
-		};
+		});
 	} else if (filter.startsWith('matches-')) {
 		var r = filter.substring(8);
 		var regex = new RegExp(r, 'i');
-		return function($event) {
+		return filterEvents(events, function($event) {
 			var name = $event.attr('m');
 			return regex.test(name.toLowerCase());
-		};
+		});
 	} else if (filter.startsWith('region-')) {
 		regionFilter = true;
 		var region = filter.substring(7);
@@ -255,10 +290,10 @@ function getFilter(filter) {
 		var $regionElement = $geo.find("r[n='"+region+"']");
 		window.regionElement = $regionElement;
 		// we have the region id
-		return function($event) {
+		return filterEvents(events, function($event) {
 			var eventRegionId = $event.attr('r');
 			return $regionElement.is('[id="'+eventRegionId+'"]') || ($regionElement.has('r[id="'+eventRegionId+'"]').length > 0);
-		};
+		});
 	} else if (filter.startsWith('athlete')) {
 		var athleteId;
 		if (filter == 'athlete') {
@@ -273,10 +308,10 @@ function getFilter(filter) {
 			}).done(function(data) {
 				athleteData[athleteId] = $(data);
 			});	
-		} 
-		return function($event) {
+		}
+		return filterEvents(events, function($event) {
 			return athleteData[athleteId].find("a[href$='/" + $event.attr('n') + "/results']").length > 0;
-		};
+		});
 	} else if (filter.startsWith('within-')) {
 		withinFilter = true;
 		var within = filter.substring(7);
@@ -300,63 +335,65 @@ function getFilter(filter) {
 		}
 
 		addMarker(withinLatitude, withinLongitude, 'Within ' + distance +'km', 'orange');
-		return function($event) {
+		return filterEvents(events, function($event) {
 			var longitude = parseFloat($event.attr('lo'));
 			var latitude = parseFloat($event.attr('la'));
 			return getDistanceFromLatLonInKm(latitude, longitude, withinLatitude, withinLongitude) < distance;
-		};
-	} else if (filter.equals('closest')) {
-		var northern = {};
-		var southern = {};
-		var eastern = {};
-		var western = {};
-
-		$geo.find('e[lo!=""][la!=""]').each(function() {
-			var $event = $(this);
-			var longitude = parseFloat($event.attr('lo'));
-			var latitude = parseFloat($event.attr('la'));
-
-			/**
-				High Lat = North
-				<e n="inverness" m="Inverness" c="97" id="267" r="7" la="57.463654" lo="-4.235474"/>
-
-				High Long = East
-				<e n="lowestoft" m="Lowestoft" c="97" id="1289" r="11" la="52.468286" lo="1.747338"/>
-
-				Low Lat = South
-				<e n="brighton" m="Brighton & Hove" c="97" id="8" r="17" la="50.842140" lo="-0.172498"/>
-
-				Low Long = West
-				<e n="aberystwyth" m="Aberystwyth" c="97" id="423" r="12" la="52.414546" lo="-4.080401"/>
-			*/
-			if (isNaN(northern.latitude) || northern.latitude < latitude) {
-				northern.longitude = longitude;
-				northern.latitude = latitude;
-				northern.id = $event.attr('id');
-			}
-			if (isNaN(eastern.longitude) || eastern.longitude < longitude) {
-				eastern.longitude = longitude;
-				eastern.latitude = latitude;
-				eastern.id = $event.attr('id');
-			}
-			if (isNaN(southern.latitude) || southern.latitude > latitude) {
-				southern.longitude = longitude;
-				southern.latitude = latitude;
-				southern.id = $event.attr('id');
-			}
-			if (isNaN(western.longitude) || western.longitude > longitude) {
-				western.longitude = longitude;
-				western.latitude = latitude;
-				western.id = $event.attr('id');
-			}
 		});
+	} else if (filter == 'compass') {
+		// new initialisation of this filter, so we should reset
+		window.compassEvents = [];
 
-		return function($event) {
+		return filterEvents(events, function($event) {
+			var northern = {};
+			var southern = {};
+			var eastern = {};
+			var western = {};
+	
+			$geo.find('e[lo!=""][la!=""]').each(function() {
+				var $event = $(this);
+				var longitude = parseFloat($event.attr('lo'));
+				var latitude = parseFloat($event.attr('la'));
+	
+				/**
+					High Lat = North
+					<e n="inverness" m="Inverness" c="97" id="267" r="7" la="57.463654" lo="-4.235474"/>
+	
+					High Long = East
+					<e n="lowestoft" m="Lowestoft" c="97" id="1289" r="11" la="52.468286" lo="1.747338"/>
+	
+					Low Lat = South
+					<e n="brighton" m="Brighton & Hove" c="97" id="8" r="17" la="50.842140" lo="-0.172498"/>
+	
+					Low Long = West
+					<e n="aberystwyth" m="Aberystwyth" c="97" id="423" r="12" la="52.414546" lo="-4.080401"/>
+				*/
+				if (isNaN(northern.latitude) || northern.latitude < latitude) {
+					northern.longitude = longitude;
+					northern.latitude = latitude;
+					northern.id = $event.attr('id');
+				}
+				if (isNaN(eastern.longitude) || eastern.longitude < longitude) {
+					eastern.longitude = longitude;
+					eastern.latitude = latitude;
+					eastern.id = $event.attr('id');
+				}
+				if (isNaN(southern.latitude) || southern.latitude > latitude) {
+					southern.longitude = longitude;
+					southern.latitude = latitude;
+					southern.id = $event.attr('id');
+				}
+				if (isNaN(western.longitude) || western.longitude > longitude) {
+					western.longitude = longitude;
+					western.latitude = latitude;
+					western.id = $event.attr('id');
+				}
+			});
+
 			var eventId = $event.attr('id');
 			return (eventId == northern.id || eventId == eastern.id || eventId == southern.id || eventId == western.id);
-		};
-	} else if (filter.startsWith('compass')) {
-		withinFilter = true;
+		});
+	} else if (filter.startsWith('closest')) {
 		var closest = filter.substring(8);
 		if (isNaN(closest)) {
 			var indexOf = closest.indexOf('-');
@@ -387,7 +424,6 @@ function getFilter(filter) {
 		var eventDistances = [];
 		var closestEventDistances = [];
 
-		console.info('Looking for the closest ' + closest + ' events to ' + closestLatitude + ',' + closestLongitude);
 		$geo.find('e[lo!=""][la!=""]').each(function() {
 			var $event = $(this);
 			var longitude = parseFloat($event.attr('lo'));
@@ -404,16 +440,16 @@ function getFilter(filter) {
 		delete closestEventDistances;
 
 		addMarker(closestLatitude, closestLongitude, 'Closest ' + closest + ' event ', 'green');
-		return function($event) {
+		return filterEvents(events, function($event) {
 			return events.indexOf($event.attr('id')) > -1;
-		};
+		});
 	} else if (filter === 'none') {
-		return function() {
-			return false;
-		};
+		return filterEvents(events, function($event) {
+			return [];
+		});
 	} else if (filter === 'all') {
-		return function() {
-			return true;
+		return function(events) {
+			return events;
 		};
 	}
 }
@@ -448,9 +484,7 @@ function load() {
 				filters.push(filter);
 			}
 		});
-		if (filters.length > 0) {
-			displayEvents(filters);
-		}
+		displayEvents(filters);
 	});
 }
 
@@ -471,6 +505,7 @@ function init() {
 			var name = $element.attr('n');
 			// checked
 			var $checkbox = $("<input type='checkbox' />");
+			$checkbox.attr('name', name);
 			if (name == 'UK') {
 				$checkbox.attr('checked','');
 			}
