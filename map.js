@@ -121,20 +121,22 @@ function displayEvents(filterFunctions) {
 		console.info('after filter ' + i + ' there are ' + events.length + ' events');
 	}
 
-	if (!(regionFilter || withinFilter)) {
-		// there is no region or within filter specified, so we should find out the UI selected regions
-		var selectedCountries = $('.countries input:checked');
-		if (selectedCountries.length > 0) {
-			var regionFilterText = 'or-';
-			for (var sc=0; sc<selectedCountries.length; sc++) {
-				regionFilterText += 'region-' + $(selectedCountries[sc]).attr('name') + '||';
+	if (filterFunctions.length > 0) {
+		if (!(regionFilter || withinFilter)) {
+			// there is no region or within filter specified, so we should find out the UI selected regions
+			var selectedCountries = $('.countries input:checked');
+			if (selectedCountries.length > 0) {
+				var regionFilterText = 'or-';
+				for (var sc=0; sc<selectedCountries.length; sc++) {
+					regionFilterText += 'region-' + $(selectedCountries[sc]).attr('name') + '||';
+				}
+				regionFilterText = regionFilterText.substring(0, regionFilterText.length-2)
+				// window.location.hash += '#' + regionFilterText;
+				events = getFilter(regionFilterText)(events);
 			}
-			regionFilterText = regionFilterText.substring(0, regionFilterText.length-2)
-			// window.location.hash += '#' + regionFilterText;
-			events = getFilter(regionFilterText)(events);
 		}
+		console.info('after all filters there are ' + events.length + ' events');
 	}
-	console.info('after all filters there are ' + events.length + ' events');
 
 	window.events = events;
 
@@ -337,7 +339,7 @@ function getFilter(filter) {
 			var eastern = {};
 			var western = {};
 	
-			for (var e = 0; e<events.length;e++) {
+			for (var e = 0; e<events.length; e++) {
 				var $event = $(this);
 				var $event = $(events[e]);
 				var longitude = parseFloat($event.attr('lo'));
@@ -382,7 +384,9 @@ function getFilter(filter) {
 				}
 			}
 
-			return [nothern.event, eastern.event, southern.event, western.event];
+			var events = [northern.event, eastern.event, southern.event, western.event];
+			console.info(events);
+			return events;
 		}
 	} else if (filter.startsWith('closest')) {
 		var closest = filter.substring(8);
