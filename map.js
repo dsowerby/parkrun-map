@@ -130,6 +130,7 @@ function displayEvents(filterFunctions) {
 				regionFilterText += 'region-' + $(selectedCountries[sc]).attr('name') + '||';
 			}
 			regionFilterText = regionFilterText.substring(0, regionFilterText.length-2)
+			// window.location.hash += '#' + regionFilterText;
 			events = getFilter(regionFilterText)(events);
 		}
 	}
@@ -330,14 +331,15 @@ function getFilter(filter) {
 		// new initialisation of this filter, so we should reset
 		window.compassEvents = [];
 
-		return filterEvents(events, function($event) {
+		return function(events) {
 			var northern = {};
 			var southern = {};
 			var eastern = {};
 			var western = {};
 	
-			$geo.find('e[lo!=""][la!=""]').each(function() {
+			for (var e = 0; e<events.length;e++) {
 				var $event = $(this);
+				var $event = $(events[e]);
 				var longitude = parseFloat($event.attr('lo'));
 				var latitude = parseFloat($event.attr('la'));
 	
@@ -358,27 +360,30 @@ function getFilter(filter) {
 					northern.longitude = longitude;
 					northern.latitude = latitude;
 					northern.id = $event.attr('id');
+					northern.event = $event;
 				}
 				if (isNaN(eastern.longitude) || eastern.longitude < longitude) {
 					eastern.longitude = longitude;
 					eastern.latitude = latitude;
 					eastern.id = $event.attr('id');
+					eastern.event = $event;
 				}
 				if (isNaN(southern.latitude) || southern.latitude > latitude) {
 					southern.longitude = longitude;
 					southern.latitude = latitude;
 					southern.id = $event.attr('id');
+					southern.event = $event;
 				}
 				if (isNaN(western.longitude) || western.longitude > longitude) {
 					western.longitude = longitude;
 					western.latitude = latitude;
 					western.id = $event.attr('id');
+					western.event = $event;
 				}
-			});
+			}
 
-			var eventId = $event.attr('id');
-			return (eventId == northern.id || eventId == eastern.id || eventId == southern.id || eventId == western.id);
-		});
+			return [nothern.event, eastern.event, southern.event, western.event];
+		}
 	} else if (filter.startsWith('closest')) {
 		var closest = filter.substring(8);
 		if (isNaN(closest)) {
