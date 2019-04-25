@@ -330,9 +330,6 @@ function getFilter(filter) {
 			return getDistanceFromLatLonInKm(latitude, longitude, withinLatitude, withinLongitude) < distance;
 		});
 	} else if (filter == 'compass') {
-		// new initialisation of this filter, so we should reset
-		window.compassEvents = [];
-
 		return function(events) {
 			var northern = {};
 			var southern = {};
@@ -386,7 +383,7 @@ function getFilter(filter) {
 
 			var events = [northern.event, eastern.event, southern.event, western.event];
 			console.info(events);
-			return events;
+			return _.uniq(events);
 		}
 	} else if (filter.startsWith('closest')) {
 		var closest = filter.substring(8);
