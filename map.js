@@ -104,6 +104,10 @@ function centreMap() {
 }
 
 function displayEvents(filterFunctions) {
+	if (filterFunctions.length == 0) {
+		return;
+	}
+
 	var displayedEvents = 0;
 
 	// TODO: change this from iterating the list of events, to iterating the list of functions
