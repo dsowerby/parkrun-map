@@ -9,19 +9,20 @@ var hamburger;
 var regionFilter;
 var withinFilter;
 
-navigator.geolocation.getCurrentPosition(function(data) {
-	position = data;
-	initAndLoad();
-}, function(error) {
-	initAndLoad();
-});
-
 $(document).ready(function() {
 	// initAjaxPrefilter();
 	initOptions();
 	initMap();
 	initBurger();
 	centreMap();
+	initAndLoad();
+});
+
+navigator.geolocation.getCurrentPosition(function(data) {
+	position = data;
+	initAndLoad();
+}, function(error) {
+	initAndLoad();
 });
 
 // bypass CORS or CORB
