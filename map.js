@@ -342,7 +342,6 @@ function getFilter(filter) {
 			var western = {};
 	
 			for (var e = 0; e<events.length; e++) {
-				var $event = $(this);
 				var $event = $(events[e]);
 				var longitude = parseFloat($event.attr('lo'));
 				var latitude = parseFloat($event.attr('la'));
@@ -417,29 +416,34 @@ function getFilter(filter) {
 			}
 		}
 
-		var events = [];
-		var eventDistances = [];
-		var closestEventDistances = [];
+		return function(events) {
+			var eventDistances = [];
+			var closestEventDistances = [];
 
-		$geo.find('e[lo!=""][la!=""]').each(function() {
-			var $event = $(this);
-			var longitude = parseFloat($event.attr('lo'));
-			var latitude = parseFloat($event.attr('la'));
-			var distance = getDistanceFromLatLonInKm(latitude, longitude, closestLatitude, closestLongitude);
-			eventDistances.push({'id': $event.attr('id'), 'distance': distance });
-		});
+			for (var e = 0; e<events.length; e++) {
+				var $event = $(events[e]);
+				var longitude = parseFloat($event.attr('lo'));
+				var latitude = parseFloat($event.attr('la'));
+				var distance = getDistanceFromLatLonInKm(latitude, longitude, closestLatitude, closestLongitude);
+				eventDistances.push({'id': $event.attr('id'), 'distance': distance });
+			}
+	
+			closestEventDistances = eventDistances.sort(function(a, b){return a.distance-b.distance}).slice(0, closest);
+			var closestEventIds = [];
+			for (var i=0; i< closestEventDistances.length; i++) {
+				closestEventIds.push(closestEventDistances[i].id);
+			}
 
-		closestEventDistances = eventDistances.sort(function(a, b){return a.distance-b.distance}).slice(0, closest);
-		delete eventDistances;
-		for (var i=0; i< closestEventDistances.length; i++) {
-			events.push(closestEventDistances[i].id);
+			var filteredEvents = [];
+			for (var e = 0; e < events.length; e++) {
+				var $event = $(events[e]);
+				if (closestEventIds.indexOf($event.attr('id') > -1)) {
+					filteredEvents.push($event);
+				}
+			}
+
+			return filterEvents;
 		}
-		delete closestEventDistances;
-
-		addMarker(closestLatitude, closestLongitude, 'Closest ' + closest + ' event ', 'green');
-		return filterEvents(events, function($event) {
-			return events.indexOf($event.attr('id')) > -1;
-		});
 	} else if (filter === 'none') {
 		return filterEvents(events, function($event) {
 			return [];
