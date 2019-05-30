@@ -10,6 +10,7 @@ uglifyjs --rename alphabeteer.js > docs/alphabeteer/alphabeteer.min.js
 uglifycss map.css > docs/map.min.css
 uglifycss map.css > docs/juniors/map.min.css
 uglifycss hamburger.css > docs/hamburger.min.css
+uglifycss hamburger.css > docs/juniors/hamburger.min.css
 CACHEBUST=`date +%s`
 sed 's/CACHEBUST/'$CACHEBUST'/g' index.html > docs/index.html
 sed 's/CACHEBUST/'$CACHEBUST'/g' index-closest.html > docs/closest/index.html
