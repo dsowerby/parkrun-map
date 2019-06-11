@@ -68,13 +68,25 @@ function centreMap() {
 	}
 }
 
-function addMarker(index, latitude, longitude, name, iconColour, $event) {
+function addDoneMarker(latitude, longitude, name, $event) {
+	var markerIcon = L.ExtraMarkers.icon({
+		markerColor: 'green',
+		icon: 'fa-check'
+	});
+	addMarker(markerIcon, latitude, longitude, name, $event);
+}
+
+function addIndexMarker(index, latitude, longitude, name, iconColour, $event) {
 	var markerIcon = L.ExtraMarkers.icon({
 		markerColor: iconColour,
 		icon: 'fa-number',
 		number: index
 	});
-	var marker = L.marker([latitude, longitude], { icon: markerIcon});
+	addMarker(markerIcon, latitude, longitude, name, $event);
+}
+
+function addMarker(icon, latitude, longitude, name, $event) {
+	var marker = L.marker([latitude, longitude], { icon: icon});
 	var markerContent;
 	if (typeof($event) !== 'undefined') {
 		var elementId = $event.attr('n');
@@ -92,7 +104,6 @@ function addMarker(index, latitude, longitude, name, iconColour, $event) {
 		}
 		markerContent += '<a target="_blank" href="https://www.happycow.net/searchmap?lat='+latitude+'&lng='+longitude+'&vegan=true">Local vegan food</a>';
 	}
-	// markerContent += '<br /><a href class="complete-event" data-name="'+name+'">(completed this event)</a>';
 	marker.bindPopup(markerContent);
 	marker.addTo(markerGroup);
 }
@@ -156,9 +167,11 @@ function displayEvents(closest) {
 				display = true;
 			} else if (athleteData[options.athleteId].find("a[href$='/" + $event.attr('n') + "/results']").length == 0) {
 				display = true;
+			} else {
+				addDoneMarker($event.attr('la'), $event.attr('lo'), eventName, $event);
 			}
 			if (display) {
-				addMarker(++displayedEvents, $event.attr('la'), $event.attr('lo'), eventName, iconColours[(displayedEvents % iconColours.length)-1], $event);
+				addIndexMarker(++displayedEvents, $event.attr('la'), $event.attr('lo'), eventName, iconColours[(displayedEvents % iconColours.length)-1], $event);
 			}
 		}
 	});
