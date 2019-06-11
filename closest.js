@@ -71,7 +71,7 @@ function centreMap() {
 function addDoneMarker(latitude, longitude, name, $event) {
 	var markerIcon = L.ExtraMarkers.icon({
 		markerColor: 'green-light',
-		icon: 'fa-check',
+		icon: 'check',
 		prefix: 'fa'
 	});
 	addMarker(markerIcon, latitude, longitude, name, $event);
