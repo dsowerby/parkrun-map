@@ -149,7 +149,7 @@ function displayEvents(hash) {
 	alphabetEvents = {};
 	for (var i=allCompletedEvents.length; i>0; i--) {
 		var eventName = allCompletedEvents[i-1].innerHTML;
-		var eventLetter = eventName.substring(0, 1).toUpperCase().normalize('NFD').replace(/[\u0300-\u036f]/g, "");
+		var eventLetter = eventName.substring(0, 1).toUpperCase();
 		if (typeof(alphabetEvents[eventLetter]) === 'undefined') {
 			alphabetEvents[eventLetter] = eventName;
 		} else if (typeof(alphabetEvents[eventLetter + '1']) === 'undefined' && options.double) {
@@ -162,7 +162,7 @@ function displayEvents(hash) {
 		$event = $geo.find("e[id='"+eventId+"']");
 
 		var eventName = $event.attr('m');
-		var eventIndex = eventName.substring(0,1).toUpperCase().normalize('NFD').replace(/[\u0300-\u036f]/g, "");
+		var eventIndex = eventName.substring(0,1).toUpperCase();
 
 		// completed events
 		if (alphabetEvents[eventIndex] == eventName) {
