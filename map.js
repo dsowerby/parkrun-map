@@ -8,6 +8,7 @@ var position;
 var hamburger;
 var regionFilter;
 var withinFilter;
+var closestFilter;
 
 $(document).ready(function() {
 	// initAjaxPrefilter();
@@ -127,7 +128,7 @@ function displayEvents(filterFunctions) {
 	}
 
 	if (filterFunctions.length > 0) {
-		if (!(regionFilter || withinFilter)) {
+		if (!(regionFilter || withinFilter || closestFilter)) {
 			// there is no region or within filter specified, so we should find out the UI selected regions
 			var selectedCountries = $('.countries input:checked');
 			if (selectedCountries.length > 0) {
@@ -391,6 +392,7 @@ function getFilter(filter) {
 			return _.uniq(events);
 		}
 	} else if (filter.startsWith('closest')) {
+		closestFilter = true;
 		var closest = filter.substring(8);
 		if (isNaN(closest)) {
 			var indexOf = closest.indexOf('-');
@@ -475,6 +477,7 @@ function load() {
 		filters = [];
 		regionFilter = false;
 		withinFilter = false;
+		closestFilter = false;
 		hash.split('#').filter(function(e){return e}).forEach(function(hash) {
 			var filter = getFilter(hash);
 			if (filter !== undefined) {
