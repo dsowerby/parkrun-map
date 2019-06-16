@@ -9,6 +9,7 @@ var hamburger;
 var regionFilter;
 var withinFilter;
 var closestFilter;
+var events;
 
 $(document).ready(function() {
 	// initAjaxPrefilter();
@@ -114,7 +115,7 @@ function displayEvents(filterFunctions) {
 
 	// TODO: change this from iterating the list of events, to iterating the list of functions
 	// this way we can increase the speed of rendering
-	var events = $geo.find('e');
+	events = $geo.find('e');
 
 	console.info('initial size: ' + events.length);
 	console.info('processing with ' + filterFunctions.length + ' filters');
@@ -283,7 +284,6 @@ function getFilter(filter) {
 		var region = filter.substring(7);
 		// we now have the region name
 		var $regionElement = $geo.find("r[n='"+region+"']");
-		window.regionElement = $regionElement;
 		// we have the region id
 		return filterEvents(events, function($event) {
 			var eventRegionId = $event.attr('r');
@@ -419,29 +419,28 @@ function getFilter(filter) {
 			}
 		}
 
-		var events = [];
-		var eventDistances = [];
-		var closestEventDistances = [];
+		return function(events) {
+			// we need to map all events to their distance from the "closest" center
+			// then we simply need to split array of those mappings, and return their values (the events)
 
-		$geo.find('e[lo!=""][la!=""]').each(function() {
-			var $event = $(this);
-			var longitude = parseFloat($event.attr('lo'));
-			var latitude = parseFloat($event.attr('la'));
-			var distance = getDistanceFromLatLonInKm(latitude, longitude, closestLatitude, closestLongitude);
-			eventDistances.push({'id': $event.attr('id'), 'distance': distance });
-		});
-
-		closestEventDistances = eventDistances.sort(function(a, b){return a.distance-b.distance}).slice(0, closest);
-		delete eventDistances;
-		for (var i=0; i< closestEventDistances.length; i++) {
-			events.push(closestEventDistances[i].id);
+			var eventDistances = [];
+			for (var e = 0; e<events.length; e++) {
+				$event = $(events[e]);
+				var longitude = parseFloat($event.attr('lo'));
+				var latitude = parseFloat($event.attr('la'));
+				var distance = getDistanceFromLatLonInKm(latitude, longitude, closestLatitude, closestLongitude);
+				eventDistances.push({'event': $event, 'distance': distance });
+			}
+			var closestEventDistances = eventDistances.sort(function(a, b){return a.distance-b.distance}).slice(0, closest);
+			var filteredEvents = [];
+			if (eventDistances.length < closest) {
+				closest = eventDistances.length;
+			}
+			for (var i=0; i< closest; i++) {
+				filteredEvents.push(eventDistances[i].event);
+			}
+			return filteredEvents;
 		}
-		delete closestEventDistances;
-
-		addMarker(closestLatitude, closestLongitude, 'Closest ' + closest + ' event ', 'green');
-		return filterEvents(events, function($event) {
-			return events.indexOf($event.attr('id')) > -1;
-		});
 	} else if (filter === 'none') {
 		return filterEvents(events, function($event) {
 			return [];
