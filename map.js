@@ -115,7 +115,7 @@ function displayEvents(filterFunctions) {
 
 	// TODO: change this from iterating the list of events, to iterating the list of functions
 	// this way we can increase the speed of rendering
-	events = $geo.find('e');
+	events = $geo.find('e[lo!=""][la!=""]');
 
 	console.info('initial size: ' + events.length);
 	console.info('processing with ' + filterFunctions.length + ' filters');
