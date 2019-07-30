@@ -436,7 +436,7 @@ function getFilter(filter) {
 			if (eventDistances.length < closest) {
 				closest = eventDistances.length;
 			}
-			for (var j=0; j<20; j++) {
+			for (var j=0; j<eventDistances.length; j++) {
 				console.info(eventDistances[j].distance);
 				console.info(eventDistances[j].event.attr('n'));
 			}
