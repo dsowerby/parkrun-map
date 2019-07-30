@@ -431,7 +431,7 @@ function getFilter(filter) {
 				var distance = getDistanceFromLatLonInKm(latitude, longitude, closestLatitude, closestLongitude);
 				eventDistances.push({'event': $event, 'distance': distance });
 			}
-			var closestEventDistances = eventDistances.sort(function(a, b){return a.distance-b.distance}).slice(0, closest);
+			var closestEventDistances = eventDistances.sort(function(a, b){return a.distance-b.distance});
 			var filteredEvents = [];
 			if (eventDistances.length < closest) {
 				closest = eventDistances.length;
