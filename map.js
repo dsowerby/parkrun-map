@@ -436,10 +436,6 @@ function getFilter(filter) {
 			if (eventDistances.length < closest) {
 				closest = eventDistances.length;
 			}
-			for (var j=0; j<eventDistances.length; j++) {
-				console.info(eventDistances[j].distance);
-				console.info(eventDistances[j].event.attr('n'));
-			}
 			addMarker(closestLatitude, closestLongitude, 'Closest ' + closest + ' event ', 'green');
 			for (var i=0; i< closest; i++) {
 				filteredEvents.push(eventDistances[i].event);
