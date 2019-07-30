@@ -432,6 +432,7 @@ function getFilter(filter) {
 				eventDistances.push({'event': $event, 'distance': distance });
 			}
 			var closestEventDistances = eventDistances.sort(function(a, b){return a.distance-b.distance});
+			console.info(closestEventDistances);
 			var filteredEvents = [];
 			if (eventDistances.length < closest) {
 				closest = eventDistances.length;
