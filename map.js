@@ -152,10 +152,8 @@ function displayEvents(filterFunctions) {
 		var longitude = parseFloat($event.attr('lo'));
 		var latitude = parseFloat($event.attr('la'));
 		var name = $event.attr('m');
-		if (!isNaN(longitude) && !isNaN(latitude)) {
-			addMarker(latitude, longitude, name, 'blue', $event);
-			displayedEvents++;
-		}
+		addMarker(latitude, longitude, name, 'blue', $event);
+		displayedEvents++;
 	}
 
 	if (displayedEvents > 0) {
@@ -437,7 +435,7 @@ function getFilter(filter) {
 				closest = eventDistances.length;
 			}
 			addMarker(closestLatitude, closestLongitude, 'Closest ' + closest + ' event ', 'green');
-			for (var i=0; i< closest; i++) {
+			for (var i=0; i<closest; i++) {
 				filteredEvents.push(eventDistances[i].event);
 			}
 			return filteredEvents;
