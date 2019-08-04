@@ -187,12 +187,10 @@ function addMarker(latitude, longitude, name, iconColour, $event) {
 	} else if (typeof(name) !== 'undefined') {
 		markerContent = name;
 	}
-	if (options.vegan) {
-		if (typeof(markerContent) !== 'undefined') {
-			markerContent += '<br />';
-		}
-		markerContent += '<a target="_blank" href="https://www.happycow.net/searchmap?lat='+latitude+'&lng='+longitude+'&vegan=true">Local vegan food</a>';
+	if (typeof(markerContent) !== 'undefined') {
+		markerContent += '<br />';
 	}
+	markerContent += '<a target="_blank" href="https://www.happycow.net/searchmap?lat='+latitude+'&lng='+longitude+'&vegan=true">Local vegan food</a>';
 	if (options.nationaltrust) {
 		if (typeof(markerContent) !== 'undefined') {
 			markerContent += '<br />';
