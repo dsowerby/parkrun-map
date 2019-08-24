@@ -440,7 +440,8 @@ function getFilter(filter) {
 		}
 	} else if (filter == 'random') {
 		return function(events) {
-			return [ event[_.random(events.length - 1)] ];
+			var randomEvent = _.random(events.length - 1);
+			return [ $(events[randomEvent]) ];
 		}
 	} else if (filter === 'none') {
 		return filterEvents(events, function($event) {
