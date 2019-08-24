@@ -438,6 +438,10 @@ function getFilter(filter) {
 			}
 			return filteredEvents;
 		}
+	} else if (filter == 'random') {
+		return function(events) {
+			return [ event[_.random(events.length - 1)] ];
+		}
 	} else if (filter === 'none') {
 		return filterEvents(events, function($event) {
 			return [];
