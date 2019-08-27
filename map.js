@@ -112,10 +112,7 @@ function displayEvents(filterFunctions) {
 	}
 
 	var displayedEvents = 0;
-
-	// TODO: change this from iterating the list of events, to iterating the list of functions
-	// this way we can increase the speed of rendering
-	events = $geo.find('e[lo!=""][la!=""]');
+	var events = $geo.find('e[lo!=""][la!=""]');
 
 	console.info('initial size: ' + events.length);
 	console.info('processing with ' + filterFunctions.length + ' filters');
@@ -140,6 +137,7 @@ function displayEvents(filterFunctions) {
 				regionFilterText = regionFilterText.substring(0, regionFilterText.length-2)
 				// window.location.hash += '#' + regionFilterText;
 				events = getFilter(regionFilterText)(events);
+				console.info('after filter ' + filterFunctions.length + ' there are ' + events.length + ' events');
 			}
 		}
 		console.info('after all filters there are ' + events.length + ' events');
