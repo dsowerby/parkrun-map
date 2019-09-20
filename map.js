@@ -132,10 +132,12 @@ function displayEvents(filterFunctions) {
 			if (selectedCountries.length > 0) {
 				var regionFilterText = 'or-';
 				for (var sc=0; sc<selectedCountries.length; sc++) {
-					regionFilterText += 'region-' + $(selectedCountries[sc]).attr('name') + '||';
+					regionFilterText += 'region-' + $(selectedCountries[sc]).attr('name');
+					if (sc <selectedCountries.length) {
+						regionFilterText += '||';
+					}
 				}
-				regionFilterText = regionFilterText.substring(0, regionFilterText.length-2)
-				// window.location.hash += '#' + regionFilterText;
+				console.info('filter ' + filterFunction.length + ' ' + regionFilterText);
 				events = getFilter(regionFilterText)(events);
 				console.info('after filter ' + filterFunctions.length + ' there are ' + events.length + ' events');
 			}
@@ -477,11 +479,14 @@ function load() {
 		regionFilter = false;
 		withinFilter = false;
 		closestFilter = false;
+		var h = 0;
 		hash.split('#').filter(function(e){return e}).forEach(function(hash) {
+			console.info('filter ' + h + ' ' + hash);
 			var filter = getFilter(hash);
 			if (filter !== undefined) {
 				filters.push(filter);
 			}
+			h++;
 		});
 		displayEvents(filters);
 	});
