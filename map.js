@@ -131,7 +131,7 @@ function displayEvents(filterFunctions) {
 			var selectedCountries = $('.countries input:checked');
 			if (selectedCountries.length > 0) {
 				var regionFilterText = 'or-';
-				for (var sc=0; sc<selectedCountries.length; sc++) {
+				for (var sc=1; sc<selectedCountries.length; sc++) {
 					regionFilterText += 'region-' + $(selectedCountries[sc]).attr('name');
 					if (sc <selectedCountries.length) {
 						regionFilterText += '||';
