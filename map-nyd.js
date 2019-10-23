@@ -47,7 +47,7 @@ function centreMap() {
 
 function displayEvents(filterFunctions) {
 	$.ajax({
-		url: 'https://www.parkrun.org.uk/special-events/',
+		url: 'https://cors-anywhere.herokuapp.com/https://www.parkrun.org.uk/special-events/',
 		async: false,
 	}).done(function(data) {
 		$specialEvents = $(data);
