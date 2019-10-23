@@ -10,13 +10,6 @@ $(document).ready(function() {
 	initAndLoad();
 });
 
-navigator.geolocation.getCurrentPosition(function(data) {
-	position = data;
-	initAndLoad();
-}, function(error) {
-	initAndLoad();
-});
-
 function initOptions() {
 	options = JSON.parse(Cookies.get('options') || '{}');
 }
@@ -43,23 +36,13 @@ function initMap() {
 }
 
 function centreMap() {
-	if (position) {
-		// centre the map around the user's location
-		mymap.fitBounds(
-			[
-				[position.coords.latitude - 0.01, position.coords.longitude - 0.01],
-				[position.coords.latitude + 0.01, position.coords.longitude + 0.01]
-			]
-		)
-	} else {
-		// centre on the complete bounds of all UK based parkruns
-		mymap.fitBounds(
-			[
-				[49.095026, -7.742293],
-				[60.258081000000004, 1.847338]
-			]
-		);
-	}
+	// centre on the complete bounds of all UK based parkruns
+	mymap.fitBounds(
+		[
+			[49.095026, -7.742293],
+			[60.258081000000004, 1.847338]
+		]
+	);
 }
 
 function displayEvents(filterFunctions) {
