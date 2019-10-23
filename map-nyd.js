@@ -50,6 +50,7 @@ function displayEvents(filterFunctions) {
 		url: 'https://cors-anywhere.herokuapp.com/https://www.parkrun.org.uk/special-events/',
 		async: false,
 	}).done(function(data) {
+		var displayedEvents = 0;
 		$specialEvents = $(data);
 		$specialEvents.find("td:nth-child(4):not(:contains(':'))").parent().remove();
 		var events = $geo.find('e');
@@ -59,13 +60,12 @@ function displayEvents(filterFunctions) {
 			var longitude = parseFloat($event.attr('lo'));
 			var latitude = parseFloat($event.attr('la'));
 			var parkrunid = $event.attr('n');
+			var name = $event.attr('m');
 			if (!isNaN(longitude) && !isNaN(latitude)) {
-				if ($specialEvents.find("td>a[href='http://www.parkrun.org.uk/"+parkrunid+"/'").length > 0) {
+				if ($specialEvents.find("td>a[href='http://www.parkrun.org.uk/"+parkrunid+"/']").length > 0) {
 					addMarker(latitude, longitude, name, 'green', $event);
 					displayedEvents++;
 				}
-			} else {
-				console.info("Couldn't find " + parkrunid);
 			}
 		}
 
