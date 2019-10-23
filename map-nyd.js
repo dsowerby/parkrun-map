@@ -64,6 +64,8 @@ function displayEvents(filterFunctions) {
 					addMarker(latitude, longitude, name, 'green', $event);
 					displayedEvents++;
 				}
+			} else {
+				console.info("Couldn't find " + parkrunid);
 			}
 		}
 
