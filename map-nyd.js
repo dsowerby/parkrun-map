@@ -136,7 +136,7 @@ function load() {
 
 function init() {
 	$.ajax({
-		url: './geo.xml',
+		url: '../geo.xml',
 		async: false,
 	}).done(function(data) {
 		$geo = $(data);
