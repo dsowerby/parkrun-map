@@ -62,7 +62,7 @@ function displayEvents(filterFunctions) {
 			var parkrunid = $event.attr('n');
 			var name = $event.attr('m');
 			if (!isNaN(longitude) && !isNaN(latitude)) {
-				if ($specialEvents.find("td>a[href='http://www.parkrun.ie/"+parkrunid+"/']").length > 0) {
+				if ($specialEvents.find("td>a[href='https://www.parkrun.ie/"+parkrunid+"/']").length > 0) {
 					addMarker(latitude, longitude, name, 'green', $event);
 					displayedEvents++;
 				}
