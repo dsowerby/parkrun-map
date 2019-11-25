@@ -20,7 +20,7 @@ function parseName(nameevent) {
 
 function parseEventId(eventidevent) {
 	if (typeof(eventidevent) !== 'undefined') {
-		return eventidevent.properties.eventName;
+		return eventidevent.properties.eventname;
 	}
 	return undefined;
 }
