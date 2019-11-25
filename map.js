@@ -6,10 +6,57 @@ var athleteData = [];
 var filters = [];
 var position;
 var hamburger;
-var regionFilter;
+// var regionFilter;
 var withinFilter;
 var closestFilter;
 var events;
+
+function parseName(nameevent) {
+	if (typeof(nameevent) !== 'undefined') {
+		return nameevent.properties.EventLongName;
+	}
+	return undefined;
+}
+
+function parseEventId(eventidevent) {
+	if (typeof(eventidevent) !== 'undefined') {
+		return eventidevent.properties.eventName;
+	}
+	return undefined;
+}
+
+function parseLongitude(longevent) {
+	if (typeof(longevent) !== 'undefined') {
+		return parseFloat(longevent.geometry.coordinates[0]);
+	}
+	return undefined;
+}
+
+function parseLatitude(latevent) {
+	if (typeof(latevent) !== 'undefined') {
+		return parseFloat(latevent.geometry.coordinates[1]);
+	}
+	return undefined;
+}
+
+function parseCountrycode(countrycodeevent) {
+	if (typeof(countrycodeevent) !== 'undefined') {
+		return countrycodeevent.properties.countrycode;
+	}
+	return undefined;
+}
+
+function parseEventUrl(urlevent) {
+	var eventid = parseEventId(urlevent);
+	var countrycode = parseCountrycode(urlevent);
+	var country = countries[countrycode];
+	console.info(country.url);
+	return "https://" + country.url + "/" + eventid;
+}
+
+function parseSeriesId(seriesidevent) {
+	return seriesidevent.properties.seriesid;
+}
 
 $(document).ready(function() {
 	// initAjaxPrefilter();
@@ -26,15 +73,6 @@ navigator.geolocation.getCurrentPosition(function(data) {
 }, function(error) {
 	initAndLoad();
 });
-
-// bypass CORS or CORB
-// function initAjaxPrefilter() {
-	// jQuery.ajaxPrefilter(function(options) {
-		// if (options.crossDomain && jQuery.support.cors) {
-			// options.url = 'https://cors-anywhere.herokuapp.com/' + options.url;
-		// }
-	// });
-// }
 
 function initOptions() {
 	options = JSON.parse(Cookies.get('options') || '{}');
@@ -112,8 +150,9 @@ function displayEvents(filterFunctions) {
 	}
 
 	var displayedEvents = 0;
-	var events = $geo.find('e[lo!=""][la!=""]');
 
+	var events = $events.features;
+	console.info(events.length);
 	console.info('initial size: ' + events.length);
 	console.info('processing with ' + filterFunctions.length + ' filters');
 
@@ -126,33 +165,33 @@ function displayEvents(filterFunctions) {
 	}
 
 	if (filterFunctions.length > 0) {
-		if (!(regionFilter || withinFilter || closestFilter)) {
-			// there is no region or within filter specified, so we should find out the UI selected regions
-			var selectedCountries = $('.countries input:checked');
-			if (selectedCountries.length > 0) {
-				var regionFilterText = 'or-';
-				for (var sc=1; sc<selectedCountries.length; sc++) {
-					regionFilterText += 'region-' + $(selectedCountries[sc]).attr('name');
-					if (sc <selectedCountries.length) {
-						regionFilterText += '||';
-					}
-				}
-				console.info('filter ' + filterFunction.length + ' ' + regionFilterText);
-				events = getFilter(regionFilterText)(events);
-				console.info('after filter ' + filterFunctions.length + ' there are ' + events.length + ' events');
-			}
-		}
+		// if (!(regionFilter || withinFilter || closestFilter)) {
+		// 	// there is no region or within filter specified, so we should find out the UI selected regions
+		// 	var selectedCountries = $('.countries input:checked');
+		// 	if (selectedCountries.length > 0) {
+		// 		var regionFilterText = 'or-';
+		// 		for (var sc=1; sc<selectedCountries.length; sc++) {
+		// 			regionFilterText += 'region-' + $(selectedCountries[sc]).attr('name');
+		// 			if (sc <selectedCountries.length) {
+		// 				regionFilterText += '||';
+		// 			}
+		// 		}
+		// 		console.info('filter ' + filterFunction.length + ' ' + regionFilterText);
+		// 		events = getFilter(regionFilterText)(events);
+		// 		console.info('after filter ' + filterFunctions.length + ' there are ' + events.length + ' events');
+		// 	}
+		// }
 		console.info('after all filters there are ' + events.length + ' events');
 	}
 
 	window.events = events;
 
 	for (var e = 0; e < events.length; e++) {
-		var $event = $(events[e]);
-		var longitude = parseFloat($event.attr('lo'));
-		var latitude = parseFloat($event.attr('la'));
-		var name = $event.attr('m');
-		addMarker(latitude, longitude, name, 'blue', $event);
+		var event = events[e];
+		var longitude = parseLongitude(event);
+		var latitude = parseLatitude(event);
+		var name = parseName(event);
+		addMarker(latitude, longitude, name, 'blue', event);
 		displayedEvents++;
 	}
 
@@ -178,12 +217,8 @@ function addMarker(latitude, longitude, name, iconColour, $event) {
 	var marker = L.marker([latitude, longitude], { icon: markerIcon});
 	var markerContent;
 	if (typeof($event) !== 'undefined') {
-		var elementId = $event.attr('n');
-		var region = $event.attr('r');
-		if (region != '') {
-			var elementRegionUrl = $geo.find('r[id=' + region + ']').closest("r[u!='']").attr('u');
-		}
-		markerContent = '<strong><a target="_blank" href="' + elementRegionUrl + '/' + elementId + '/">'+ name + '</a></strong><br /><a target="_blank" href="' + elementRegionUrl + '/' + elementId + '/course/">Course page</a><br /><a target="_blank" href="' + elementRegionUrl + '/' + elementId + '/futureroster/">Future Roster</a><br /><a target="_blank" href="https://www.google.com/maps/dir/?api=1&destination='+latitude+',' + longitude + '">Directions</a>';
+		var eventUrl = parseEventUrl($event); 
+		markerContent = '<strong><a target="_blank" href="' + eventUrl + '/">'+ name + '</a></strong><br /><a target="_blank" href="' + eventUrl + '/course/">Course page</a><br /><a target="_blank" href="' + eventUrl + '/futureroster/">Future Roster</a><br /><a target="_blank" href="https://www.google.com/maps/dir/?api=1&destination='+latitude+',' + longitude + '">Directions</a>';
 	} else if (typeof(name) !== 'undefined') {
 		markerContent = name;
 	}
@@ -213,7 +248,7 @@ function filterEvents(events, eventFilter) {
 	return function(events) {
 		var filteredEvents = [];
 		for (var e=0; e<events.length; e++) {
-			var $event = $(events[e]);
+			var $event = events[e];
 			if (eventFilter($event)) {
 				filteredEvents.push($event);
 			}
@@ -223,12 +258,18 @@ function filterEvents(events, eventFilter) {
 }
 
 function getFilter(filter) {
-	if (filter.startsWith('not-')) {
+	if (filter.startsWith('seriesid')) {
+		var requiredseriesid = filter.substring(9);
+		return filterEvents(events, function($event) {
+			var seriesid = parseSeriesId($event);
+			return seriesid == requiredseriesid;
+		});
+	} else if (filter.startsWith('not-')) {
 		var notFilter = filter.substring(4);
 		var filterFunction = getFilter(notFilter);
 		return function(events) {
 			var includedEvents = filterFunction(events);
-			return _.differenceWith(events, includedEvents, function(event1, event2) { return $(event1).attr('id') == $(event2).attr('id'); });
+			return _.differenceWith(events, includedEvents, function(event1, event2) { return parseEventId(event1) == parseEventId(event2); });
 		};
 	} else if (filter.startsWith('and-')) {
 		var andFilter = filter.substring(4);
@@ -259,32 +300,33 @@ function getFilter(filter) {
 	} else if (filter.startsWith('startsWith-')) {
 		var prefix = filter.substring(11);
 		return filterEvents(events, function($event) {
-			var name = $event.attr('m');
+			var name = parseName($event);
 			return name.toLowerCase().startsWith(prefix.toLowerCase());
 		});
 	} else if (filter.startsWith('contains-')) {
 		var needle = filter.substring(9);
 		return filterEvents(events, function($event) {
-			var name = $event.attr('m');
+			var name = parseName($event);
 			return name.toLowerCase().indexOf(needle.toLowerCase()) > -1;
 		});
 	} else if (filter.startsWith('matches-')) {
 		var r = filter.substring(8);
 		var regex = new RegExp(r, 'i');
 		return filterEvents(events, function($event) {
-			var name = $event.attr('m');
+			var name = parseName($event);
+
 			return regex.test(name.toLowerCase());
 		});
-	} else if (filter.startsWith('region-')) {
-		regionFilter = true;
-		var region = filter.substring(7);
-		// we now have the region name
-		var $regionElement = $geo.find("r[n='"+region+"']");
-		// we have the region id
-		return filterEvents(events, function($event) {
-			var eventRegionId = $event.attr('r');
-			return $regionElement.is('[id="'+eventRegionId+'"]') || ($regionElement.has('r[id="'+eventRegionId+'"]').length > 0);
-		});
+	// } else if (filter.startsWith('region-')) {
+	// 	regionFilter = true;
+	// 	var region = filter.substring(7);
+	// 	// we now have the region name
+	// 	var $regionElement = $geo.find("r[n='"+region+"']");
+	// 	// we have the region id
+	// 	return filterEvents(events, function($event) {
+	// 		var eventRegionId = $event.attr('r');
+	// 		return $regionElement.is('[id="'+eventRegionId+'"]') || ($regionElement.has('r[id="'+eventRegionId+'"]').length > 0);
+	// 	});
 	} else if (filter.startsWith('athlete')) {
 		var athleteId;
 		if (filter == 'athlete') {
@@ -301,7 +343,8 @@ function getFilter(filter) {
 			});	
 		}
 		return filterEvents(events, function($event) {
-			return athleteData[athleteId].find("a[href$='/" + $event.attr('n') + "/results']").length > 0;
+			var eventId = parseEventId($event);
+			return athleteData[athleteId].find("a[href$='/" + eventId + "/results']").length > 0;
 		});
 	} else if (filter.startsWith('within-')) {
 		withinFilter = true;
@@ -327,8 +370,8 @@ function getFilter(filter) {
 
 		addMarker(withinLatitude, withinLongitude, 'Within ' + distance +'km', 'orange');
 		return filterEvents(events, function($event) {
-			var longitude = parseFloat($event.attr('lo'));
-			var latitude = parseFloat($event.attr('la'));
+			var latitude = parseLatitude($event);
+			var longitude = parseLongitude($event);
 			return getDistanceFromLatLonInKm(latitude, longitude, withinLatitude, withinLongitude) < distance;
 		});
 	} else if (filter == 'compass') {
@@ -339,10 +382,9 @@ function getFilter(filter) {
 			var western = {};
 	
 			for (var e = 0; e<events.length; e++) {
-				var $event = $(this);
-				var $event = $(events[e]);
-				var longitude = parseFloat($event.attr('lo'));
-				var latitude = parseFloat($event.attr('la'));
+				var compassevent = events[e];
+				var latitude = parseLatitude(compassevent);
+				var longitude = parseLongitude(compassevent);
 	
 				/**
 					High Lat = North
@@ -360,31 +402,30 @@ function getFilter(filter) {
 				if (isNaN(northern.latitude) || northern.latitude < latitude) {
 					northern.longitude = longitude;
 					northern.latitude = latitude;
-					northern.id = $event.attr('id');
-					northern.event = $event;
+					northern.id = parseEventId(compassevent);
+					northern.event = compassevent;
 				}
 				if (isNaN(eastern.longitude) || eastern.longitude < longitude) {
 					eastern.longitude = longitude;
 					eastern.latitude = latitude;
-					eastern.id = $event.attr('id');
-					eastern.event = $event;
+					eastern.id = parseEventId(compassevent);
+					eastern.event = compassevent;
 				}
 				if (isNaN(southern.latitude) || southern.latitude > latitude) {
 					southern.longitude = longitude;
 					southern.latitude = latitude;
-					southern.id = $event.attr('id');
-					southern.event = $event;
+					southern.id = parseEventId(compassevent);
+					southern.event = compassevent;
 				}
 				if (isNaN(western.longitude) || western.longitude > longitude) {
 					western.longitude = longitude;
 					western.latitude = latitude;
-					western.id = $event.attr('id');
-					western.event = $event;
+					western.id = parseEventId(compassevent);
+					western.event = compassevent;
 				}
 			}
 
 			var events = [northern.event, eastern.event, southern.event, western.event];
-			console.info(events);
 			return _.uniq(events);
 		}
 	} else if (filter.startsWith('closest')) {
@@ -421,9 +462,9 @@ function getFilter(filter) {
 
 			var eventDistances = [];
 			for (var e = 0; e<events.length; e++) {
-				$event = $(events[e]);
-				var longitude = parseFloat($event.attr('lo'));
-				var latitude = parseFloat($event.attr('la'));
+				$event = events[e];
+				var latitude = parseLatitude($event);
+				var longitude = parseLongitude($event);
 				var distance = getDistanceFromLatLonInKm(latitude, longitude, closestLatitude, closestLongitude);
 				eventDistances.push({'event': $event, 'distance': distance });
 			}
@@ -441,7 +482,7 @@ function getFilter(filter) {
 	} else if (filter == 'random') {
 		return function(events) {
 			var randomEvent = _.random(events.length - 1);
-			return [ $(events[randomEvent]) ];
+			return [ events[randomEvent] ];
 		}
 	} else if (filter === 'none') {
 		return filterEvents(events, function($event) {
@@ -497,32 +538,36 @@ function init() {
 		load();
 	});	
 	$.ajax({
-		url: './geo.xml',
+		url: './events.json',
 		async: false,
 	}).done(function(data) {
-		$geo = $(data);
-		var $countries = $('<div class="countries"><h4>Countries</h4></div>')
-		$('.nav .controls').append($countries);
-		$geo.find("r[id=1] > r").each(function() {
-			var $element = $(this);
-			var id = $element.attr('id');
-			var name = $element.attr('n');
-			// checked
-			var $checkbox = $("<input type='checkbox' />");
-			$checkbox.attr('name', name);
-			if (name == 'UK') {
-				$checkbox.attr('checked','');
-			}
-			$checkbox.attr('data-region-id-' + id, '');
-			$geo.find('r[id='+id+'] r').each(function() {
-				$region = $(this);
-				$checkbox.attr('data-region-id-' + $region.attr('id'), '');
-			});
-			$countries.append($checkbox).append($('<span />').text(name)).append($('<br />'));
-			$checkbox.change(function() {
-				load();
-			})
-		});
+		$events = data.events;
+		countries = data.countries;
+		// var $countries = $('<div class="countries"><h4>Countries</h4></div>')
+		// $('.nav .controls').append($countries);
+		// console.info($events[0].countries);
+		// console.info($events[0]['countries']);
+		// $events.find("r[id=1] > r").each(function() {
+		// 	var $element = $(this);
+		// 	var id = $element.attr('id');
+		// 	var name = $element.attr('n');
+		// 	// checked
+		// 	var $checkbox = $("<input type='checkbox' />");
+		// 	$checkbox.attr('name', name);
+		// 	if (name == 'UK') {
+		// 		$checkbox.attr('checked','');
+		// 	}
+		// 	$checkbox.attr('data-region-id-' + id, '');
+		// 	countries;
+		// 	$geo.find('r[id='+id+'] r').each(function() {
+		// 		$region = $(this);
+		// 		$checkbox.attr('data-region-id-' + $region.attr('id'), '');
+		// 	});
+		// 	$countries.append($checkbox).append($('<span />').text(name)).append($('<br />'));
+		// 	$checkbox.change(function() {
+		// 		load();
+		// 	})
+		// });
 	});
 	$('#letter-prefix').keypress(function (e) {
 		if (e.which == 13) {
