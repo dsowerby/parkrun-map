@@ -1,9 +1,57 @@
 var mymap;
-var $geo;
+var events;
 var position;
 var options = {};
+var events;
+var countries;
 var athleteData = [];
 var iconColours = ['red', 'orange-dark', 'orange', 'yellow', 'blue-dark', 'cyan', 'purple', 'violet', 'pink', 'green-dark', 'green', 'black', 'white']
+
+function parseName(nameevent) {
+	if (typeof(nameevent) !== 'undefined') {
+		return nameevent.properties.EventLongName;
+	}
+	return undefined;
+}
+
+function parseEventId(eventidevent) {
+	if (typeof(eventidevent) !== 'undefined') {
+		return eventidevent.properties.eventname;
+	}
+	return undefined;
+}
+
+function parseLongitude(longevent) {
+	if (typeof(longevent) !== 'undefined') {
+		return parseFloat(longevent.geometry.coordinates[0]);
+	}
+	return undefined;
+}
+
+function parseLatitude(latevent) {
+	if (typeof(latevent) !== 'undefined') {
+		return parseFloat(latevent.geometry.coordinates[1]);
+	}
+	return undefined;
+}
+
+function parseCountrycode(countrycodeevent) {
+	if (typeof(countrycodeevent) !== 'undefined') {
+		return countrycodeevent.properties.countrycode;
+	}
+	return undefined;
+}
+
+function parseEventUrl(urlevent) {
+	var eventid = parseEventId(urlevent);
+	var countrycode = parseCountrycode(urlevent);
+	var country = countries[countrycode];
+	return "https://" + country.url + "/" + eventid;
+}
+
+function parseSeriesId(seriesidevent) {
+	return seriesidevent.properties.seriesid;
+}
 
 Array.prototype.getUnique = function() {
 	var o = {}, a = []
@@ -77,25 +125,22 @@ function addDoneMarker(latitude, longitude, name, $event) {
 	addMarker(markerIcon, latitude, longitude, name, $event);
 }
 
-function addIndexMarker(index, latitude, longitude, name, iconColour, $event) {
+function addIndexMarker(index, addIndexMarkerLatitude, addIndexMarkerLongitude, name, iconColour, $event) {
 	var markerIcon = L.ExtraMarkers.icon({
 		markerColor: iconColour,
 		icon: 'fa-number',
 		number: index
 	});
-	addMarker(markerIcon, latitude, longitude, name, $event);
+	addMarker(markerIcon, addIndexMarkerLatitude, addIndexMarkerLongitude, name, $event);
 }
 
-function addMarker(icon, latitude, longitude, name, $event) {
-	var marker = L.marker([latitude, longitude], { icon: icon});
+function addMarker(icon, markerLatitude, markerLongitude, name, event) {
+	var marker = L.marker([markerLatitude, markerLongitude], { icon: icon});
 	var markerContent;
-	if (typeof($event) !== 'undefined') {
-		var elementId = $event.attr('n');
-		var region = $event.attr('r');
-		if (region != '') {
-			var elementRegionUrl = $geo.find('r[id=' + region + ']').closest("r[u!='']").attr('u');
-		}
-		markerContent = '<strong><a target="_blank" href="' + elementRegionUrl + '/' + elementId + '/">'+ name + '</a></strong><br /><a target="_blank" href="' + elementRegionUrl + '/' + elementId + '/course/">Course page</a><br /><a target="_blank" href="https://www.google.com/maps/dir/?api=1&destination='+latitude+',' + longitude + '">Directions</a>';
+	if (typeof(event) !== 'undefined') {
+		var elementId = parseEventId(event);
+		var url = parseEventUrl(event);
+		markerContent = '<strong><a target="_blank" href="' + url + '/">'+ name + '</a></strong><br /><a target="_blank" href="' + url + '/course/">Course page</a><br /><a target="_blank" href="https://www.google.com/maps/dir/?api=1&destination='+markerLatitude+',' + markerLongitude + '">Directions</a>';
 	} else if (typeof(name) !== 'undefined') {
 		markerContent = name;
 	}
@@ -103,7 +148,7 @@ function addMarker(icon, latitude, longitude, name, $event) {
 		if (typeof(markerContent) !== 'undefined') {
 			markerContent += '<br />';
 		}
-		markerContent += '<a target="_blank" href="https://www.happycow.net/searchmap?lat='+latitude+'&lng='+longitude+'&vegan=true">Local vegan food</a>';
+		markerContent += '<a target="_blank" href="https://www.happycow.net/searchmap?lat='+markerLatitude+'&lng='+markerLongitude+'&vegan=true">Local vegan food</a>';
 	}
 	marker.bindPopup(markerContent);
 	marker.addTo(markerGroup);
@@ -128,17 +173,18 @@ function displayEvents(closest) {
 			closestLongitude = position.coords.longitude;
 		}
 	}
+
 	var eventIds = [];
 	var eventDistances = [];
 	var closestEventDistances = [];
 
-	$geo.find('e[lo!=""][la!=""]').each(function() {
-		var $event = $(this);
-		var longitude = parseFloat($event.attr('lo'));
-		var latitude = parseFloat($event.attr('la'));
-		var distance = getDistanceFromLatLonInKm(latitude, longitude, closestLatitude, closestLongitude);
-		eventDistances.push({'id': $event.attr('id'), 'distance': distance });
-	});
+	for (var e = 0; e < events.length; e++) {
+		var event = events[e];
+		var parsedLatitude = parseLatitude(event);
+		var parsedLongitude = parseLongitude(event);
+		var distance = getDistanceFromLatLonInKm(parsedLatitude, parsedLongitude, closestLatitude, closestLongitude);
+		eventDistances.push({'id': parseEventId(event), 'distance': distance });
+	};
 
 	closestEventDistances = eventDistances.sort(function(a, b){return a.distance-b.distance});
 	delete eventDistances;
@@ -146,7 +192,6 @@ function displayEvents(closest) {
 		eventIds.push(closestEventDistances[i].id);
 	}
 	delete closestEventDistances;
-
 	if (typeof(options.athleteId === 'string')) {
 		if (typeof(athleteData[options.athleteId]) === 'undefined') {
 			$.ajax({
@@ -161,18 +206,28 @@ function displayEvents(closest) {
 	var displayedEvents = 0;
 	eventIds.forEach(function(eventId) {
 		if (displayedEvents < closest) {
-			$event = $geo.find("e[id='"+eventId+"']");
-			var eventName = $event.attr('m');
-			var display = false;
-			if (typeof(options.athleteId) === 'undefined' || typeof(athleteData) === 'undefined' || typeof(athleteData[options.athleteId]) == 'undefined') {
-				display = true;
-			} else if (athleteData[options.athleteId].find("a[href$='/" + $event.attr('n') + "/results']").length == 0) {
-				display = true;
-			} else {
-				addDoneMarker($event.attr('la'), $event.attr('lo'), eventName, $event);
-			}
-			if (display) {
-				addIndexMarker(++displayedEvents, $event.attr('la'), $event.attr('lo'), eventName, iconColours[(displayedEvents % iconColours.length)-1], $event);
+			var matchedEvent;
+			events.forEach(function(event) {
+				var parsedEventId = parseEventId(event);
+				var seriesid = parseSeriesId(event);
+				if (seriesid === 1 && parsedEventId === eventId) {
+					matchedEvent = event;
+					return;
+				}
+			});
+			if (typeof(matchedEvent) !== 'undefined') {
+				var eventName = parseName(matchedEvent);
+				var display = false;
+				if (typeof(options.athleteId) === 'undefined' || typeof(athleteData) === 'undefined' || typeof(athleteData[options.athleteId]) == 'undefined') {
+					display = true;
+				} else if (athleteData[options.athleteId].find("a[href$='/" + parseName(event) + "/results']").length == 0) {
+					display = true;
+				} else {
+					addDoneMarker(parseLatitude(matchedEvent), parseLongitude(matchedEvent), eventName, event);
+				}
+				if (display) {
+					addIndexMarker(++displayedEvents, parseLatitude(matchedEvent), parseLongitude(matchedEvent), eventName, iconColours[(displayedEvents % iconColours.length)-1], matchedEvent);
+				}
 			}
 		}
 	});
@@ -222,10 +277,11 @@ function init() {
 		load();
 	});	
 	$.ajax({
-		url: '../geo.xml',
+		url: '../events.json',
 		async: false,
 	}).done(function(data) {
-		$geo = $(data);
+		events = data.events.features;
+		countries = data.countries;
 	});
 }
 
