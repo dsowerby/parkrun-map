@@ -220,10 +220,10 @@ function displayEvents(closest) {
 				var display = false;
 				if (typeof(options.athleteId) === 'undefined' || typeof(athleteData) === 'undefined' || typeof(athleteData[options.athleteId]) == 'undefined') {
 					display = true;
-				} else if (athleteData[options.athleteId].find("a[href$='/" + parseName(event) + "/results']").length == 0) {
+				} else if (athleteData[options.athleteId].find("a[href$='/" + parseEventId(matchedEvent) + "/results']").length == 0) {
 					display = true;
 				} else {
-					addDoneMarker(parseLatitude(matchedEvent), parseLongitude(matchedEvent), eventName, event);
+					addDoneMarker(parseLatitude(matchedEvent), parseLongitude(matchedEvent), eventName, matchedEvent);
 				}
 				if (display) {
 					addIndexMarker(++displayedEvents, parseLatitude(matchedEvent), parseLongitude(matchedEvent), eventName, iconColours[(displayedEvents % iconColours.length)-1], matchedEvent);
