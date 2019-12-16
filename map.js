@@ -301,7 +301,7 @@ function getFilter(filter) {
 		var prefix = filter.substring(11);
 		return filterEvents(events, function($event) {
 			var name = parseName($event);
-			return name.toLowerCase().startsWith(prefix.toLowerCase());
+			return name.toLowerCase().startsWith(prefix.toLowerCase()) || name.toLowerCase().startsWith('parkrun ' + prefix.toLowerCase());
 		});
 	} else if (filter.startsWith('contains-')) {
 		var needle = filter.substring(9);
