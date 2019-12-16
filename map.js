@@ -217,7 +217,7 @@ function addMarker(latitude, longitude, name, iconColour, $event) {
 	var marker = L.marker([latitude, longitude], { icon: markerIcon});
 	var markerContent;
 	if (typeof($event) !== 'undefined') {
-		var eventUrl = parseEventUrl($event); 
+		var eventUrl = parseEventUrl($event);
 		markerContent = '<strong><a target="_blank" href="' + eventUrl + '/">'+ name + '</a></strong><br /><a target="_blank" href="' + eventUrl + '/course/">Course page</a><br /><a target="_blank" href="' + eventUrl + '/futureroster/">Future Roster</a><br /><a target="_blank" href="https://www.google.com/maps/dir/?api=1&destination='+latitude+',' + longitude + '">Directions</a>';
 	} else if (typeof(name) !== 'undefined') {
 		markerContent = name;
@@ -399,8 +399,14 @@ function getFilter(filter) {
 				async: false,
 			}).done(function(data) {
 				xmas = $(data).find("td:nth-child(3):not(:contains(':'))").parent().remove();
+				xmas.find("td>a[href]").forEach(function(item) {
+					console.info(item.attr('href'));
+				});
 				nyd = $(data).find("td:nth-child(4):not(:contains(':'))").parent().remove();
-			});	
+				nyd.find("td>a[href]").forEach(function(item) {
+					console.info(item.attr('href'));
+				});
+			});
 		}
 		return filterEvents(events, function($event) {
 			var parkrunid = parseEventId($event);
@@ -413,8 +419,14 @@ function getFilter(filter) {
 				async: false,
 			}).done(function(data) {
 				xmas = $(data).find("td:nth-child(3):not(:contains(':'))").parent().remove();
+				xmas.find("td>a[href]").forEach(function(item) {
+					console.info(item.attr('href'));
+				});
 				nyd = $(data).find("td:nth-child(4):not(:contains(':'))").parent().remove();
-			});	
+				nyd.find("td>a[href]").forEach(function(item) {
+					console.info(item.attr('href'));
+				});
+			});
 		}
 		return filterEvents(events, function($event) {
 			var parkrunid = parseEventId($event);
@@ -433,7 +445,7 @@ function getFilter(filter) {
 				async: false,
 			}).done(function(data) {
 				athleteData[athleteId] = $(data);
-			});	
+			});
 		}
 		return filterEvents(events, function($event) {
 			var eventId = parseEventId($event);
@@ -473,22 +485,22 @@ function getFilter(filter) {
 			var southern = {};
 			var eastern = {};
 			var western = {};
-	
+
 			for (var e = 0; e<events.length; e++) {
 				var compassevent = events[e];
 				var latitude = parseLatitude(compassevent);
 				var longitude = parseLongitude(compassevent);
-	
+
 				/**
 					High Lat = North
 					<e n="inverness" m="Inverness" c="97" id="267" r="7" la="57.463654" lo="-4.235474"/>
-	
+
 					High Long = East
 					<e n="lowestoft" m="Lowestoft" c="97" id="1289" r="11" la="52.468286" lo="1.747338"/>
-	
+
 					Low Lat = South
 					<e n="brighton" m="Brighton & Hove" c="97" id="8" r="17" la="50.842140" lo="-0.172498"/>
-	
+
 					Low Long = West
 					<e n="aberystwyth" m="Aberystwyth" c="97" id="423" r="12" la="52.414546" lo="-4.080401"/>
 				*/
@@ -591,12 +603,12 @@ function getFilter(filter) {
 function getDistanceFromLatLonInKm(lat1,lon1,lat2,lon2) {
 	var R = 6371; // Radius of the earth in km
 	var dLat = deg2rad(lat2-lat1);  // deg2rad below
-	var dLon = deg2rad(lon2-lon1); 
-	var a = 
+	var dLon = deg2rad(lon2-lon1);
+	var a =
 		Math.sin(dLat/2) * Math.sin(dLat/2) +
-		Math.cos(deg2rad(lat1)) * Math.cos(deg2rad(lat2)) * 
-		Math.sin(dLon/2) * Math.sin(dLon/2); 
-	var c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a)); 
+		Math.cos(deg2rad(lat1)) * Math.cos(deg2rad(lat2)) *
+		Math.sin(dLon/2) * Math.sin(dLon/2);
+	var c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
 	var d = R * c; // Distance in km
 	return d;
 }
@@ -629,7 +641,7 @@ function load() {
 function init() {
 	$(window).bind( 'hashchange', function(event) {
 		load();
-	});	
+	});
 	$.ajax({
 		url: './events.json',
 		async: false,
