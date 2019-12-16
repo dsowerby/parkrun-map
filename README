@@ -1,0 +1,9 @@
+First install beautify tool:
+
+npm install --global js-beautify
+
+Then add the following to the ~/.gitconfig
+
+[diff "minjs"]
+        textconv = js-beautify
+        cachetextconv = true
