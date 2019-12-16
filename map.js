@@ -399,11 +399,11 @@ function getFilter(filter) {
 				async: false,
 			}).done(function(data) {
 				xmas = $(data).find("td:nth-child(3):not(:contains(':'))").parent().remove();
-				xmas.find("td>a[href]").forEach(function(item) {
+				xmas.find("td>a[href]").each(function(item) {
 					console.info(item.attr('href'));
 				});
 				nyd = $(data).find("td:nth-child(4):not(:contains(':'))").parent().remove();
-				nyd.find("td>a[href]").forEach(function(item) {
+				nyd.find("td>a[href]").each(function(item) {
 					console.info(item.attr('href'));
 				});
 			});
@@ -419,11 +419,11 @@ function getFilter(filter) {
 				async: false,
 			}).done(function(data) {
 				xmas = $(data).find("td:nth-child(3):not(:contains(':'))").parent().remove();
-				xmas.find("td>a[href]").forEach(function(item) {
+				xmas.find("td>a[href]").each(function(item) {
 					console.info(item.attr('href'));
 				});
 				nyd = $(data).find("td:nth-child(4):not(:contains(':'))").parent().remove();
-				nyd.find("td>a[href]").forEach(function(item) {
+				nyd.find("td>a[href]").each(function(item) {
 					console.info(item.attr('href'));
 				});
 			});
