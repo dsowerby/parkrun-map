@@ -395,7 +395,7 @@ function getFilter(filter) {
 	} else if (filter == 'nyd') {
 		if (typeof(nyd) === 'undefined') {
 			$.ajax({
-				url: 'https://cors-anywhere.herokuapp.com/https://www.parkrun.org/special-events/',
+				url: 'https://cors-anywhere.herokuapp.com/https://www.parkrun.org.uk/special-events/',
 				async: false,
 			}).done(function(data) {
 				xmas = $(data).find("td:nth-child(3):not(:contains(':'))").parent().remove();
