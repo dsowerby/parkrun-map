@@ -52,7 +52,6 @@ function parseEventUrl(urlevent) {
 	var eventid = parseEventId(urlevent);
 	var countrycode = parseCountrycode(urlevent);
 	var country = countries[countrycode];
-	console.info(country.url);
 	return "https://" + country.url + "/" + eventid;
 }
 
@@ -154,7 +153,6 @@ function displayEvents(filterFunctions) {
 	var displayedEvents = 0;
 
 	var events = $events.features;
-	console.info(events.length);
 	console.info('initial size: ' + events.length);
 	console.info('processing with ' + filterFunctions.length + ' filters');
 
@@ -381,9 +379,7 @@ function getFilter(filter) {
 				countrycode = 98;
 				break;
 		}
-		console.info('countrycode: ' + countrycode);
 		return filterEvents(events, function(countryEvent) {
-			console.info(parseCountrycode(countryEvent));
 			return countrycode === parseCountrycode(countryEvent);
 		});
 	// } else if (filter.startsWith('region-')) {
