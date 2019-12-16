@@ -10,6 +10,8 @@ var hamburger;
 var withinFilter;
 var closestFilter;
 var events;
+var xmas;
+var nyd;
 
 function parseName(nameevent) {
 	if (typeof(nameevent) !== 'undefined') {
@@ -394,6 +396,34 @@ function getFilter(filter) {
 	// 		var eventRegionId = $event.attr('r');
 	// 		return $regionElement.is('[id="'+eventRegionId+'"]') || ($regionElement.has('r[id="'+eventRegionId+'"]').length > 0);
 	// 	});
+	} else if (filter == 'nyd') {
+		if (typeof(nyd) === 'undefined') {
+			$.ajax({
+				url: 'https://cors-anywhere.herokuapp.com/https://www.parkrun.org/special-events/',
+				async: false,
+			}).done(function(data) {
+				xmas = $(data).find("td:nth-child(3):not(:contains(':'))").parent().remove();
+				nyd = $(data).find("td:nth-child(4):not(:contains(':'))").parent().remove();
+			});	
+		}
+		return filterEvents(events, function($event) {
+			var parkrunid = parseEventId($event);
+			return (nyd.find("td>a[href='https://www.parkrun.org.uk/"+parkrunid+"/']").length > 0);
+		});
+	} else if (filter == 'xmas') {
+		if (typeof(xmas) === 'undefined') {
+			$.ajax({
+				url: 'https://cors-anywhere.herokuapp.com/https://www.parkrun.org.uk/special-events/',
+				async: false,
+			}).done(function(data) {
+				xmas = $(data).find("td:nth-child(3):not(:contains(':'))").parent().remove();
+				nyd = $(data).find("td:nth-child(4):not(:contains(':'))").parent().remove();
+			});	
+		}
+		return filterEvents(events, function($event) {
+			var parkrunid = parseEventId($event);
+			return (xmas.find("td>a[href='https://www.parkrun.org.uk/"+parkrunid+"/']").length > 0);
+		});
 	} else if (filter.startsWith('athlete')) {
 		var athleteId;
 		if (filter == 'athlete') {
