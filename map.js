@@ -401,11 +401,13 @@ function getFilter(filter) {
 			}).done(function(data) {
 				specialEvents = $(data);
 				xmas = $(data);
-				xmas.find("td:nth-child(3):not(:contains(':'))").parent().remove();
-				xmas.find("td>a[href$='/news/tag/newyear']").each(function(index, item) { console.info('xmas ' + $(item).attr('href')); });
+				xmas.find('#content .sortable tbody').addClass('events')
+				xmas.find(".events td:nth-child(3):not(:contains(':'))").parent().remove();
+				xmas.find(".events td>a[href$='/news/tag/newyear']").each(function(index, item) { console.info('xmas ' + $(item).attr('href')); });
 				nyd = $(data);
-				nyd.find("td:nth-child(4):not(:contains(':'))").parent().remove();
-				nyd.find("td>a[href$='/news/tag/newyear']").each(function(index, item) { console.info('nyd ' + $(item).attr('href')); });
+				nyd.find('#content .sortable tbody').addClass('events')
+				nyd.find(".events td:nth-child(4):not(:contains(':'))").parent().remove();
+				nyd.find(".events td>a[href$='/news/tag/newyear']").each(function(index, item) { console.info('nyd ' + $(item).attr('href')); });
 			});
 		}
 		return filterEvents(events, function($event) {
@@ -420,11 +422,13 @@ function getFilter(filter) {
 			}).done(function(data) {
 				specialEvents = $(data);
 				xmas = $(data);
-				xmas.find("td:nth-child(3):not(:contains(':'))").parent().remove();
-				xmas.find("td>a[href$='/news/tag/newyear']").each(function(index, item) { console.info('xmas ' + $(item).attr('href')); });
+				xmas.find('#content .sortable tbody').addClass('events')
+				xmas.find(".events td:nth-child(3):not(:contains(':'))").parent().remove();
+				xmas.find(".events td>a[href$='/news/tag/newyear']").each(function(index, item) { console.info('xmas ' + $(item).attr('href')); });
 				nyd = $(data);
-				nyd.find("td:nth-child(4):not(:contains(':'))").parent().remove();
-				nyd.find("td>a[href$='/news/tag/newyear']").each(function(index, item) { console.info('nyd ' + $(item).attr('href')); });
+				nyd.find('#content .sortable tbody').addClass('events')
+				nyd.find(".events td:nth-child(4):not(:contains(':'))").parent().remove();
+				nyd.find(".events td>a[href$='/news/tag/newyear']").each(function(index, item) { console.info('nyd ' + $(item).attr('href')); });
 			});
 		}
 		return filterEvents(events, function($event) {
