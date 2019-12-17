@@ -12,6 +12,7 @@ var closestFilter;
 var events;
 var xmas;
 var nyd;
+var specialEvents;
 
 function parseName(nameevent) {
 	if (typeof(nameevent) !== 'undefined') {
@@ -398,6 +399,7 @@ function getFilter(filter) {
 				url: 'https://cors-anywhere.herokuapp.com/https://www.parkrun.org.uk/special-events/',
 				async: false,
 			}).done(function(data) {
+				specialEvents = $(data);
 				xmas = $(data);
 				xmas.find("td:nth-child(3):not(:contains(':'))").parent().remove();
 				nyd = $(data);
@@ -414,6 +416,7 @@ function getFilter(filter) {
 				url: 'https://cors-anywhere.herokuapp.com/https://www.parkrun.org.uk/special-events/',
 				async: false,
 			}).done(function(data) {
+				specialEvents = $(data);
 				xmas = $(data);
 				xmas.find("td:nth-child(3):not(:contains(':'))").parent().remove();
 				nyd = $(data);
