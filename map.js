@@ -398,8 +398,10 @@ function getFilter(filter) {
 				url: 'https://cors-anywhere.herokuapp.com/https://www.parkrun.org.uk/special-events/',
 				async: false,
 			}).done(function(data) {
-				xmas = $(data).find("td:nth-child(3):not(:contains(':'))").parent().remove();
-				nyd = $(data).find("td:nth-child(4):not(:contains(':'))").parent().remove();
+				xmas = $(data);
+				xmas.find("td:nth-child(3):not(:contains(':'))").parent().remove();
+				nyd = $(data);
+				nyd.find("td:nth-child(4):not(:contains(':'))").parent().remove();
 			});
 		}
 		return filterEvents(events, function($event) {
@@ -412,8 +414,10 @@ function getFilter(filter) {
 				url: 'https://cors-anywhere.herokuapp.com/https://www.parkrun.org.uk/special-events/',
 				async: false,
 			}).done(function(data) {
-				xmas = $(data).find("td:nth-child(3):not(:contains(':'))").parent().remove();
-				nyd = $(data).find("td:nth-child(4):not(:contains(':'))").parent().remove();
+				xmas = $(data);
+				xmas.find("td:nth-child(3):not(:contains(':'))").parent().remove();
+				nyd = $(data);
+				nyd.find("td:nth-child(4):not(:contains(':'))").parent().remove();
 			});
 		}
 		return filterEvents(events, function($event) {
