@@ -440,7 +440,10 @@ function getFilter(filter) {
 		if (filter == 'athlete') {
 			athleteId = options.athleteId;
 		} else {
-			athleteId = filter.substring(8);
+			athleteId = filter.substring(8).trim();
+			if (athleteId.toUpperCase().startsWith('A')) {
+				athleteId = athleteId.substring(1);
+			}
 		}
 		if (typeof(athleteData[athleteId]) === 'undefined') {
 			$.ajax({
@@ -688,6 +691,12 @@ function init() {
 		if (e.which == 13) {
 			var search = $('#search').val();
 			window.location.hash = '#matches-.*' + search + '.*';
+		}
+	});
+	$('#athlete').keypress(function (e) {
+		if (e.which == 13) {
+			var athlete = $('#athlete').val();
+			window.location.hash = '#athlete-' + athlete;
 		}
 	});
 }
