@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-	<title>parkrun map</title>
+	<title>weather redirect</title>
 	<meta charset="utf-8" />
 	<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
 
@@ -19,10 +19,9 @@
 			$.ajax({
 				url: 'https://cors-anywhere.herokuapp.com/https://www.metoffice.gov.uk/public/data/services/locations/v3/nearest/latlong?latitude='+latitude+'&longitude='+longitude+'&n=1&filter=none',
 				async: false,
-			}).done(function(data) {
-				var latlong = JSON.parse(data);
-				console.info(latlong);
-				console.info(latlong.locationResults[0].result.geohash);
+			}).done(function(latlong) {
+				var geohash = latlong.locationResults[0].result.geohash;
+				window.location.href = "https://www.metoffice.gov.uk/public/weather/forecast/" + geohash;
 			});
 		});
 	</script>
