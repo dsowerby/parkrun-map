@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>parkrun map</title>
+	<meta charset="utf-8" />
+	<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+
+	<link rel="shortcut icon" type="image/x-icon" href="docs/images/favicon.ico" />
+
+	<script src="https://code.jquery.com/jquery-3.3.1.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/js-cookie/2.2.0/js.cookie.min.js" crossorigin="anonymous"></script>
+	<script>
+		$(document).ready(function() {
+			var hash = window.location.hash.substring(1);
+			var values = hash.split(',');
+			var latitude = values[0];
+			var longitude = values[1];
+
+			$.ajax({
+				url: 'https://cors-anywhere.herokuapp.com/https://www.metoffice.gov.uk/public/data/services/locations/v3/nearest/latlong?latitude='+latitude+'&longitude=-'+longitude+'&n=1&filter=none',
+				async: false,
+			}).done(function(data) {
+				var latlong = JSON.parse(data);
+				console.info(latlong);
+				console.info(latlong.locationResults[0].result.geohash);
+			});
+		});
+	</script>
+</head>
+</html>
