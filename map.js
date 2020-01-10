@@ -365,7 +365,7 @@ function getFilter(filter) {
 				countrycode = 79;
 				break;
 			case 'singapore':
-				countrycode = 87;
+				countrycode = 82;
 				break;
 			case 'south africa':
 				countrycode = 85;
