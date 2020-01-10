@@ -219,7 +219,7 @@ function addMarker(latitude, longitude, name, iconColour, $event) {
 	var markerContent;
 	if (typeof($event) !== 'undefined') {
 		var eventUrl = parseEventUrl($event);
-		markerContent = '<strong><a target="_blank" href="'+eventUrl+'/">'+ name+'</a></strong><br /><a target="_blank" href="'+eventUrl+'/course/">Course page</a><br /><a target="_blank" href="'+eventUrl+'/futureroster/">Future Roster</a><br /><a target="_blank" href="https://www.google.com/maps/dir/?api=1&destination='+latitude+','+longitude+'">Directions</a><br /><a target="_blank" href="./weather#'+latitude+','+longitude+'">Weather Forecast</a>';
+	markerContent = '<strong><a target="_blank" href="'+eventUrl+'/">'+ name+'</a></strong><br /><a target="_blank" href="'+eventUrl+'/course/">Course page</a><br /><a target="_blank" href="'+eventUrl+'/futureroster/">Future Roster</a><br /><a target="_blank" href="https://www.google.com/maps/dir/?api=1&destination='+latitude+','+longitude+'">Directions</a><br /><a target="_blank" href="./weather#'+latitude+','+longitude+'">Weather Forecast</a>';
 	} else if (typeof(name) !== 'undefined') {
 		markerContent = name;
 	}
@@ -349,7 +349,7 @@ function getFilter(filter) {
 			case 'japan':
 				countrycode = 46;
 				break;
-			case 'mylasia':
+			case 'malaysia':
 				countrycode = 57;
 				break;
 			case 'new-zealand':
