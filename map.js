@@ -352,6 +352,9 @@ function getFilter(filter) {
 			case 'malaysia':
 				countrycode = 57;
 				break;
+			case 'netherlands':
+				countrycode = 64;
+				break;
 			case 'new-zealand':
 				countrycode = 65;
 				break;
