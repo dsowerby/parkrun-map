@@ -396,6 +396,19 @@ function getFilter(filter) {
 	// 		var eventRegionId = $event.attr('r');
 	// 		return $regionElement.is('[id="'+eventRegionId+'"]') || ($regionElement.has('r[id="'+eventRegionId+'"]').length > 0);
 	// 	});
+	} else if (filter == 'cancelled') {
+		if (typeof(cancelled) === 'undefined') {
+			$.ajax({
+				url: 'https://cors-anywhere.herokuapp.com/https://www.parkrun.org.uk/cancellations/',
+				async: false,
+			}).done(function(data) {
+				cancelled = $(data);
+			});
+		}
+		return filterEvents(events, function($event) {
+			var parkrunid = parseEventId($event);
+			return (cancelled.find("#main > #primary > #content > div.floatleft.left > ul:nth-child(4) > li:nth-child(1), #main > #primary > #content > div.floatleft.left > ul:nth-child(6)").find("td>a[href='https://www.parkrun.org.uk/"+parkrunid+"/']").length > 0);
+		});
 	} else if (filter == 'nyd') {
 		if (typeof(nyd) === 'undefined') {
 			$.ajax({
