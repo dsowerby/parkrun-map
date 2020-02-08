@@ -12,6 +12,7 @@ var closestFilter;
 var events;
 var xmas;
 var nyd;
+var cancelled;
 var specialEvents;
 
 function parseName(nameevent) {
