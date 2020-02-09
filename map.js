@@ -408,7 +408,8 @@ function getFilter(filter) {
 		}
 		return filterEvents(events, function($event) {
 			var parkrunurl = parseEventUrl($event);
-			return (cancelled.find("#main > #primary > #content > div.floatleft.left > ul:nth-child(4) > li:nth-child(1), #main > #primary > #content > div.floatleft.left > ul:nth-child(6)").find("li>a[href*='"+parkrunurl+"']").length > 0);
+			console.info(parkrunurl);
+			return (cancelled.find("#main > #primary > #content > div.floatleft.left > ul:nth-child(4), #main > #primary > #content > div.floatleft.left > ul:nth-child(6)").find("li>a[href*='"+parkrunurl+"']").length > 0);
 		});
 	} else if (filter == 'nyd') {
 		if (typeof(nyd) === 'undefined') {
