@@ -54,7 +54,7 @@ function parseEventUrl(urlevent) {
 	var eventid = parseEventId(urlevent);
 	var countrycode = parseCountrycode(urlevent);
 	var country = countries[countrycode];
-	return "https://" + country.url + "/" + eventid;
+	return "//" + country.url + "/" + eventid;
 }
 
 function parseSeriesId(seriesidevent) {
@@ -220,7 +220,7 @@ function addMarker(latitude, longitude, name, iconColour, $event) {
 	var markerContent;
 	if (typeof($event) !== 'undefined') {
 		var eventUrl = parseEventUrl($event);
-	markerContent = '<strong><a target="_blank" href="'+eventUrl+'/">'+ name+'</a></strong><br /><a target="_blank" href="'+eventUrl+'/course/">Course page</a><br /><a target="_blank" href="'+eventUrl+'/futureroster/">Future Roster</a><br /><a target="_blank" href="https://www.google.com/maps/dir/?api=1&destination='+latitude+','+longitude+'">Directions</a><br /><a target="_blank" href="./weather#'+latitude+','+longitude+'">Weather Forecast</a>';
+		markerContent = '<strong><a target="_blank" href="'+eventUrl+'/">'+ name+'</a></strong><br /><a target="_blank" href="'+eventUrl+'/course/">Course page</a><br /><a target="_blank" href="'+eventUrl+'/futureroster/">Future Roster</a><br /><a target="_blank" href="https://www.google.com/maps/dir/?api=1&destination='+latitude+','+longitude+'">Directions</a><br /><a target="_blank" href="./weather#'+latitude+','+longitude+'">Weather Forecast</a>';
 	} else if (typeof(name) !== 'undefined') {
 		markerContent = name;
 	}
@@ -407,7 +407,7 @@ function getFilter(filter) {
 			});
 		}
 		return filterEvents(events, function($event) {
-			var parkrunurl = parseEventUrl($event).replace(/^https?/gi, '');
+			var parkrunurl = parseEventUrl($event);
 			return (cancelled.find("#main > #primary > #content > div.floatleft.left > ul:nth-child(4) > li:nth-child(1), #main > #primary > #content > div.floatleft.left > ul:nth-child(6)").find("li>a[href*='"+parkrunurl+"']").length > 0);
 		});
 	} else if (filter == 'nyd') {
