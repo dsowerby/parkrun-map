@@ -408,7 +408,6 @@ function getFilter(filter) {
 		}
 		return filterEvents(events, function($event) {
 			var parkrunurl = parseEventUrl($event);
-			console.info(parkrunurl);
 			return (cancelled.find("#main > #primary > #content > div.floatleft.left > ul:nth-child(4), #main > #primary > #content > div.floatleft.left > ul:nth-child(6)").find("li>a[href*='"+parkrunurl+"']").length > 0);
 		});
 	} else if (filter == 'nyd') {
