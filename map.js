@@ -74,6 +74,7 @@ navigator.geolocation.getCurrentPosition(function(data) {
 	position = data;
 	initAndLoad();
 }, function(error) {
+	console.info("Error looking up location" + error);
 	initAndLoad();
 });
 
