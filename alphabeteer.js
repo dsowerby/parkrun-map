@@ -161,12 +161,13 @@ function displayEvents(hash) {
 	var eventDistances = [];
 	var closestEventDistances = [];
 
-	events.forEach(function(event, index) {
+	for (var i = 0; i < events; i++) {
+		var event = events[i];
 		var longitude = parseLongitude(event);
 		var latitude = parseLatitideu(event);
 		var distance = getDistanceFromLatLonInKm(latitude, longitude, closestLatitude, closestLongitude);
 		eventDistances.push({'event': event, 'distance': distance });
-	});
+	}
 
 	closestEventDistances = eventDistances.sort(function(a, b){return a.distance-b.distance});
 	delete eventDistances;
