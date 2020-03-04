@@ -1,10 +1,56 @@
 var mymap;
-var $geo;
+var events;
 var position;
 var options = {};
 var athleteData = [];
 var iconColours = ['red', 'orange-dark', 'orange', 'yellow', 'blue-dark', 'cyan', 'purple', 'violet', 'pink', 'green-dark', 'green', 'green-light', 'black', 'white']
 var alphabetEvents;
+
+function parseName(nameevent) {
+	if (typeof(nameevent) !== 'undefined') {
+		return nameevent.properties.EventLongName;
+	}
+	return undefined;
+}
+
+function parseEventId(eventidevent) {
+	if (typeof(eventidevent) !== 'undefined') {
+		return eventidevent.properties.eventname;
+	}
+	return undefined;
+}
+
+function parseLongitude(longevent) {
+	if (typeof(longevent) !== 'undefined') {
+		return parseFloat(longevent.geometry.coordinates[0]);
+	}
+	return undefined;
+}
+
+function parseLatitude(latevent) {
+	if (typeof(latevent) !== 'undefined') {
+		return parseFloat(latevent.geometry.coordinates[1]);
+	}
+	return undefined;
+}
+
+function parseCountrycode(countrycodeevent) {
+	if (typeof(countrycodeevent) !== 'undefined') {
+		return countrycodeevent.properties.countrycode;
+	}
+	return undefined;
+}
+
+function parseEventUrl(urlevent) {
+	var eventid = parseEventId(urlevent);
+	var countrycode = parseCountrycode(urlevent);
+	var country = countries[countrycode];
+	return "//" + country.url + "/" + eventid;
+}
+
+function parseSeriesId(seriesidevent) {
+	return seriesidevent.properties.seriesid;
+}
 
 Array.prototype.getUnique = function() {
 	var o = {}, a = []
@@ -80,12 +126,8 @@ function addMarker(eventNamePrefix, latitude, longitude, name, iconColour, $even
 	var marker = L.marker([latitude, longitude], { icon: markerIcon});
 	var markerContent;
 	if (typeof($event) !== 'undefined') {
-		var elementId = $event.attr('n');
-		var region = $event.attr('r');
-		if (region != '') {
-			var elementRegionUrl = $geo.find('r[id=' + region + ']').closest("r[u!='']").attr('u');
-		}
-		markerContent = '<strong><a target="_blank" href="' + elementRegionUrl + '/' + elementId + '/">'+ name + '</a></strong><br /><a target="_blank" href="' + elementRegionUrl + '/' + elementId + '/course/">Course page</a><br /><a target="_blank" href="https://www.google.com/maps/dir/?api=1&destination='+latitude+',' + longitude + '">Directions</a>';
+		var eventUrl = parseEventUrl(event);
+		markerContent = '<strong><a target="_blank" href="' + eventUrl + '/">'+ name + '</a></strong><br /><a target="_blank" href="' + eventUrl + '/course/">Course page</a><br /><a target="_blank" href="https://www.google.com/maps/dir/?api=1&destination='+latitude+',' + longitude + '">Directions</a>';
 	} else if (typeof(name) !== 'undefined') {
 		markerContent = name;
 	}
@@ -119,18 +161,18 @@ function displayEvents(hash) {
 	var eventDistances = [];
 	var closestEventDistances = [];
 
-	$geo.find('e[lo!=""][la!=""]').each(function() {
-		var $event = $(this);
-		var longitude = parseFloat($event.attr('lo'));
-		var latitude = parseFloat($event.attr('la'));
+	events.forEach(function(event, index) {
+		var longitude = parseLongitude(event);
+		var latitude = parseLatitideu(event);
 		var distance = getDistanceFromLatLonInKm(latitude, longitude, closestLatitude, closestLongitude);
-		eventDistances.push({'id': $event.attr('id'), 'distance': distance });
+		eventDistances.push({'event': event, 'distance': distance });
 	});
 
 	closestEventDistances = eventDistances.sort(function(a, b){return a.distance-b.distance});
 	delete eventDistances;
+	var closestEvents = [];
 	for (var i=0; i< closestEventDistances.length; i++) {
-		eventIds.push(closestEventDistances[i].id);
+		closestEvents.push(closestEventDistances[i]);
 	}
 	delete closestEventDistances;
 
@@ -158,24 +200,23 @@ function displayEvents(hash) {
 	}
 
 	var displayedEvents = 0;
-	eventIds.forEach(function(eventId) {
-		$event = $geo.find("e[id='"+eventId+"']");
-
-		var eventName = $event.attr('m');
+	closestEvents.forEach(function(closestEvent) {
+		var event = closestEvent.event;
+		var eventName = parseName(event);
 		var eventIndex = eventName.substring(0,1).toUpperCase();
 
 		// completed events
 		if (alphabetEvents[eventIndex] == eventName) {
-			addMarker(eventIndex, $event.attr('la'), $event.attr('lo'), eventName, 'purple', $event);
+			addMarker(eventIndex, parseEventLatitude(event), parseEventLongitutde(event), eventName, 'purple', $event);
 		} else if (alphabetEvents[eventIndex + '1'] == eventName && options.double) {
-			addMarker(eventIndex + '1', $event.attr('la'), $event.attr('lo'), eventName, 'purple', $event);
+			addMarker(eventIndex + '1', parseEventLatitude(event), parseEventLongitutde(event), eventName, 'purple', $event);
 		// non completed events
 		} else if (typeof(alphabetEvents[eventIndex]) === 'undefined' && typeof(position) !== 'undefined') {
 			alphabetEvents[eventIndex] = eventName;
-			addMarker(eventIndex, $event.attr('la'), $event.attr('lo'), eventName, 'orange', $event);
+			addMarker(eventIndex, parseEventLatitude(event), parseEventLongitutde(event), eventName, 'orange', $event);
 		} else if (typeof(alphabetEvents[eventIndex + '1']) === 'undefined' && typeof(position) !== 'undefined' && options.double) {
 			alphabetEvents[eventIndex + '1'] = eventName;
-			addMarker(eventIndex + '1', $event.attr('la'), $event.attr('lo'), eventName, 'orange', $event);
+			addMarker(eventIndex + '1', parseEventLatitude(event), parseEventLongitutde(event), eventName, 'orange', $event);
 		}
 	});
 
@@ -223,10 +264,10 @@ function init() {
 		load();
 	});	
 	$.ajax({
-		url: '../geo.xml',
+		url: '../events.json',
 		async: false,
 	}).done(function(data) {
-		$geo = $(data);
+		events = data;
 	});
 }
 
