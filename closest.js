@@ -140,7 +140,7 @@ function addMarker(icon, markerLatitude, markerLongitude, name, event) {
 	if (typeof(event) !== 'undefined') {
 		var elementId = parseEventId(event);
 		var url = parseEventUrl(event);
-		markerContent = '<strong><a target="_blank" href="' + url + '/">'+ name + '</a></strong><br /><a target="_blank" href="' + url + '/course/">Course page</a><br /><a target="_blank" href="https://www.google.com/maps/dir/?api=1&destination='+markerLatitude+',' + markerLongitude + '">Directions</a><br /><a target="_blank" href="../weather#'+markerLatitude+','+markerLongitude+'">Weather Forecast</a>';
+		markerContent = '<strong><a target="_blank" href="' + url + '/">'+ name + '</a></strong><br /><a target="_blank" href="' + url + '/course/">Course page</a><br /><a target="_blank" href="https://www.google.com/maps/dir/?api=1&destination='+markerLatitude+',' + markerLongitude + '">Directions</a><br /><a target="_blank" href="../weather#'+markerLatitude+','+markerLongitude+'">Weather Forecast</a><br /><a target="_blank" href="https://www.facebook.com/search/top/?q='+ name + '&epa=SEARCH_BOX">Facebook</a>';
 	} else if (typeof(name) !== 'undefined') {
 		markerContent = name;
 	}
