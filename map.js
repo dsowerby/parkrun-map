@@ -327,6 +327,7 @@ function getFilter(filter) {
 			case 'austria':
 			case 'at':
 				countrycode = 4;
+				break;
 			case 'australia':
 			case 'au':
 				countrycode = 3;
