@@ -324,64 +324,92 @@ function getFilter(filter) {
 		var country = filter.substring(8);
 		var countrycode;
 		switch(country.toLowerCase()) {
+			case 'austria':
+			case 'at':
+				countrycode = 4;
 			case 'australia':
+			case 'au':
 				countrycode = 3;
 				break;
 			case 'canada':
+			case 'ca':
 				countrycode = 14;
 				break;
 			case 'denmark':
+			case 'dk':
 				countrycode = 23;
 				break;
 			case 'finland':
+			case 'fi':
 				countrycode = 30;
 				break;
 			case 'france':
+			case 'fr':
 				countrycode = 31;
 				break;
 			case 'germany':
+			case 'de':
 				countrycode = 32;
 				break;
 			case 'ireland':
+			case 'ie':
 				countrycode = 42;
 				break;
 			case 'italy':
+			case 'it':
 				countrycode = 44;
 				break;
 			case 'japan':
+			case 'ja':
 				countrycode = 46;
 				break;
 			case 'malaysia':
+			case 'my':
 				countrycode = 57;
 				break;
 			case 'netherlands':
+			case 'nl':
 				countrycode = 64;
 				break;
-			case 'new-zealand':
+				case 'new-zealand':
+				case 'new zealand':
+				case 'nz':
 				countrycode = 65;
 				break;
 			case 'norway':
+			case 'no':
 				countrycode = 67;
 				break;
 			case 'poland':
+			case 'pl':
 				countrycode = 74;
 				break;
 			case 'russia':
+			case 'ru':
 				countrycode = 79;
 				break;
 			case 'singapore':
+			case 'sg':
 				countrycode = 82;
 				break;
 			case 'south africa':
+			case 'south-africa':
+			case 'za':
 				countrycode = 85;
 				break;
 			case 'sweden':
+			case 'se':
 				countrycode = 88;
 				break;
+			case 'united kingdom':
+			case 'united-kingdom':
 			case 'uk':
 				countrycode = 97;
 				break;
+			case 'united states':
+			case 'united-states':
 			case 'usa':
+			case 'us':
 				countrycode = 98;
 				break;
 		}
