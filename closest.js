@@ -227,6 +227,7 @@ function displayEvents(closest) {
 				}
 				if (display) {
 					addIndexMarker(++displayedEvents, parseLatitude(matchedEvent), parseLongitude(matchedEvent), eventName, iconColours[(displayedEvents % iconColours.length)-1], matchedEvent);
+					console.info("index event " + displayedEvents + " " + eventName);
 				}
 			}
 		}
