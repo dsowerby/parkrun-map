@@ -651,7 +651,7 @@ function getFilter(filter) {
 			return events;
 		};
 	} else if (filter.startsWith('pin-')) {
-		var within = filter.substring(4);
+		var pin = filter.substring(4);
 		var indexOf = pin.indexOf('-');
 		pinColour = pin.substring(0, indexOf);
 		var pinLongLat = pin.substring(indexOf+1).split(',');
