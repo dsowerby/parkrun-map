@@ -650,6 +650,17 @@ function getFilter(filter) {
 		return function(events) {
 			return events;
 		};
+	} else if (filter.startsWith('pin-')) {
+		var within = filter.substring(4);
+		var indexOf = pin.indexOf('-');
+		pinColour = pin.substring(0, indexOf);
+		var pinLongLat = pin.substring(indexOf+1).split(',');
+		pinLatitude = pinLongLat[0];
+		pinLongitude = pinLongLat[1];
+		addMarker(pinLatitude, pinLongitude, 'Pinned location', pinColour);
+		return function(events) {
+			return events;
+		};
 	}
 }
 
