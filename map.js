@@ -471,7 +471,7 @@ function getFilter(filter) {
 				xmas = $(data);
 				xmas.find('#content .sortable tbody').addClass('events')
 				xmas.find(".events td:nth-child(3):not(:contains(':'))").parent().remove();
-				xmas.find(".events td>a[href$='/news/tag/newyear']").each(function(index, item) { console.info('xmas ' + $(item).attr('href')); });
+				xmas.find(".events td>a[href$='/news/tag/christmas']").each(function(index, item) { console.info('xmas ' + $(item).attr('href')); });
 				nyd = $(data);
 				nyd.find('#content .sortable tbody').addClass('events')
 				nyd.find(".events td:nth-child(4):not(:contains(':'))").parent().remove();
