@@ -497,7 +497,7 @@ function getFilter(filter) {
 				url: './athletes/' + athleteId + '.json',
 				async: false,
 			}).done(function(data) {
-				athleteData[athleteId] = JSON.parse(data);
+				athleteData[athleteId] = data;
 			});
 		}
 		return filterEvents(events, function($event) {
