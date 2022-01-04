@@ -494,15 +494,15 @@ function getFilter(filter) {
 		}
 		if (typeof(athleteData[athleteId]) === 'undefined') {
 			$.ajax({
-				url: 'https://cors-anywhere.herokuapp.com/http://www.parkrun.org.uk/results/athleteeventresultshistory/?athleteNumber=' + athleteId + '&eventNumber=0',
+				url: './athletes/' + athleteId + '.json',
 				async: false,
 			}).done(function(data) {
-				athleteData[athleteId] = $(data);
+				athleteData[athleteId] = JSON.parse(data);
 			});
 		}
 		return filterEvents(events, function($event) {
 			var eventId = parseEventId($event);
-			return athleteData[athleteId].find("a[href$='/" + eventId + "/results']").length > 0;
+			return athleteData[athleteId].contains(eventId).length > 0;
 		});
 	} else if (filter.startsWith('within-')) {
 		withinFilter = true;
