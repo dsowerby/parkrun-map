@@ -502,7 +502,7 @@ function getFilter(filter) {
 		}
 		return filterEvents(events, function($event) {
 			var eventId = parseEventId($event);
-			return athleteData[athleteId].contains(eventId).length > 0;
+			return athleteData[athleteId].includes(eventId).length > 0;
 		});
 	} else if (filter.startsWith('within-')) {
 		withinFilter = true;
