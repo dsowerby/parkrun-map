@@ -195,10 +195,10 @@ function displayEvents(closest) {
 	if (typeof(options.athleteId === 'string')) {
 		if (typeof(athleteData[options.athleteId]) === 'undefined') {
 			$.ajax({
-				url: 'https://cors-anywhere.herokuapp.com/https://www.parkrun.org.uk:443/results/athleteeventresultshistory/?athleteNumber=' + options.athleteId + '&eventNumber=0',
+				url: '../athletes/' + options.athleteId + '.json',
 				async: false,
 			}).done(function(data) {
-				athleteData[options.athleteId] = $(data);
+				athleteData[options.athleteId] = data;
 			});	
 		}
 	}
@@ -220,7 +220,7 @@ function displayEvents(closest) {
 				var display = false;
 				if (typeof(options.athleteId) === 'undefined' || typeof(athleteData) === 'undefined' || typeof(athleteData[options.athleteId]) == 'undefined') {
 					display = true;
-				} else if (athleteData[options.athleteId].find("a[href$='/" + parseEventId(matchedEvent) + "/results']").length == 0) {
+				} else if (!athleteData[options.athleteId].includes(parseEventId(matchedEvent))) {
 					display = true;
 				} else {
 					addDoneMarker(parseLatitude(matchedEvent), parseLongitude(matchedEvent), eventName, matchedEvent);
