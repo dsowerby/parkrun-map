@@ -1,9 +1,3 @@
 SOURCE_DIR=$(dirname "$0")
 
-$SOURCE_DIR/fetch-athlete.sh 316947
-$SOURCE_DIR/fetch-athlete.sh 1142363
-$SOURCE_DIR/fetch-athlete.sh 1328433
-$SOURCE_DIR/fetch-athlete.sh 1804932
-$SOURCE_DIR/fetch-athlete.sh 2810853
-$SOURCE_DIR/fetch-athlete.sh 3169399
-$SOURCE_DIR/fetch-athlete.sh 3347093
+for ATHLETE in $(ls $SOURCE_DIR/docs/athletes | xargs -I{} -n 1 basename {} .json); do $SOURCE_DIR/fetch-athlete.sh $ATHLETE; sleep 2; done
