@@ -134,8 +134,8 @@ function addIndexMarker(index, addIndexMarkerLatitude, addIndexMarkerLongitude, 
 	addMarker(markerIcon, addIndexMarkerLatitude, addIndexMarkerLongitude, name, $event);
 }
 
-function addMarker(icon, markerLatitude, markerLongitude, name, event) {
-	var marker = L.marker([markerLatitude, markerLongitude], { icon: icon});
+function addMarker(icon, latitude, longitude, name, event) {
+	var marker = L.marker([latitude, longitude], { icon: icon});
 	var markerContent;
 	if (typeof($event) !== 'undefined') {
 		var eventUrl = parseEventUrl($event);
