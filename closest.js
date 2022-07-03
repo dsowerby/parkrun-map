@@ -137,18 +137,41 @@ function addIndexMarker(index, addIndexMarkerLatitude, addIndexMarkerLongitude, 
 function addMarker(icon, markerLatitude, markerLongitude, name, event) {
 	var marker = L.marker([markerLatitude, markerLongitude], { icon: icon});
 	var markerContent;
-	if (typeof(event) !== 'undefined') {
-		var elementId = parseEventId(event);
-		var url = parseEventUrl(event);
-		markerContent = '<strong><a target="_blank" href="' + url + '/">'+ name + '</a></strong><br /><a target="_blank" href="' + url + '/course/">Course page</a><br /><a target="_blank" href="https://www.google.com/maps/dir/?api=1&destination='+markerLatitude+',' + markerLongitude + '">Directions</a><br /><a target="_blank" href="../weather#'+markerLatitude+','+markerLongitude+'">Weather Forecast</a><br /><a target="_blank" href="https://www.facebook.com/search/top/?q='+ name + '&epa=SEARCH_BOX">Facebook</a>';
+	if (typeof($event) !== 'undefined') {
+		var eventUrl = parseEventUrl($event);
+		markerContent = '<strong><a target="_blank" href="'+eventUrl+'/">'+ name+'</a></strong><br /><a target="_blank" href="'+eventUrl+'/course/">Course page</a><br /><a target="_blank" href="'+eventUrl+'/futureroster/">Future Roster</a><br /><a target="_blank" href="'+eventUrl+'/results/eventhistory/">Event History</a><br /><a target="_blank" href="https://www.google.com/maps/dir/?api=1&destination='+latitude+','+longitude+'">Directions</a><br /><a target="_blank" href="./weather#'+latitude+','+longitude+'">Weather Forecast</a><br /><a target="_blank" href="https://www.facebook.com/search/top/?q='+ name + '&epa=SEARCH_BOX">Facebook</a>';
 	} else if (typeof(name) !== 'undefined') {
 		markerContent = name;
 	}
-	if (options.vegan) {
+	// vegan
+	{
 		if (typeof(markerContent) !== 'undefined') {
 			markerContent += '<br />';
 		}
-		markerContent += '<a target="_blank" href="https://www.happycow.net/searchmap?lat='+markerLatitude+'&lng='+markerLongitude+'&vegan=true">Local vegan food</a>';
+		markerContent += '<a target="_blank" href="https://www.happycow.net/searchmap?lat='+latitude+'&lng='+longitude+'&vegan=true">Local vegan food</a>';
+	}
+	// national trust
+	{
+		if (typeof(markerContent) !== 'undefined') {
+			markerContent += '<br />';
+		}
+		markerContent += '<a target="_blank" href="https://www.nationaltrust.org.uk/search?lat='+latitude+'&lon='+longitude+'&type=place&view=map">National Trust venues</a>';
+		markerContent += '<br />';
+		markerContent += '<a target="_blank" href="https://www.nationaltrust.org.uk/search?lat='+latitude+'&lon='+longitude+'&type=place&view=map&PlaceFilter=houses-and-buildings">National Trust houses</a>';
+	}
+	// premier inn
+	{
+		if (typeof(markerContent) !== 'undefined') {
+			markerContent += '<br />';
+		}
+		markerContent += '<a target="_blank" href="https://www.premierinn.com/gb/en/search.html?&LOCATION=' + latitude + ',' + longitude + '">Local Premier Inns</a>';
+	}
+	// pitch up
+	{
+		if (typeof(markerContent) !== 'undefined') {
+			markerContent += '<br />';
+		}
+		markerContent += '<a target="_blank" href="https://www.pitchup.com/search/?sort=&lat=' + latitude + '&lng=' + longitude + '&facet=toilet-block&facet=adults-only&facet=shower-available&within=40&q=&type=4&adults=2&children=0">Tent site</a>'
 	}
 	marker.bindPopup(markerContent);
 	marker.addTo(markerGroup);
