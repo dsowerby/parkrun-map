@@ -225,11 +225,15 @@ function addMarker(latitude, longitude, name, iconColour, $event) {
 	} else if (typeof(name) !== 'undefined') {
 		markerContent = name;
 	}
-	if (typeof(markerContent) !== 'undefined') {
-		markerContent += '<br />';
+	// vegan
+	{
+		if (typeof(markerContent) !== 'undefined') {
+			markerContent += '<br />';
+		}
+		markerContent += '<a target="_blank" href="https://www.happycow.net/searchmap?lat='+latitude+'&lng='+longitude+'&vegan=true">Local vegan food</a>';
 	}
-	markerContent += '<a target="_blank" href="https://www.happycow.net/searchmap?lat='+latitude+'&lng='+longitude+'&vegan=true">Local vegan food</a>';
-	if (options.nationaltrust) {
+	// national trust
+	{
 		if (typeof(markerContent) !== 'undefined') {
 			markerContent += '<br />';
 		}
@@ -237,11 +241,19 @@ function addMarker(latitude, longitude, name, iconColour, $event) {
 		markerContent += '<br />';
 		markerContent += '<a target="_blank" href="https://www.nationaltrust.org.uk/search?lat='+latitude+'&lon='+longitude+'&type=place&view=map&PlaceFilter=houses-and-buildings">National Trust houses</a>';
 	}
-	if (options.premierinn) {
+	// premier inn
+	{
 		if (typeof(markerContent) !== 'undefined') {
 			markerContent += '<br />';
 		}
 		markerContent += '<a target="_blank" href="https://www.premierinn.com/gb/en/search.html?&LOCATION=' + latitude + ',' + longitude + '">Local Premier Inns</a>';
+	}
+	// pitch up
+	{
+		if (typeof(markerContent) !== 'undefined') {
+			markerContent += '<br />';
+		}
+		markerContent += '<a target="_blank" href="https://www.pitchup.com/search/?sort=&lat=' + latitude + '&lng=' + longitude + '&facet=toilet-block&facet=adults-only&facet=shower-available&within=40&q=&type=4&adults=2&children=0">Tent site</a>'
 	}
 	marker.bindPopup(markerContent);
 	marker.addTo(markerGroup);
