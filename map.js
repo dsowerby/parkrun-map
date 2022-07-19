@@ -221,7 +221,14 @@ function addMarker(latitude, longitude, name, iconColour, $event) {
 	var markerContent;
 	if (typeof($event) !== 'undefined') {
 		var eventUrl = parseEventUrl($event);
-		markerContent = '<strong><a target="_blank" href="'+eventUrl+'/">'+ name+'</a></strong><br /><a target="_blank" href="'+eventUrl+'/course/">Course page</a><br /><a target="_blank" href="'+eventUrl+'/futureroster/">Future Roster</a><br /><a target="_blank" href="'+eventUrl+'/results/eventhistory/">Event History</a><br /><a target="_blank" href="https://www.google.com/maps/dir/?api=1&destination='+latitude+','+longitude+'">Directions</a><br /><a target="_blank" href="./weather#'+latitude+','+longitude+'">Weather Forecast</a><br /><a target="_blank" href="https://www.facebook.com/search/top/?q='+ name + '&epa=SEARCH_BOX">Facebook</a>';
+		markerContent = '<strong><a target="_blank" href="'+eventUrl+'/">'+ name+'</a></strong><br />';
+		markerContent += '<a target="_blank" href="'+eventUrl+'/course/">Course page</a><br />';
+		markerContent += '<a target="_blank" href="'+eventUrl+'/futureroster/">Future Roster</a><br />';
+		markerContent += '<a target="_blank" href="'+eventUrl+'/results/eventhistory/">Event History</a><br />';
+		markerContent += '<a target="_blank" href="https://www.google.com/maps/dir/?api=1&destination='+latitude+','+longitude+'">Directions</a><br />';
+		markerContent += '<a target="_blank" href="./weather#'+latitude+','+longitude+'">Weather Forecast</a><br />';
+		markerContent += '<a target="_blank" href="https://www.facebook.com/search/top/?q='+ name + '&epa=SEARCH_BOX">Facebook</a><br />';
+		markerContent += '<a target="_blank" href="https://www.youtube.com/results?search_query=' + name + '">YouTube</a>';
 	} else if (typeof(name) !== 'undefined') {
 		markerContent = name;
 	}
