@@ -17,7 +17,7 @@ var specialEvents;
 
 function parseName(nameevent) {
 	if (typeof(nameevent) !== 'undefined') {
-		return nameevent.properties.EventLongName;
+		return nameevent.properties.EventShortName;
 	}
 	return undefined;
 }
