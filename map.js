@@ -230,7 +230,7 @@ function addMarker(latitude, longitude, name, iconColour, $event) {
 	} else if (typeof(name) !== 'undefined') {
 		markerContent = name;
 	}
-	markerContent += '<a target="_blank" href="https://www.google.com/maps/dir/?api=1&destination='+latitude+','+longitude+'">Directions</a><br />';
+	markerContent += '<br /><a target="_blank" href="https://www.google.com/maps/dir/?api=1&destination='+latitude+','+longitude+'">Directions</a><br />';
 	markerContent += '<a target="_blank" href="./weather#'+latitude+','+longitude+'">Weather Forecast</a><br />';
 	// vegan
 	markerContent += '<a target="_blank" href="https://www.happycow.net/searchmap?lat='+latitude+'&lng='+longitude+'&vegan=true">Local vegan food</a><br />';
