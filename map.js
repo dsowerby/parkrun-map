@@ -226,7 +226,7 @@ function addMarker(latitude, longitude, name, iconColour, $event) {
 		markerContent += '<a target="_blank" href="'+eventUrl+'/futureroster/">Future Roster</a><br />';
 		markerContent += '<a target="_blank" href="'+eventUrl+'/results/eventhistory/">Event History</a><br />';
 		markerContent += '<a target="_blank" href="https://www.facebook.com/search/top/?q='+ name + '%20parkrun&epa=SEARCH_BOX">Facebook</a><br />';
-		markerContent += '<a target="_blank" href="https://www.youtube.com/results?search_query=' + name + '%20parkrun">YouTube</a><br />';
+		markerContent += '<a target="_blank" href="https://www.youtube.com/results?search_query=' + name + '%20parkrun">YouTube</a>';
 	} else if (typeof(name) !== 'undefined') {
 		markerContent = name;
 	}
