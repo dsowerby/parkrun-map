@@ -256,8 +256,8 @@ function displayEvents(closest) {
 				}
 			}
 		}
-		console.info("Completed  " + completedEvents + " parkruns within " + closest + " closest events distance.");
 	});
+	console.info("Completed  " + completedEvents + " parkruns within " + closest + " closest events distance.");
 
 	var markerIcon = L.icon({
 		iconUrl: 'https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-blue.png',
