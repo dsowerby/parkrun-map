@@ -227,6 +227,7 @@ function displayEvents(closest) {
 	}
 
 	var displayedEvents = 0;
+	var completedEvents = 0;
 	eventIds.forEach(function(eventId) {
 		if (displayedEvents < closest) {
 			var matchedEvent;
@@ -247,6 +248,7 @@ function displayEvents(closest) {
 					display = true;
 				} else {
 					addDoneMarker(parseLatitude(matchedEvent), parseLongitude(matchedEvent), eventName, matchedEvent);
+					completedEvents++;
 				}
 				if (display) {
 					addIndexMarker(++displayedEvents, parseLatitude(matchedEvent), parseLongitude(matchedEvent), eventName, iconColours[(displayedEvents % iconColours.length)-1], matchedEvent);
@@ -254,6 +256,7 @@ function displayEvents(closest) {
 				}
 			}
 		}
+		console.info("Completed  " + completedEvents + " parkruns within " + closest + " closest events distance.");
 	});
 
 	var markerIcon = L.icon({
