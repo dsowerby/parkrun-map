@@ -146,7 +146,7 @@ function addMarker(icon, latitude, longitude, name, $event) {
 		markerContent += '<a target="_blank" href="https://www.google.com/maps/dir/?api=1&destination='+latitude+','+longitude+'">Directions</a><br />';
 		markerContent += '<a target="_blank" href="../weather#'+latitude+','+longitude+'">Weather Forecast</a><br />';
 		markerContent += '<a target="_blank" href="https://www.facebook.com/search/top/?q='+ name + '&epa=SEARCH_BOX">Facebook</a><br />';
-		markerContent += '<a target="_blank" href="https://www.youtube.com/results?search_query=' + name + '%20parkrun">YouTube</a>';
+		markerContent += '<a target="_blank" href="https://www.youtube.com/results?search_query=' + name + '">YouTube</a>';
 	} else if (typeof(name) !== 'undefined') {
 		markerContent = name;
 	}
