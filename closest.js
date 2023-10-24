@@ -164,7 +164,7 @@ function addMarker(icon, latitude, longitude, name, $event) {
 		}
 		markerContent += '<a target="_blank" href="https://www.nationaltrust.org.uk/search?lat='+latitude+'&lon='+longitude+'&type=place&view=map">National Trust venues</a>';
 		markerContent += '<br />';
-		markerContent += '<a target="_blank" href="https://www.nationaltrust.org.uk/search?lat='+latitude+'&lon='+longitude+'&type=place&view=map&PlaceFilter=houses-and-buildings">National Trust houses</a>';
+		markerContent += '<a target="_blank" href="https://www.nationaltrust.org.uk/search?lat='+latitude+'&lon='+longitude+'&type=place&view=map&filter=houses-and-buildings">National Trust houses</a>';
 	}
 	// premier inn
 	{
