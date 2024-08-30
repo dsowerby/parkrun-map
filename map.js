@@ -362,6 +362,10 @@ function getFilter(filter) {
 			case 'ja':
 				countrycode = 46;
 				break;
+			case 'lithuania':
+			case 'lt':
+				countrycode = 54;
+				break;
 			case 'malaysia':
 			case 'my':
 				countrycode = 57;
