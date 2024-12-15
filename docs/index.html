@@ -10,8 +10,8 @@
 	<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto" rel='stylesheet' type="text/css" />
 	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/noty/3.1.4/noty.min.css" type="text/css" />
 	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.7.0/animate.min.css" type="text/css" />
-	<link rel="stylesheet" href="hamburger.min.css?1722536076" type="text/css" />
-	<link rel="stylesheet" href="map.min.css?1722536076" type="text/css" />
+	<link rel="stylesheet" href="hamburger.min.css?1734248319" type="text/css" />
+	<link rel="stylesheet" href="map.min.css?1734248319" type="text/css" />
 	<script src="https://cdnjs.cloudflare.com/ajax/libs/lodash.js/4.17.11/lodash.min.js" type="text/javascript"></script>
 	<script src="https://unpkg.com/leaflet@1.3.4/dist/leaflet.js" integrity="sha512-nMMmRyTVoLYqjP9hrbed9S+FzjZHW5gY1TWCHA5ckwXZBadntCNs8kEqAWdrb9O7rxbCaA4lKTIWjDXZxflOcA==" crossorigin="" type="text/javascript"></script>
 	<script src="https://code.jquery.com/jquery-3.3.1.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous" type="text/javascript"></script>
@@ -20,7 +20,7 @@
 	<script src="https://cdnjs.cloudflare.com/ajax/libs/noty/3.1.4/noty.min.js" type="text/javascript"></script>
 	<script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet.fullscreen/1.4.5/Control.FullScreen.min.js" type="text/javascript"></script>
 
-	<script src="map.min.js?1722536076" type="text/javascript"></script>
+	<script src="map.min.js?1734248319" type="text/javascript"></script>
 </head>
 <body>
 	<div id="mapid"></div>
@@ -64,7 +64,6 @@
 				<a href="#startsWith-W">W</a>
 				<a href="#startsWith-Y">Y</a>
 				<a href="#startsWith-Z">Z</a>
-				<a href="#all">All</a>
 				<h5>Missing letters:</h5>
 				<input id="letter-prefix" />
 				
@@ -92,6 +91,17 @@
 				<a href="#matches-^C[^%20]+%20C[^%20]+$">10cc</a><br />
 				<a href="#matches-^Bushy|^Wimbledon%20Common|^Banstead%20Woods|^Woodhouse%20Moor|^Richmond|^Brighton%20&%20Hove|^Cardiff|^Bramhall|^Albert|^Basingstoke#seriesid-1#country-uk">The Time Trials</a><br />
 				<a href="#matches-hampton#seriesid-1#country-uk">The Hamptons</a><br />
+
+				<h4>Years</h4>
+				<a href="#matches-^Chippenham$">2016</a><br />
+				<a href="#matches-^Walsall Arboretum$|^Southwick Country Park$|^Exeter Riverside$|^Lydiard$|^Wolverhampton$|^Salisbury$|^Cheltenham$|^Bath Skyline$|^Bedfont Lakes$|^Cannock Chase$|^Chipping Sodbury$">2017</a><br />
+				<a href="#matches-^Melksham$|^Pomphrey Hill$|^Eastville$|^Severn Bridge$|^Cardiff$|^Yeovil Montacute$|^Marlborough Common$|^Gloucester North$|^Bushy Park$|^Queen Elizabeth$|^Thornbury$|^Aberbeeg$|^Henley Wood, Oswestry$|^Jersey Farm$|^Isabel Trail$|^Newbury$|^Didcot$">2018</a><br />
+				<a href="#matches-^Wotton$|^Fire Service College$|^Cirencester$|^Gloucester City$|^Churchfields Farm$|^Riverfront$|^Upton Court$|^Victoria Dock$|^Lymington Woodside$|^Osterley$|^Killerton$|^Grangemoor$|^Pontefract$|^Pontypridd$|^Pontypool$|^Pont y Bala$|^Newport$|^Somerdale Pavilion$|^Henstridge Airfield$|^Stonehouse$|^Cwmbran$|^Tetbury Goods Shed$|^Abingdon$|^Eden Project$|^Shepton Mallet$|^Street$|^Kingsway$|^Chasewater$|^Lydney$|^Barry Island$|^Aberystwyth$|^St Mary’s$|^Rogiet$|^Clevedon Salthouse Fields$|^Forest of Dean$|^Mount Edgcumbe$|^The Old Showfield$|^Severn Valley Country$|^Ashton Court$|^Stratford Park, Stroud$|^Wendover Woods$|^Andover$|^Burnham and Highbridge$|^Babbs Mill$|^Daventry$|^Mallards Pike$">2019</a><br />
+				<a href="#matches-^Upton House$|^Bournemouth$|^King George V Playing Field$|^Ross-on-Wye$|^Penallta$|^East Park$|^Blandford$|^Seven Fields$">2020</a><br />
+				<a href="#matches-^Itchen Valley Country$|^Berkeley Green$|^Evesham$|^Oaklands$|^Witney$|^Woking$|^Bramley$|^Linford Wood$|^Grüner Weg$|^Neckarufer, Esslingen$|^Black Park$|^Brynaman$|^Woolacombe Dunes$|^Chevin Forest$|^Poolbeg$|^Chipping Norton School$|^Arrow Valley$|^Cosmeston Lakes$|^Aberdare$|^Peter Pan$|^Bicester$">2021</a><br />
+				<a href="#matches-^Irchester Country$|^Horspath$|^Moors Valley$|^Bedworth$|^Marine Parade$|^Grove Fields$|^Zuiderpark$|^Edgbaston Reservoir$|^Trelai Park$|^Tremorfa$|^Woodgate Valley Country Park$|^Worcester Pitchcroft$|^Milano Nord$|^Bryn Bach$|^California Country$|^Jesmond Dene$|^University Parks$|^Sandy Water$|^Prospect$|^Sharpham Road Playing Fields$|^Broadwater$|^Cranbrook Country Park$|^Amager Strandpark$|^Malmö Ribersborg$|^Coed Cefn-pwll-du$|^Sandhurst Memorial$|^Watermead Country Park$|^Charlton$|^Perry Hall$|^Rugby$|^Valentines$|^Henlow Bridge Lakes$|^Dallas Burston Polo Club$|^Nansenparken$|^Chippenham Playing Fields, Monmouth$|^Reading$|^Queen’s, Belfast$|^Brueton$|^Tokoinranta$|^Weymouth$|^Kastanienallee$|^Monrepos$|^Warszawa-Praga$|^York$|^The Great Field$|^Bury Field$|^Gunpowder$|^Goole$|^Markshall Estate$|^Bartley Park$|^Zalew Żyrardowski$|^Llanishen Park$|^Fareham$|^Tidworth$|^Banbury$|^Hove Promenade$">2022</a><br />
+				<a href="#matches-^Littlehampton Prom$|^Coventry$|^Trentham Gardens$|^Katowice$|^Oxford$|^Etna$|^Market Bosworth Country Park$|^Hastings High School$|^Netley Abbey$|^Yarborough Leisure Centre$|^Southampton$|^Donaupark$|^Beatrixpark$|^Woodley$|^Gdynia$|^Frogmary Green Farm$|^Ifield Mill Pond$|^Portrush$|^Wrocław$|^Ganger Farm$|^Salcey Forest$|^Tapijn$|^Karpendonkse Plas$|^Fælledparken$|^Amager Fælled$|^Växjösjön$|^Frimley Lodge$|^Newent$|^Church Mead$|^Great Salterns$|^Abbey Park$|^Crosby$|^Porthcawl$|^Buckingham$|^Southwark$|^Edenbrook Country$|^Ashbourne Recreation Ground$|^Bere Island$|^Bethlem Royal Hospital$|^Seaford Beach$|^Thames Path, Woolwich$|^Durlston Country Park$|^Sportpark Rems$|^Kräherwald$|^Longrun Meadow$|^Merthyr$|^Queen’s, Glasgow$|^Five Arches$|^Holbrooks$|^Jubilee$|^Zalew Wrzesiński$|^Rushmoor$|^Aberfields$|^Stratford-upon-Avon$|^Gnoll$|^Basingstoke$|^Blaise Castle$|^Kraków$|^Jabłonna$">2023</a><br />
+				<a href="#matches-^Pole Mokotowskie$|^Stevenage$|^Pavilion Gardens$|^Maesteg$|^University of Northampton$|^Dinton Pastures$|^Stockley Country$|^Old Deer Park$|^Milton Keynes$|^Princes$|^Rosliston$|^Leavesden Country$|^Zamek w Malborku$|^Zielony Jar$|^Nonsuch$|^Malahide$|^Northala Fields$|^Damhusengen$|^Harcourt Hill$|^Haga$|^Lillsjön$|^Reeuwijkse Hout$|^Kralingse Bos$|^Bracknell$|^Wolford Wood$|^Tewkesbury$|^Lowestoft$|^Quakers Walk$|^Y Promenâd$|^Bushy, Dublin$|^Bramshall Road$|^Swansea Bay$|^Aylesbury$|^Orpington$|^Lee-on-the-Solent$|^Northwich$|^Inch Beach$|^Three Brooks$|^Vogrie$|^Fairview$|^Y Promenâd, Abermaw$|^Oberwald$|^Rosensteinpark$|^Wertwiesen$|^Poolsbrook$|^Jezioro Swarzędzkie$|^Victoria$|^Belton House$|^Brixworth Country$|^Ed Austin Regional$|^Depot Park$|^Weedon Island Preserve$|^Clermont Waterfront$|^Wycombe Rye$|^Llyn Llech Owain$">2024</a><br />
 			</ul>
 		</div>
 	</nav>
