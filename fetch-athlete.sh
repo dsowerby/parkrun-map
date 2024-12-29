@@ -6,6 +6,7 @@ fi
 
 echo Go fetch https://www.parkrun.org.uk/parkrunner/$ATHLETE_ID/all/ to docs/athletes/$ATHLETE_ID.html
 code docs/athletes/$ATHLETE_ID.json
+sleep 1
 open https://www.parkrun.org.uk/parkrunner/$ATHLETE_ID/all/
 echo "Tell me when that's done"
 echo 'Reminder: javascript:(function(){const links=Array.from(document.querySelectorAll('a[href]'));const pattern=/^(https?:\/\/[^/]+\/([^/]+)\/results\/)$/;const matchingLinks=links.map(link=>link.href.match(pattern)).filter(match=>match).map(match=>match[2]);const uniqueLinks=[...new Set(matchingLinks)].sort();const jsonArray=JSON.stringify(uniqueLinks);document.body.innerHTML=`<pre>${jsonArray}</pre>`;document.body.style.whiteSpace=%27pre-wrap%27;document.body.style.fontFamily=%27monospace%27;})();'
