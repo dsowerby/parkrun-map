@@ -324,7 +324,7 @@ function getFilter(filter) {
 			var shortName = parseName($event);
 			var longName = parseLongName($event);
 
-			return regex.test(shorName.toLowerCase()) || regex.test(longName.toLowerCase());
+			return regex.test(shortName.toLowerCase()) || regex.test(longName.toLowerCase());
 		});
 	} else if (filter.startsWith('country-')) {
 		var country = filter.substring(8);
