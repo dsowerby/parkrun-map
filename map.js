@@ -22,6 +22,13 @@ function parseName(nameevent) {
 	return undefined;
 }
 
+function parseLongName(nameevent) {
+	if (typeof(nameevent) !== 'undefined') {
+		return nameevent.properties.EventLongName;
+	}
+	return undefined;
+}
+
 function parseEventId(eventidevent) {
 	if (typeof(eventidevent) !== 'undefined') {
 		return eventidevent.properties.eventname;
@@ -314,9 +321,10 @@ function getFilter(filter) {
 		var r = filter.substring(8);
 		var regex = new RegExp(r, 'i');
 		return filterEvents(events, function($event) {
-			var name = parseName($event);
+			var shortName = parseName($event);
+			var longName = parseLongName($event);
 
-			return regex.test(name.toLowerCase());
+			return regex.test(shorName.toLowerCase()) || regex.test(longName.toLowerCase());
 		});
 	} else if (filter.startsWith('country-')) {
 		var country = filter.substring(8);
