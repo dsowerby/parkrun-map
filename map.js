@@ -66,7 +66,6 @@ function parseSeriesId(seriesidevent) {
 }
 
 $(document).ready(function() {
-	// initAjaxPrefilter();
 	initOptions();
 	initMap();
 	initBurger();
@@ -183,22 +182,6 @@ function displayEvents(filterFunctions) {
 	}
 
 	if (filterFunctions.length > 0) {
-		// if (!(regionFilter || withinFilter || closestFilter)) {
-		// 	// there is no region or within filter specified, so we should find out the UI selected regions
-		// 	var selectedCountries = $('.countries input:checked');
-		// 	if (selectedCountries.length > 0) {
-		// 		var regionFilterText = 'or-';
-		// 		for (var sc=1; sc<selectedCountries.length; sc++) {
-		// 			regionFilterText += 'region-' + $(selectedCountries[sc]).attr('name');
-		// 			if (sc <selectedCountries.length) {
-		// 				regionFilterText += '||';
-		// 			}
-		// 		}
-		// 		console.info('filter ' + filterFunction.length + ' ' + regionFilterText);
-		// 		events = getFilter(regionFilterText)(events);
-		// 		console.info('after filter ' + filterFunctions.length + ' there are ' + events.length + ' events');
-		// 	}
-		// }
 		console.info('after all filters there are ' + events.length + ' events');
 	}
 
@@ -435,16 +418,6 @@ function getFilter(filter) {
 		return filterEvents(events, function(countryEvent) {
 			return countrycode === parseCountrycode(countryEvent);
 		});
-	// } else if (filter.startsWith('region-')) {
-	// 	regionFilter = true;
-	// 	var region = filter.substring(7);
-	// 	// we now have the region name
-	// 	var $regionElement = $geo.find("r[n='"+region+"']");
-	// 	// we have the region id
-	// 	return filterEvents(events, function($event) {
-	// 		var eventRegionId = $event.attr('r');
-	// 		return $regionElement.is('[id="'+eventRegionId+'"]') || ($regionElement.has('r[id="'+eventRegionId+'"]').length > 0);
-	// 	});
 	} else if (filter.startsWith('athlete')) {
 		var athleteId;
 		if (filter == 'athlete') {
@@ -675,31 +648,6 @@ function init() {
 	}).done(function(data) {
 		$events = data.events;
 		countries = data.countries;
-		// var $countries = $('<div class="countries"><h4>Countries</h4></div>')
-		// $('.nav .controls').append($countries);
-		// console.info($events[0].countries);
-		// console.info($events[0]['countries']);
-		// $events.find("r[id=1] > r").each(function() {
-		// 	var $element = $(this);
-		// 	var id = $element.attr('id');
-		// 	var name = $element.attr('n');
-		// 	// checked
-		// 	var $checkbox = $("<input type='checkbox' />");
-		// 	$checkbox.attr('name', name);
-		// 	if (name == 'UK') {
-		// 		$checkbox.attr('checked','');
-		// 	}
-		// 	$checkbox.attr('data-region-id-' + id, '');
-		// 	countries;
-		// 	$geo.find('r[id='+id+'] r').each(function() {
-		// 		$region = $(this);
-		// 		$checkbox.attr('data-region-id-' + $region.attr('id'), '');
-		// 	});
-		// 	$countries.append($checkbox).append($('<span />').text(name)).append($('<br />'));
-		// 	$checkbox.change(function() {
-		// 		load();
-		// 	})
-		// });
 	});
 	$('#letter-prefix').keypress(function (e) {
 		if (e.which == 13) {
