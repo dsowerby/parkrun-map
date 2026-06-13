@@ -717,7 +717,7 @@ function init() {
 		load();
 	});
 	$.ajax({
-		url: './events.json',
+		url: 'https://snowy-wood-82b6.dave-sowerby.workers.dev/events',
 		async: false,
 	}).done(function(data) {
 		$events = data.events;
