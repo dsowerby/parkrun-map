@@ -10,6 +10,7 @@ var hamburger;
 var withinFilter;
 var closestFilter;
 var events;
+var initialized = false;
 
 function parseName(nameevent) {
 	if (typeof(nameevent) !== 'undefined') {
@@ -70,15 +71,26 @@ $(document).ready(function() {
 	initMap();
 	initBurger();
 	centreMap();
-	initAndLoad();
+	if (!initialized) {
+		initialized = true;
+		initAndLoad();
+	}
 });
 
 navigator.geolocation.getCurrentPosition(function(data) {
 	position = data;
-	initAndLoad();
+	if (!initialized) {
+		initialized = true;
+		initAndLoad();
+	} else {
+		load(); // Just reload with new position
+	}
 }, function(error) {
 	console.info("Error looking up location" + error);
-	initAndLoad();
+	if (!initialized) {
+		initialized = true;
+		initAndLoad();
+	}
 });
 
 function initOptions() {
