@@ -80,7 +80,6 @@ def main():
     html_files = [
         ('index.html', 'docs/index.html'),
         ('index-closest.html', 'docs/closest/index.html'),
-        ('index.html', 'docs/juniors/index.html'),
     ]
     
     print("\nHTML cache-busting:")

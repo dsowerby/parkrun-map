@@ -10,10 +10,6 @@ var hamburger;
 var withinFilter;
 var closestFilter;
 var events;
-var xmas;
-var nyd;
-var cancelled;
-var specialEvents;
 
 function parseName(nameevent) {
 	if (typeof(nameevent) !== 'undefined') {
@@ -437,61 +433,6 @@ function getFilter(filter) {
 	// 		var eventRegionId = $event.attr('r');
 	// 		return $regionElement.is('[id="'+eventRegionId+'"]') || ($regionElement.has('r[id="'+eventRegionId+'"]').length > 0);
 	// 	});
-	} else if (filter == 'cancelled') {
-		if (typeof(cancelled) === 'undefined') {
-			$.ajax({
-				url: 'https://cors-anywhere.herokuapp.com/https://www.parkrun.org.uk/cancellations/',
-				async: false,
-			}).done(function(data) {
-				cancelled = $(data);
-			});
-		}
-		return filterEvents(events, function($event) {
-			var parkrunurl = parseEventUrl($event) + '/';
-			return (cancelled.find("#main > #primary > #content > div.floatleft.left > ul:nth-child(4), #main > #primary > #content > div.floatleft.left > ul:nth-child(6)").find("li>a[href*='"+parkrunurl+"']").length > 0);
-		});
-	} else if (filter == 'nyd') {
-		if (typeof(nyd) === 'undefined') {
-			$.ajax({
-				url: 'https://cors-anywhere.herokuapp.com/https://www.parkrun.org.uk/special-events/',
-				async: false,
-			}).done(function(data) {
-				specialEvents = $(data);
-				xmas = $(data);
-				xmas.find('#content .sortable tbody').addClass('events')
-				xmas.find(".events td:nth-child(3):not(:contains(':'))").parent().remove();
-				xmas.find(".events td>a[href$='/news/tag/newyear']").each(function(index, item) { console.info('xmas ' + $(item).attr('href')); });
-				nyd = $(data);
-				nyd.find('#content .sortable tbody').addClass('events')
-				nyd.find(".events td:nth-child(4):not(:contains(':'))").parent().remove();
-				nyd.find(".events td>a[href$='/news/tag/newyear']").each(function(index, item) { console.info('nyd ' + $(item).attr('href')); });
-			});
-		}
-		return filterEvents(events, function($event) {
-			var parkrunid = parseEventId($event);
-			return (nyd.find("td>a[href='https://www.parkrun.org.uk/"+parkrunid+"/']").length > 0);
-		});
-	} else if (filter == 'xmas') {
-		if (typeof(xmas) === 'undefined') {
-			$.ajax({
-				url: 'https://cors-anywhere.herokuapp.com/https://www.parkrun.org.uk/special-events/',
-				async: false,
-			}).done(function(data) {
-				specialEvents = $(data);
-				xmas = $(data);
-				xmas.find('#content .sortable tbody').addClass('events')
-				xmas.find(".events td:nth-child(3):not(:contains(':'))").parent().remove();
-				xmas.find(".events td>a[href$='/news/tag/christmas']").each(function(index, item) { console.info('xmas ' + $(item).attr('href')); });
-				nyd = $(data);
-				nyd.find('#content .sortable tbody').addClass('events')
-				nyd.find(".events td:nth-child(4):not(:contains(':'))").parent().remove();
-				nyd.find(".events td>a[href$='/news/tag/newyear']").each(function(index, item) { console.info('nyd ' + $(item).attr('href')); });
-			});
-		}
-		return filterEvents(events, function($event) {
-			var parkrunid = parseEventId($event);
-			return (xmas.find("td>a[href='https://www.parkrun.org.uk/"+parkrunid+"/']").length > 0);
-		});
 	} else if (filter.startsWith('athlete')) {
 		var athleteId;
 		if (filter == 'athlete') {
