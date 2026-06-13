@@ -59,12 +59,7 @@ def main():
     # Minify JavaScript files
     js_files = [
         ('map.js', 'docs/map.min.js'),
-        ('map-nyd.js', 'docs/nyd/map.min.js'),
-        ('map-nyd-ie.js', 'docs/nyd/ie/map.min.js'),
-        ('map-xmas.js', 'docs/xmas/map.min.js'),
-        ('map-juniors.js', 'docs/juniors/map.min.js'),
         ('closest.js', 'docs/closest/closest.min.js'),
-        ('alphabeteer.js', 'docs/alphabeteer/alphabeteer.min.js'),
     ]
     
     print("JavaScript minification:")
@@ -74,12 +69,7 @@ def main():
     # Minify CSS files
     css_files = [
         ('map.css', 'docs/map.min.css'),
-        ('map.css', 'docs/juniors/map.min.css'),
-        ('map.css', 'docs/nyd/map.min.css'),
-        ('map.css', 'docs/nyd/ie/map.min.css'),
-        ('map.css', 'docs/xmas/map.min.css'),
         ('hamburger.css', 'docs/hamburger.min.css'),
-        ('hamburger.css', 'docs/juniors/hamburger.min.css'),
     ]
     
     print("\nCSS minification:")
@@ -90,11 +80,7 @@ def main():
     html_files = [
         ('index.html', 'docs/index.html'),
         ('index-closest.html', 'docs/closest/index.html'),
-        ('index-alphabeteer.html', 'docs/alphabeteer/index.html'),
         ('index.html', 'docs/juniors/index.html'),
-        ('index-nyd.html', 'docs/nyd/index.html'),
-        ('index-xmas.html', 'docs/xmas/index.html'),
-        ('index-nyd.html', 'docs/nyd/ie/index.html'),
     ]
     
     print("\nHTML cache-busting:")
