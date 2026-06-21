@@ -5,6 +5,8 @@ name = "pypi"
 
 [packages]
 playwright = "*"
+rjsmin = "*"
+rcssmin = "*"
 
 [dev-packages]
 

@@ -418,6 +418,7 @@ function createAthleteFilter(athleteId) {
 			dataType: 'json'
 		}).done(function(data) {
 			athleteData[athleteId] = data;
+			load();
 		}).fail(function() {
 			console.error('Failed to load athlete data for ' + athleteId);
 		});
@@ -624,6 +625,9 @@ function deg2rad(deg) {
 
 function load() {
 	$(document).ready(function() {
+		if (typeof $events === 'undefined') {
+			return; // events not loaded yet; init()'s .done will call load() once they are
+		}
 		markerGroup.clearLayers();
 		var hash = decodeURIComponent(window.location.hash);
 		filters = [];
@@ -657,6 +661,7 @@ function init() {
 		$events = data.events;
 		countries = data.countries;
 		console.info('Events loaded: ' + $events.features.length + ' events');
+		load();
 	})
 	.fail(function(jqXHR, textStatus, errorThrown) {
 		console.error('Failed to load events: ' + textStatus + ' ' + errorThrown);
