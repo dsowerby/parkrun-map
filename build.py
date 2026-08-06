@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
 """Build script: minify JS/CSS and cache-bust HTML for parkrun-explorer."""
 
 import os

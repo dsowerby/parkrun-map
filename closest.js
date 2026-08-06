@@ -309,14 +309,13 @@ function load() {
 function init() {
 	$(window).bind( 'hashchange', function(event) {
 		load();
-	});	
-	$.ajax({
-		url: '../events.json',
-		async: false,
-	}).done(function(data) {
-		events = data.events.features;
-		countries = data.countries;
 	});
+	fetch('https://snowy-wood-82b6.dave-sowerby.workers.dev/events')
+		.then(r => r.json())
+		.then(data => {
+			events = data.events.features;
+			countries = data.countries;
+		});
 }
 
 function initAndLoad() {
