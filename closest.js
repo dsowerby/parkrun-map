@@ -62,16 +62,16 @@ Array.prototype.getUnique = function() {
 
 navigator.geolocation.getCurrentPosition(function(data) {
 	position = data;
-	initAndLoad();
+	load();
 }, function(error) {
-	initAndLoad();
+	load();
 });
 
 $(document).ready(function() {
 	initMap();
 	initOptions();
 	centreMap();
-	initAndLoad();
+	init();
 });
 
 function initOptions() {
@@ -85,14 +85,18 @@ function initMap() {
 		maxBounds: new L.LatLngBounds( new L.LatLng(-90, -180), new L.LatLng(90, 180)),
 		minZoom: 2,
 	});
+
 	L.control.zoom({
 		position:'topright'
 	}).addTo(mymap);
+
 	markerGroup = L.featureGroup().addTo(mymap);
+
 	L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
 		maxZoom: 19,
 		attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>'
 	}).addTo(mymap);
+
 	mymap.on('contextmenu', function (eventData) { window.location.hash ='#25-'+eventData.latlng.lat + ',' + eventData.latlng.lng; });
 }
 
@@ -137,6 +141,7 @@ function addIndexMarker(index, addIndexMarkerLatitude, addIndexMarkerLongitude, 
 function addMarker(icon, latitude, longitude, name, $event) {
 	var marker = L.marker([latitude, longitude], { icon: icon});
 	var markerContent;
+
 	if (typeof($event) !== 'undefined') {
 		var eventUrl = parseEventUrl($event);
 		markerContent = '<strong><a target="_blank" href="'+eventUrl+'/">'+ name+'</a></strong><br />';
@@ -150,6 +155,7 @@ function addMarker(icon, latitude, longitude, name, $event) {
 	} else if (typeof(name) !== 'undefined') {
 		markerContent = name;
 	}
+
 	// vegan
 	{
 		if (typeof(markerContent) !== 'undefined') {
@@ -157,6 +163,7 @@ function addMarker(icon, latitude, longitude, name, $event) {
 		}
 		markerContent += '<a target="_blank" href="https://www.happycow.net/searchmap?lat='+latitude+'&lng='+longitude+'&vegan=true">Local vegan food</a>';
 	}
+
 	// national trust
 	{
 		if (typeof(markerContent) !== 'undefined') {
@@ -166,6 +173,7 @@ function addMarker(icon, latitude, longitude, name, $event) {
 		markerContent += '<br />';
 		markerContent += '<a target="_blank" href="https://www.nationaltrust.org.uk/search?type=place&lat='+latitude+'&lon='+longitude+'&filter=houses-and-buildings&view=map">National Trust houses</a>';
 	}
+
 	// premier inn
 	{
 		if (typeof(markerContent) !== 'undefined') {
@@ -173,6 +181,7 @@ function addMarker(icon, latitude, longitude, name, $event) {
 		}
 		markerContent += '<a target="_blank" href="https://www.premierinn.com/gb/en/search.html?&LOCATION=' + latitude + ',' + longitude + '">Local Premier Inns</a>';
 	}
+
 	// pitch up
 	{
 		if (typeof(markerContent) !== 'undefined') {
@@ -180,6 +189,7 @@ function addMarker(icon, latitude, longitude, name, $event) {
 		}
 		markerContent += '<a target="_blank" href="https://www.pitchup.com/search/?sort=&lat=' + latitude + '&lng=' + longitude + '&facet=toilet-block&facet=adults-only&facet=shower-available&within=40&q=&type=4&adults=2&children=0">Tent site</a>'
 	}
+
 	marker.bindPopup(markerContent);
 	marker.addTo(markerGroup);
 }
@@ -218,10 +228,12 @@ function displayEvents(closest) {
 
 	closestEventDistances = eventDistances.sort(function(a, b){return a.distance-b.distance});
 	delete eventDistances;
+
 	for (var i=0; i< closestEventDistances.length; i++) {
 		eventIds.push(closestEventDistances[i].id);
 	}
 	delete closestEventDistances;
+
 	if (typeof(options.athleteId === 'string')) {
 		if (typeof(athleteData[options.athleteId]) === 'undefined') {
 			$.ajax({
@@ -229,7 +241,7 @@ function displayEvents(closest) {
 				async: false,
 			}).done(function(data) {
 				athleteData[options.athleteId] = data;
-			});	
+			});
 		}
 	}
 
@@ -246,9 +258,11 @@ function displayEvents(closest) {
 					return;
 				}
 			});
+
 			if (typeof(matchedEvent) !== 'undefined') {
 				var eventName = parseName(matchedEvent);
 				var display = false;
+
 				if (typeof(options.athleteId) === 'undefined' || typeof(athleteData) === 'undefined' || typeof(athleteData[options.athleteId]) == 'undefined') {
 					display = true;
 				} else if (!athleteData[options.athleteId].includes(parseEventId(matchedEvent))) {
@@ -257,6 +271,7 @@ function displayEvents(closest) {
 					addDoneMarker(parseLatitude(matchedEvent), parseLongitude(matchedEvent), eventName, matchedEvent);
 					completedEvents++;
 				}
+
 				if (display) {
 					addIndexMarker(++displayedEvents, parseLatitude(matchedEvent), parseLongitude(matchedEvent), eventName, iconColours[(displayedEvents % iconColours.length)-1], matchedEvent);
 					console.info("index event " + displayedEvents + " " + eventName);
@@ -264,7 +279,8 @@ function displayEvents(closest) {
 			}
 		}
 	});
-	console.info("Completed  " + completedEvents + " parkruns within " + closest + " closest events distance.");
+
+	console.info("Completed " + completedEvents + " parkruns within " + closest + " closest events distance.");
 
 	var markerIcon = L.icon({
 		iconUrl: 'https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-blue.png',
@@ -274,6 +290,7 @@ function displayEvents(closest) {
 		popupAnchor: [1, -34],
 		shadowSize: [41, 41]
 	});
+
 	var marker = L.marker([closestLatitude, closestLongitude], { icon: markerIcon});
 	marker.addTo(markerGroup);
 
@@ -282,13 +299,13 @@ function displayEvents(closest) {
 
 function getDistanceFromLatLonInKm(lat1,lon1,lat2,lon2) {
 	var R = 6371; // Radius of the earth in km
-	var dLat = deg2rad(lat2-lat1);  // deg2rad below
-	var dLon = deg2rad(lon2-lon1); 
-	var a = 
+	var dLat = deg2rad(lat2-lat1); // deg2rad below
+	var dLon = deg2rad(lon2-lon1);
+	var a =
 		Math.sin(dLat/2) * Math.sin(dLat/2) +
-		Math.cos(deg2rad(lat1)) * Math.cos(deg2rad(lat2)) * 
-		Math.sin(dLon/2) * Math.sin(dLon/2); 
-	var c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a)); 
+		Math.cos(deg2rad(lat1)) * Math.cos(deg2rad(lat2)) *
+		Math.sin(dLon/2) * Math.sin(dLon/2);
+	var c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
 	var d = R * c; // Distance in km
 	return d;
 }
@@ -298,6 +315,12 @@ function deg2rad(deg) {
 }
 
 function load() {
+	// Guard against being called before the events data has arrived
+	// (e.g. from the geolocation callback firing before the fetch resolves).
+	if (typeof(events) === 'undefined') {
+		return;
+	}
+
 	$(document).ready(function() {
 		markerGroup.clearLayers();
 		var hash = decodeURIComponent(window.location.hash);
@@ -310,15 +333,12 @@ function init() {
 	$(window).bind( 'hashchange', function(event) {
 		load();
 	});
+
 	fetch('https://snowy-wood-82b6.dave-sowerby.workers.dev/events')
 		.then(r => r.json())
 		.then(data => {
 			events = data.events.features;
 			countries = data.countries;
+			load();
 		});
-}
-
-function initAndLoad() {
-	init();
-	load();
 }
