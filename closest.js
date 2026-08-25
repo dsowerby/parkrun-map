@@ -138,6 +138,32 @@ function addIndexMarker(index, addIndexMarkerLatitude, addIndexMarkerLongitude, 
 	addMarker(markerIcon, addIndexMarkerLatitude, addIndexMarkerLongitude, name, $event);
 }
 
+function geohashEncode(lat, lon, precision = 9) {
+  const BASE32 = '0123456789bcdefghjkmnpqrstuvwxyz';
+  let latRange = [-90, 90], lonRange = [-180, 180];
+  let hash = '', bit = 0, ch = 0, even = true;
+
+  while (hash.length < precision) {
+    if (even) {
+      const mid = (lonRange[0] + lonRange[1]) / 2;
+      if (lon > mid) { ch |= (1 << (4 - bit)); lonRange[0] = mid; }
+      else lonRange[1] = mid;
+    } else {
+      const mid = (latRange[0] + latRange[1]) / 2;
+      if (lat > mid) { ch |= (1 << (4 - bit)); latRange[0] = mid; }
+      else latRange[1] = mid;
+    }
+    even = !even;
+    if (bit < 4) bit++;
+    else { hash += BASE32[ch]; bit = 0; ch = 0; }
+  }
+  return hash;
+}
+
+function metOfficeForecastUrl(lat, lon) {
+  return `https://weather.metoffice.gov.uk/forecast/${geohashEncode(lat, lon)}`;
+}
+
 function addMarker(icon, latitude, longitude, name, $event) {
 	var marker = L.marker([latitude, longitude], { icon: icon});
 	var markerContent;
@@ -149,7 +175,7 @@ function addMarker(icon, latitude, longitude, name, $event) {
 		markerContent += '<a target="_blank" href="'+eventUrl+'/futureroster/">Future Roster</a><br />';
 		markerContent += '<a target="_blank" href="'+eventUrl+'/results/eventhistory/">Event History</a><br />';
 		markerContent += '<a target="_blank" href="https://www.google.com/maps/dir/?api=1&destination='+latitude+','+longitude+'">Directions</a><br />';
-		markerContent += '<a target="_blank" href="../weather#'+latitude+','+longitude+'">Weather Forecast</a><br />';
+		markerContent += '<a target="_blank" href="' + metOfficeForecastUrl(latitude, longitude) + '">Weather Forecast</a><br />';
 		markerContent += '<a target="_blank" href="https://www.facebook.com/search/top/?q='+ encodeURIComponent(name) + '&epa=SEARCH_BOX">Facebook</a><br />';
 		markerContent += '<a target="_blank" href="https://www.youtube.com/results?search_query=' + encodeURIComponent(name) + '">YouTube</a>';
 	} else if (typeof(name) !== 'undefined') {

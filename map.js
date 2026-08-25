@@ -253,6 +253,32 @@ function getMarkerIcon(colour) {
 	return markerIconCache[colour];
 }
 
+function geohashEncode(lat, lon, precision = 9) {
+  const BASE32 = '0123456789bcdefghjkmnpqrstuvwxyz';
+  let latRange = [-90, 90], lonRange = [-180, 180];
+  let hash = '', bit = 0, ch = 0, even = true;
+
+  while (hash.length < precision) {
+    if (even) {
+      const mid = (lonRange[0] + lonRange[1]) / 2;
+      if (lon > mid) { ch |= (1 << (4 - bit)); lonRange[0] = mid; }
+      else lonRange[1] = mid;
+    } else {
+      const mid = (latRange[0] + latRange[1]) / 2;
+      if (lat > mid) { ch |= (1 << (4 - bit)); latRange[0] = mid; }
+      else latRange[1] = mid;
+    }
+    even = !even;
+    if (bit < 4) bit++;
+    else { hash += BASE32[ch]; bit = 0; ch = 0; }
+  }
+  return hash;
+}
+
+function metOfficeForecastUrl(lat, lon) {
+  return `https://weather.metoffice.gov.uk/forecast/${geohashEncode(lat, lon)}`;
+}
+
 function addMarker(latitude, longitude, name, iconColour, $event) {
 	var marker = L.marker([latitude, longitude], { icon: getMarkerIcon(iconColour) });
 	var markerContent;
@@ -270,7 +296,7 @@ function addMarker(latitude, longitude, name, iconColour, $event) {
 	}
 	
 	markerContent += '<br /><a target="_blank" href="https://www.google.com/maps/dir/?api=1&destination='+latitude+','+longitude+'">Directions</a><br />';
-	markerContent += '<a target="_blank" href="./weather#'+latitude+','+longitude+'">Weather Forecast</a><br />';
+	markerContent += '<a target="_blank" href="' + metOfficeForecastUrl(latitude, longitude) + '">Weather Forecast</a><br />';
 	markerContent += '<a target="_blank" href="https://www.happycow.net/searchmap?lat='+latitude+'&lng='+longitude+'&vegan=true">Local vegan food</a><br />';
 	markerContent += '<a target="_blank" href="https://www.nationaltrust.org.uk/search?type=place&lat='+latitude+'&lon='+longitude+'&view=map">National Trust venues</a><br />';
 	markerContent += '<a target="_blank" href="https://www.nationaltrust.org.uk/search?type=place&lat='+latitude+'&lon='+longitude+'&filter=houses-and-buildings&view=map">National Trust houses</a><br />';
