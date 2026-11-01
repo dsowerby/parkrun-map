@@ -132,7 +132,7 @@ function addDoneMarker(latitude, longitude, name, $event) {
 function addIndexMarker(index, addIndexMarkerLatitude, addIndexMarkerLongitude, name, iconColour, $event) {
 	var markerIcon = L.ExtraMarkers.icon({
 		markerColor: iconColour,
-		shape: 'star',
+		shape: 'square',
 		icon: 'fa-number',
 		number: index
 	});
