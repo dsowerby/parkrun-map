@@ -5,7 +5,7 @@ var options = {};
 var events;
 var countries;
 var athleteData = [];
-var iconColours = ['red', 'orange-dark', 'orange', 'yellow', 'blue-dark', 'cyan', 'purple', 'violet', 'pink', 'green-dark', 'green', 'black', 'white']
+var iconColours = ['red', 'orange-dark', 'orange', 'yellow', 'blue-dark', 'cyan', 'purple', 'violet', 'pink', 'blue', 'green-dark', 'green', 'black']
 
 function parseName(nameevent) {
 	if (typeof(nameevent) !== 'undefined') {
@@ -299,7 +299,7 @@ function displayEvents(closest) {
 				}
 
 				if (display) {
-					addIndexMarker(++displayedEvents, parseLatitude(matchedEvent), parseLongitude(matchedEvent), eventName, iconColours[(displayedEvents % iconColours.length)-1], matchedEvent);
+					addIndexMarker(++displayedEvents, parseLatitude(matchedEvent), parseLongitude(matchedEvent), eventName, iconColours[(displayedEvents - 1) % iconColours.length], matchedEvent);
 					console.info("index event " + displayedEvents + " " + eventName);
 				}
 			}
