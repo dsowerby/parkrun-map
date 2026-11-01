@@ -5,7 +5,7 @@ var options = {};
 var events;
 var countries;
 var athleteData = [];
-var iconColours = ['red', 'orange-dark', 'orange', 'yellow', 'green-light', 'blue-dark', 'cyan', 'purple', 'violet', 'pink', 'blue', 'green-dark', 'green']
+var iconColours = ['red', 'orange-dark', 'orange', 'yellow', 'blue-dark', 'cyan', 'purple', 'violet', 'pink', 'blue', 'green-dark', 'green']
 
 function parseName(nameevent) {
 	if (typeof(nameevent) !== 'undefined') {
@@ -132,7 +132,6 @@ function addDoneMarker(latitude, longitude, name, $event) {
 function addIndexMarker(index, addIndexMarkerLatitude, addIndexMarkerLongitude, name, iconColour, $event) {
 	var markerIcon = L.ExtraMarkers.icon({
 		markerColor: iconColour,
-		shape: 'square',
 		icon: 'fa-number',
 		number: index
 	});
